@@ -62,10 +62,10 @@ public class PlayerController : MonoBehaviour
         _gameController = GameController.Instance;
 
         _playerData = _gameManager.PlayableObjectsSO.GetPlayableObjectDataByName(playableObjectName);
-        _playerModel = _playerData.prefab;
+        GameObject playerModel = _playerData.prefab;
         _playerHealth = _playerData.health;
         _gameController.WorldManager.SetWorldSpeed(_playerData.speed);
-        _playerModel = Instantiate(_playerModel, transform);
+        _playerModel = Instantiate(playerModel, transform);
 
         SetAnimatorType();
         SetLaneChangeSpeed();

@@ -13,7 +13,8 @@ namespace World
         
         private float _currentSpeed;
         private float _totalDistanceTraveled = 0f;
-        
+        private bool _isBeginning = true;
+
         public float CurrentSpeed => _currentSpeed;
         public float BaseSpeed => baseSpeed;
         public float TotalDistanceTraveled => _totalDistanceTraveled;
@@ -36,16 +37,28 @@ namespace World
             
             _totalDistanceTraveled += movement;
             
-            if (useAcceleration)
+            if (useAcceleration && _isBeginning)
             {
                 _currentSpeed = Mathf.Min(_currentSpeed + accelerationRate * deltaTime, maxSpeed);
+                if (_currentSpeed >= maxSpeed)
+                {
+                    _currentSpeed = maxSpeed;
+                    _isBeginning = false;
+                    baseSpeed = maxSpeed;
+                }
             }
+        }
+        
+        public float GetMovementDelta()
+        {
+            return _currentSpeed * Time.deltaTime;
         }
         
         public void SetSpeed(float speed)
         {
-            baseSpeed = Mathf.Clamp(speed, 0f, maxSpeed);
-            _currentSpeed = baseSpeed;
+            //baseSpeed = Mathf.Clamp(speed, 0f, maxSpeed);
+            //_currentSpeed = baseSpeed;
+            maxSpeed = speed;
         }
         
         public void ResetSpeed()

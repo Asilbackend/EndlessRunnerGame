@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: EasyChunk1 1
   m_EditorClassIdentifier: Assembly-CSharp::World.ChunkLayoutSO
   difficulty: 1
-  chunkPrefab: {fileID: 519373286010425915, guid: ffceef3c6513d8549a20f12286f0d15a, type: 3}
+  chunkPrefab: {fileID: 9211397337327938777, guid: fcad6679a7cbc994aa85d96d28078b5d, type: 3}
   lanes: 3

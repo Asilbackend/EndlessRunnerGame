@@ -6,7 +6,6 @@ namespace World
     public class ChunkPool : MonoBehaviour
     {
         [Header("Pool Settings")]
-        [Tooltip("Initial number of instances to create per prefab.")]
         [SerializeField] private int initialPoolSize = 5;
         [SerializeField] private int maxPoolSize = 50;
 

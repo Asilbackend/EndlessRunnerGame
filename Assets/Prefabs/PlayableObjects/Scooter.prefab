@@ -459,7 +459,6 @@ GameObject:
   - component: {fileID: 1785640790059987966}
   - component: {fileID: 9050736612843846823}
   - component: {fileID: -8947920716813624219}
-  - component: {fileID: 7512314619827252561}
   - component: {fileID: 8851288961165939422}
   m_Layer: 0
   m_Name: Scooter
@@ -550,27 +549,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &7512314619827252561
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 817691091575644543}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19, y: 0.8, z: 0.08}
-  m_Center: {x: 0, y: 0.5, z: 0.36}
 --- !u!95 &8851288961165939422
 Animator:
   serializedVersion: 7

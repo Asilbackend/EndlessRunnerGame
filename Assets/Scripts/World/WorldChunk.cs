@@ -6,10 +6,18 @@ namespace World
 {
     public class WorldChunk : MonoBehaviour
     {
+        private enum LaneRandomizationMode
+        {
+            LeftRight,
+            AllThree
+        }
         [Header("Chunk Settings")]
         [SerializeField] private float chunkLength = 20f;
         [SerializeField] private Transform LeftLane;
+        [SerializeField] private Transform CenterLane;
         [SerializeField] private Transform RightLane;
+        [SerializeField] private LaneRandomizationMode laneRandomizationMode = LaneRandomizationMode.LeftRight;
+
 
         private Transform chunkStartPoint;
         private Transform chunkEndPoint;
@@ -54,7 +62,7 @@ namespace World
             _currentZPosition = zPosition;
             transform.position = new Vector3(0, 0, zPosition);
             _isActive = true;
-            RandomizeLeftRightLanes();
+            RandomizeLanes();
             gameObject.SetActive(true);
             
             // Store original positions of all obstacles (including dynamic ones that move)
@@ -139,10 +147,50 @@ namespace World
             }
         }
 
-        private void RandomizeLeftRightLanes()
-        { 
-            float r = Random.Range(0, 2);
-            if (r > 0.5)
+        private void RandomizeLanes()
+        {
+            //50% chance to randomize according to the chosen mode
+            float r = Random.value; // value between0 and1
+            if (r <=0.5f) return;
+
+            if (laneRandomizationMode == LaneRandomizationMode.AllThree)
+            {
+                // If any lane is missing, fall back to LeftRight swap when possible
+                if (LeftLane == null || RightLane == null || CenterLane == null)
+                {
+                    // fallback
+                    if (LeftLane != null && RightLane != null)
+                    {
+                        float leftX = LeftLane.localPosition.x;
+                        float rightX = RightLane.localPosition.x;
+                        LeftLane.localPosition = new Vector3(rightX, LeftLane.localPosition.y, LeftLane.localPosition.z);
+                        RightLane.localPosition = new Vector3(leftX, RightLane.localPosition.y, RightLane.localPosition.z);
+                    }
+                    return;
+                }
+
+                // Collect current X positions
+                float leftPos = LeftLane.localPosition.x;
+                float centerPos = CenterLane.localPosition.x;
+                float rightPos = RightLane.localPosition.x;
+
+                float[] positions = new float[] { leftPos, centerPos, rightPos };
+
+                // Simple Fisher-Yates shuffle
+                for (int i = positions.Length -1; i >0; i--)
+                {
+                    int j = Random.Range(0, i +1);
+                    float tmp = positions[i];
+                    positions[i] = positions[j];
+                    positions[j] = tmp;
+                }
+
+                // Assign shuffled X positions back, preserving Y and Z
+                LeftLane.localPosition = new Vector3(positions[0], LeftLane.localPosition.y, LeftLane.localPosition.z);
+                CenterLane.localPosition = new Vector3(positions[1], CenterLane.localPosition.y, CenterLane.localPosition.z);
+                RightLane.localPosition = new Vector3(positions[2], RightLane.localPosition.y, RightLane.localPosition.z);
+            }
+            else // LeftRight
             {
                 if (LeftLane != null && RightLane != null)
                 {
@@ -152,9 +200,8 @@ namespace World
                     RightLane.localPosition = new Vector3(leftX, RightLane.localPosition.y, RightLane.localPosition.z);
                 }
             }
-
         }
-        
+
         private void OnDrawGizmos()
         {
             if (chunkStartPoint != null && chunkEndPoint != null)
