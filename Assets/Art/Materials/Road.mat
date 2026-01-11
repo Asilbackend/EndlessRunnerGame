@@ -85,7 +85,7 @@ Material:
     - _BUILTIN_QueueControl: -1
     - _BUILTIN_QueueOffset: 0
     - _BackwardsStrength: 0
-    - _BandSoftness: 0
+    - _BandSoftness: 3
     - _BendAmount: -99.11
     - _BendLength: 500
     - _BendStartZ: 12
@@ -100,7 +100,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _LightIntensity: 1
+    - _LightIntensity: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -120,7 +120,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Steps: 1
+    - _Steps: 4
     - _UVSec: 0
     - _WaterfallStartZ: 0
     - _WaterfallStrength: 0
@@ -130,9 +130,9 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RevealColor: {r: 0.9725491, g: 0.54901963, b: 0.34901962, a: 1}
-    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RevealColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 0}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _TilingOffset: {r: 0.3, g: 1, b: 0.5, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

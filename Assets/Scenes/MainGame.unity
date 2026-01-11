@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c415543245e4454448d6c45efafcdb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World.WorldMover
-  baseSpeed: 20
+  baseSpeed: 0
   useAcceleration: 0
   accelerationRate: 0.2
   maxSpeed: 20
@@ -552,6 +552,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcc88feef38094e42883d4b0be726973, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.HUD
+--- !u!1 &1072097581 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5060375112786841141, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
+  m_PrefabInstance: {fileID: 2479528140405150710}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1072097588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072097581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f42752430c22fa409730fd693053e86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Utilities.Outline
 --- !u!43 &1132631430
 Mesh:
   m_ObjectHideFlags: 0
@@ -1001,6 +1018,7 @@ GameObject:
   - component: {fileID: 2005647264}
   - component: {fileID: 2005647265}
   - component: {fileID: 2005647266}
+  - component: {fileID: 2005647267}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -1055,6 +1073,41 @@ MonoBehaviour:
   worldMover: {fileID: 166607344}
   chunkSpawner: {fileID: 166607343}
   chunkPool: {fileID: 166607342}
+--- !u!114 &2005647267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005647263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7781129b7189a54a82c97940a49b74e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShaderGlobals
+  targetShader: {fileID: 0}
+  EarthRadius: -400
+  SideBendStrength: 0
+  FadeStart: 40
+  FadeEnd: 150
+  RevealColor: {r: 1, g: 1, b: 1, a: 1}
+  ShadowColor: {r: 0, g: 0, b: 0, a: 1}
+  Steps: 4
+  LightIntensity: 3
+  RimPower: 0
+  RimStrength: 0
+  RimColor: {r: 1, g: 1, b: 1, a: 1}
+  EarthRadiusProp: _EarthRadius
+  SideBendStrengthProp: _SideBendStrength
+  FadeStartProp: _FadeStart
+  FadeEndProp: _FadeEnd
+  RevealColorProp: _RevealColor
+  ShadowColorProp: _ShadowColor
+  StepsProp: _Steps
+  LightIntensityProp: _LightIntensity
+  RimPowerProp: _RimPower
+  RimStrengthProp: _RimStrength
+  RimColorProp: _RimColor
 --- !u!1001 &1441492359151872456
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1160,25 +1213,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 930838091145034474, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.129298
-      objectReference: {fileID: 0}
-    - target: {fileID: 930838091145258702, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1446168651509017570, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5025212966178356482, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
-      propertyPath: laneChangeSpeed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5025212966178356482, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
-      propertyPath: playableObjectName
-      value: 0
+    - target: {fileID: 2697843328977208124, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5060375112786841141, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
       propertyPath: m_IsActive
@@ -1231,7 +1272,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5060375112786841141, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1072097588}
   m_SourcePrefab: {fileID: 100100000, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
 --- !u!1001 &8524606688281879493
 PrefabInstance:
@@ -1247,7 +1291,7 @@ PrefabInstance:
       objectReference: {fileID: 444525059}
     - target: {fileID: 417578682562342853, guid: 60de921bfce5b6d4d9d2502c12fa6af1, type: 3}
       propertyPath: m_VersionIndex
-      value: 4012
+      value: 4048
       objectReference: {fileID: 0}
     - target: {fileID: 454006901803311103, guid: 60de921bfce5b6d4d9d2502c12fa6af1, type: 3}
       propertyPath: m_Mesh
@@ -1311,7 +1355,7 @@ PrefabInstance:
       objectReference: {fileID: 1132631430}
     - target: {fileID: 6603310332773795611, guid: 60de921bfce5b6d4d9d2502c12fa6af1, type: 3}
       propertyPath: m_VersionIndex
-      value: 4029
+      value: 4065
       objectReference: {fileID: 0}
     - target: {fileID: 9211397337327938777, guid: 60de921bfce5b6d4d9d2502c12fa6af1, type: 3}
       propertyPath: m_Name

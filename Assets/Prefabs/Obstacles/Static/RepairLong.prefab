@@ -789,22 +789,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prop_RoofVent_01
       objectReference: {fileID: 0}
-    - target: {fileID: 553111504632756283, guid: 3795d6c7fec68bd40af6ae712c09c722, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 929671540753130113, guid: 3795d6c7fec68bd40af6ae712c09c722, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 929671540753130113, guid: 3795d6c7fec68bd40af6ae712c09c722, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.72
-      objectReference: {fileID: 0}
-    - target: {fileID: 929671540753130113, guid: 3795d6c7fec68bd40af6ae712c09c722, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 929671540753130113, guid: 3795d6c7fec68bd40af6ae712c09c722, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -845,12 +829,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 929671540753130113, guid: 3795d6c7fec68bd40af6ae712c09c722, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1021767483632808248, guid: 3795d6c7fec68bd40af6ae712c09c722, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1106,10 +1085,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrafficCones
       objectReference: {fileID: 0}
-    - target: {fileID: 559993727811554497, guid: 3a5df9f18409e7c439c513e6d67a378c, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 904854057185171067, guid: 3a5df9f18409e7c439c513e6d67a378c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.2
@@ -1149,18 +1124,6 @@ PrefabInstance:
     - target: {fileID: 904854057185171067, guid: 3a5df9f18409e7c439c513e6d67a378c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2678470007798548198, guid: 3a5df9f18409e7c439c513e6d67a378c, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3798211211837926698, guid: 3a5df9f18409e7c439c513e6d67a378c, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5955913275186370932, guid: 3a5df9f18409e7c439c513e6d67a378c, type: 3}
-      propertyPath: m_Layer
-      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

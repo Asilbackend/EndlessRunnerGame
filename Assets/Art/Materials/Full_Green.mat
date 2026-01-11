@@ -95,7 +95,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BandSoftness: 0.1
+    - _BandSoftness: 3
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -107,7 +107,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _LightIntensity: 1
+    - _LightIntensity: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -122,16 +122,16 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Steps: 3
+    - _Steps: 4
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 0.7075471, b: 0.7075471, a: 1}
     - _Color: {r: 0.10323429, g: 1, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RevealColor: {r: 0.9725491, g: 0.54901963, b: 0.34901962, a: 1}
-    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 0.27044016, g: 0.27044016, b: 0.27044016, a: 1}
+    - _RevealColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 0}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _TilingOffset: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

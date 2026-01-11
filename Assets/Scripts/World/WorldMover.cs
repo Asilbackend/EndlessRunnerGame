@@ -42,11 +42,6 @@ namespace World
             }
         }
         
-        public float GetMovementDelta()
-        {
-            return _currentSpeed * Time.deltaTime;
-        }
-        
         public void SetSpeed(float speed)
         {
             baseSpeed = Mathf.Clamp(speed, 0f, maxSpeed);
