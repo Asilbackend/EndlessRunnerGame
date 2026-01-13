@@ -65,7 +65,22 @@ namespace World
             RandomizeLanes();
             gameObject.SetActive(true);
             
-            // Store original positions of all obstacles (including dynamic ones that move)
+            var collectibles = GetComponentsInChildren<WorldCollectible>(true);
+            foreach (var c in collectibles)
+            {
+                if (c != null)
+                    c.ResetCollectible();
+            }
+
+            var placers = GetComponentsInChildren<ObjectPlacer>(true);
+            foreach (var placer in placers)
+            {
+                if (placer != null)
+                {
+                    placer.RandomizePlacement();
+                }
+            }
+            
             StoreOriginalObstaclePositions();
         }
         
@@ -137,13 +152,18 @@ namespace World
         
         private void ResetObstaclePositions()
         {
+            // Iterate over a copy of the dictionary entries to avoid potential modification issues
             foreach (var kvp in _originalObstaclePositions)
             {
-                if (kvp.Key != null)
-                {
-                    kvp.Key.localPosition = kvp.Value;
-                }
-                kvp.Key.GetComponent<WorldObstacle>()?.ResetMoving();
+                var t = kvp.Key;
+                if (t == null)
+                    continue;
+
+                t.localPosition = kvp.Value;
+
+                var obstacle = t.GetComponent<WorldObstacle>();
+                if (obstacle != null)
+                    obstacle.ResetMoving();
             }
         }
 

@@ -85,9 +85,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::World.WorldChunk
   chunkLength: 100
   LeftLane: {fileID: 701989199877178396}
-  CenterLane: {fileID: 0}
+  CenterLane: {fileID: 1822341874346143998}
   RightLane: {fileID: 3790711842652922742}
-  laneRandomizationMode: 0
+  laneRandomizationMode: 1
 --- !u!1 &2982567642287932649
 GameObject:
   m_ObjectHideFlags: 0
@@ -16302,7 +16302,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3505892201275106312, guid: 530400fdc14222742aa82eca2e5312c1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 67
+      value: 73
       objectReference: {fileID: 0}
     - target: {fileID: 3505892201275106312, guid: 530400fdc14222742aa82eca2e5312c1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -16496,7 +16496,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8827836855548042241, guid: 8a5a974a815fea04ab28acbc360051e1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 63
+      value: 69
       objectReference: {fileID: 0}
     - target: {fileID: 8827836855548042241, guid: 8a5a974a815fea04ab28acbc360051e1, type: 3}
       propertyPath: m_LocalRotation.w

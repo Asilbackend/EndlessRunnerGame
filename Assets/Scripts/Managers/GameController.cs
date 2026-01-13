@@ -9,6 +9,8 @@ public class GameController : MonoBehaviour
     public int GameHealth { get; private set; }
     public int GameCoins { get; private set; } = 0;
     public bool IsGameOver { get; private set; } = false;
+    public float ReverseMultiplier { get; private set; } = 2;
+
 
     private GameManager _gameManager;
     private UIManager _uiManager;
@@ -69,6 +71,7 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
+        PlayerController.StopAnimationAndWheels();
         int currentHealth = GetHealth();
         currentHealth = Mathf.Max(0, --currentHealth);
         SetHealth(currentHealth);

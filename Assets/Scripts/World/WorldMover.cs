@@ -79,7 +79,7 @@ namespace World
 
         public void Reverse()
         {
-            _currentSpeed = -1 * baseSpeed * 2;
+            _currentSpeed = -1 * baseSpeed * GameController.Instance.ReverseMultiplier;
         }
     }
 }

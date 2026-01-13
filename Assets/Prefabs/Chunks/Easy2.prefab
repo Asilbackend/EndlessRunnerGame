@@ -13069,7 +13069,7 @@ MonoBehaviour:
   LeftLane: {fileID: 8168875678994053886}
   CenterLane: {fileID: 7037463846019862044}
   RightLane: {fileID: 5511009586701802900}
-  laneRandomizationMode: 0
+  laneRandomizationMode: 1
 --- !u!1001 &285772443878679498
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -18,9 +18,24 @@ public class ObjectPlacer : MonoBehaviour
 
     private void Awake()
     {
-        if (_currentObjectData != null)
-            return;
-            
+        if (_currentObject == null)
+        {
+            RandomizePlacement();
+        }
+    }
+
+    // Public method so external code (e.g., WorldChunk.Initialize) can re-roll placement when chunk is spawned
+    public void RandomizePlacement()
+    {
+        // Destroy previous object if present
+        if (_currentObject != null)
+        {
+            // DestroyImmediate when in editor might be useful, but use regular Destroy for runtime safety
+            Destroy(_currentObject);
+            _currentObject = null;
+            _currentObjectData = null;
+        }
+
         var renderer = GetComponent<Renderer>();
         if (renderer != null)
             renderer.enabled = false;

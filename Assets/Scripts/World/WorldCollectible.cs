@@ -7,12 +7,16 @@ namespace World
     {
         [Header("Collectible Settings")]
         [SerializeField] private int scoreValue = 10;
-        [SerializeField] private bool destroyOnDespawn = true;
         [SerializeField] private float rotationSpeed = 90f;
         
         private WorldChunk _parentChunk;
         private bool _isActive = true;
         private bool _isCollected = false;
+        private bool _isPaused = false;
+
+        // New fields to support reverse behavior
+        private float _originalRotationSpeed = 0f;
+        private bool _isReversed = false;
         
         private void Awake()
         {
@@ -21,13 +25,16 @@ namespace World
             {
                 _parentChunk.AddWorldObject(this);
             }
+
+            _originalRotationSpeed = rotationSpeed;
         }
         
         private void Update()
         {
             if (_isActive && !_isCollected)
             {
-                transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+                if (!_isPaused)
+                    transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
             }
         }
         
@@ -39,20 +46,7 @@ namespace World
         public void OnDespawn()
         {
             _isActive = false;
-            
-            if (_parentChunk != null)
-            {
-                _parentChunk.RemoveWorldObject(this);
-            }
-            
-            if (destroyOnDespawn)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                gameObject.SetActive(false);
-            }
+            gameObject.SetActive(false);
         }
         
         public void OnCollided()
@@ -87,23 +81,54 @@ namespace World
             }
         }
 
-        private void Reset()
+        public void ResetCollectible()
         {
             _isActive = true;
+            _isCollected = false;
+            _isPaused = false;
+            _isReversed = false;
+            
+            rotationSpeed = _originalRotationSpeed;
+            
+            gameObject.SetActive(true);
+            var col = GetComponent<Collider>();
+            if (col != null) col.enabled = true;
+
+            if (_parentChunk == null)
+            {
+                _parentChunk = GetComponentInParent<WorldChunk>();
+            }
 
             if (_parentChunk != null)
             {
-                _parentChunk.RemoveWorldObject(this);
+                _parentChunk.AddWorldObject(this);
             }
+        }
+        
+        public void Pause()
+        {
+            _isPaused = true;
+        }
+        
+        public void Resume()
+        {
+            StopReverse();
+            _isPaused = false;
+        }
 
-            if (destroyOnDespawn)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                gameObject.SetActive(false);
-            }
+        public void Reverse()
+        {
+            if (_isReversed) return;
+            _isReversed = true;
+            _isPaused = false;
+            rotationSpeed = -Mathf.Abs(_originalRotationSpeed) * GameController.Instance.ReverseMultiplier;
+        }
+
+        public void StopReverse()
+        {
+            if (!_isReversed) return;
+            _isReversed = false;
+            rotationSpeed = _originalRotationSpeed;
         }
     }
 }

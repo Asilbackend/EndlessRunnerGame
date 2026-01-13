@@ -1,5 +1,6 @@
 using Player;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using World;
@@ -18,6 +19,11 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("Speed at which velocity values smoothly transition (for velocity-based mode)")]
     [SerializeField] private float velocitySmoothingSpeed = 10f;
+
+    [SerializeField] private List<Material> playerMaterials;
+
+    // New: speed used to smoothly drive animator parameters to zero when reversing
+    [SerializeField] private float animatorZeroingSpeed = 4f;
 
     public enum AnimatorMode
     {
@@ -56,6 +62,12 @@ public class PlayerController : MonoBehaviour
     private float _smoothedXVelocity = 0f;
     private float _smoothedYVelocity = 0f;
 
+    // wheels rotators and animator backup
+    private WheelsRotator[] _wheelRotators;
+    private float _storedAnimatorSpeed = 1f;
+
+    private bool _isReversing = false;
+
     private void Start()
     {
         _gameManager = GameManager.Instance;
@@ -86,23 +98,37 @@ public class PlayerController : MonoBehaviour
         _isGrounded = true;
         _verticalVelocity = 0f;
         _animator = _playerModel.GetComponent<Animator>();
+
+        // cache wheels rotators if present
+        _wheelRotators = _playerModel.GetComponentsInChildren<WheelsRotator>(true);
+
+        SetMaterialEmmissionDarkness(1);
     }
 
     private void Update()
     {
         if (GameController.Instance.IsGameOver)
             return;
-        HandleInput();
         SmoothMoveToTargetLane();
         ApplyGravityAndJump();
-        
+        HandleInput();
         if (_animatorMode == AnimatorMode.PositionBased)
         {
+            if (_isReversing)
+            {
+                SmoothZeroAnimatorParams();
+                return;
+            }
             Vector2 normalPos = NormalizePosition();
             SetAnimatorXY(normalPos.x, normalPos.y);
         }
         else // VelocityBased
         {
+            if (_isReversing)
+            {  
+                SmoothZeroAnimatorParams();
+                return;
+            }
             Vector2 velocity = GetVelocityBasedValues();
             SetAnimatorXY(velocity.x, velocity.y);
         }
@@ -218,6 +244,23 @@ public class PlayerController : MonoBehaviour
         _targetPosition = new Vector3(_lanePositions[_currentLaneIndex], transform.position.y, transform.position.z);
     }
 
+    private void SetLane(LaneNumber lane)
+    {
+        switch (lane)
+        {
+            case LaneNumber.Left:
+                _currentLaneIndex = 0;
+                break;
+            case LaneNumber.Center:
+                _currentLaneIndex = 1;
+                break;
+            case LaneNumber.Right:
+                _currentLaneIndex = 2;
+                break;
+        }
+        _targetPosition = new Vector3(_lanePositions[_currentLaneIndex], transform.position.y, transform.position.z);
+    }
+
     private void SmoothMoveToTargetLane()
     {
         Vector3 newPos = transform.position;
@@ -272,8 +315,10 @@ public class PlayerController : MonoBehaviour
     public void OnDeath()
     {
         Debug.Log(GetDifferenceFromCenterLane());
+        SetLane(LaneNumber.Center);
         TryChangeLane(GetDifferenceFromCenterLane());
         StartCoroutine(ResetCollider());
+        StartCoroutine(OnDeathFlash());
     }
 
     private IEnumerator ResetCollider()
@@ -283,8 +328,106 @@ public class PlayerController : MonoBehaviour
         SetColliderEnabled(true);
     }
 
+    private IEnumerator OnDeathFlash(float beginningValue = 1, float endingValue = .3f, float duration = .5f, int numOfFlashing = 3)
+    {
+        for (int i = 0; i < numOfFlashing; i++)
+        {
+            float t = 0f;
+            while (t < 1f)
+            {
+                t += Time.deltaTime / duration;
+                float value = Mathf.Lerp(beginningValue, endingValue, t);
+                SetMaterialEmmissionDarkness(value);
+                yield return null;
+            }
+
+            t = 0f;
+            while (t < 1f)
+            {
+                t += Time.deltaTime / duration;
+                float value = Mathf.Lerp(endingValue, beginningValue, t);
+                SetMaterialEmmissionDarkness(value);
+                yield return null;
+            }
+        }
+    }
+
+    private void SetMaterialEmmissionDarkness(float value)
+    {
+        foreach (var material in playerMaterials)
+        {
+            material.SetFloat("_EmmissionDarkLevel", value);
+        }
+    }
+
     public void SetColliderEnabled(bool enabled)
     {
         _playerModel.GetComponent<Collider>().enabled = enabled;
+    }
+
+    public void ReverseAnimationAndWheels()
+    {
+        if (_animator != null)
+        {
+            _storedAnimatorSpeed = _animator.speed;
+            _animator.speed = -Mathf.Abs(_storedAnimatorSpeed != 0f ? _storedAnimatorSpeed : 1f);
+        }
+
+        if (_wheelRotators != null && _wheelRotators.Length > 0)
+        {
+            foreach (var w in _wheelRotators)
+            {
+                if (w != null) w.Reverse();
+            }
+        }
+        _isReversing = true;
+    }
+
+    public void StopAnimationAndWheels()
+    {
+        if (_wheelRotators != null && _wheelRotators.Length > 0)
+        {
+            foreach (var w in _wheelRotators)
+            {
+                if (w != null) w.Stop();
+            }
+        }
+    }
+
+    public void ResumeAnimationAndWheels()
+    {
+        if (_animator != null)
+        {
+            float targetSpeed = Mathf.Abs(_storedAnimatorSpeed != 0f ? _storedAnimatorSpeed : 1f);
+            _animator.speed = targetSpeed;
+            var state = _animator.GetCurrentAnimatorStateInfo(0);
+            _animator.Play(state.shortNameHash, 0, 0f);
+        }
+
+        if (_wheelRotators != null && _wheelRotators.Length > 0)
+        {
+            foreach (var w in _wheelRotators)
+            {
+                if (w != null) w.Resume();
+            }
+        }
+        _isReversing = false;
+    }
+
+    // Smoothly move animator parameters MoveX and MoveY toward zero
+    private void SmoothZeroAnimatorParams()
+    {
+        if (_animator == null) return;
+
+        _smoothedXVelocity = 0f;
+        _smoothedYVelocity = 0f;
+
+        float currX = _animator.GetFloat("MoveX");
+        float currY = _animator.GetFloat("MoveY");
+
+        float newX = Mathf.MoveTowards(currX, 0f, animatorZeroingSpeed * Time.deltaTime);
+        float newY = Mathf.MoveTowards(currY, 0f, animatorZeroingSpeed * Time.deltaTime);
+
+        SetAnimatorXY(newX, newY);
     }
 }

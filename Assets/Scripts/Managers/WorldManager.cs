@@ -84,6 +84,15 @@ namespace Managers
                                 obstacle.Pause();
                             }
                         }
+
+                        WorldCollectible[] collectibles = chunk.GetComponentsInChildren<WorldCollectible>(true);
+                        foreach (var col in collectibles)
+                        {
+                            if (col != null)
+                            {
+                                col.Pause();
+                            }
+                        }
                     }
                 }
             }
@@ -114,11 +123,51 @@ namespace Managers
                                 obstacle.Resume();
                             }
                         }
+
+                        WorldCollectible[] collectibles = chunk.GetComponentsInChildren<WorldCollectible>(true);
+                        foreach (var col in collectibles)
+                        {
+                            if (col != null)
+                            {
+                                col.Resume();
+                            }
+                        }
                     }
                 }
             }
         }
-        
+
+        public void ReverseDynamicObstacles()
+        {
+            if (chunkSpawner != null)
+            {
+                var activeChunks = chunkSpawner.GetActiveChunks();
+                foreach (var chunk in activeChunks)
+                {
+                    if (chunk != null && chunk.IsActive)
+                    {
+                        WorldObstacle[] obstacles = chunk.GetComponentsInChildren<WorldObstacle>(true);
+                        foreach (var obstacle in obstacles)
+                        {
+                            if (obstacle != null)
+                            {
+                                obstacle.Reverse();
+                            }
+                        }
+
+                        WorldCollectible[] collectibles = chunk.GetComponentsInChildren<WorldCollectible>(true);
+                        foreach (var col in collectibles)
+                        {
+                            if (col != null)
+                            {
+                                col.Reverse();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void ResetWorld()
         {
             StartCoroutine(ResetWorldProcess());
@@ -145,11 +194,26 @@ namespace Managers
         private IEnumerator ResetToLastCheckpointProcess(float duration)
         {
             worldMover?.Reverse();
+            ReverseDynamicObstacles();
+            var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
+            if (player != null)
+            {
+                player.ReverseAnimationAndWheels();
+            }
             yield return new WaitForSeconds(duration);
             worldMover?.Pause();
+            PauseDynamicObstacles();
+            if (player != null)
+            {
+                player.StopAnimationAndWheels();
+            }
             yield return new WaitForSeconds(GameController.Instance.StartTime);
             worldMover?.Resume();
             ResumeDynamicObstacles();
+            if (player != null)
+            {
+                player.ResumeAnimationAndWheels();
+            }
         }
         
         public float GetCurrentSpeed()

@@ -22,12 +22,14 @@ namespace World
         private Collider _collider;
 
         private float _moveSpeed = 0f;
+        private float _originalMoveSpeed = 0f; // store configured speed to restore after reverse
         private ObjectData _configuredObjectData;
         private bool _isMoving;
         private bool _isDynamic;
         private bool _isBlocked = false;
         private bool _wasMovingBeforePause = false;
         private bool _isPaused = false;
+        private bool _isReversed = false;
 
         // Formula = _moveSpeed * (activationDistance / (worldSpeed - _moveSpeed))
 
@@ -39,6 +41,7 @@ namespace World
 
             damage = data.damage;
             _moveSpeed = data.speed;
+            _originalMoveSpeed = data.speed;
             _isDynamic = _moveSpeed > 0f;
         }
 
@@ -158,9 +161,29 @@ namespace World
         {
             if (_isDynamic)
             {
+                StopReverse();
                 _isPaused = false;
                 _isMoving = _wasMovingBeforePause;
             }
+        }
+
+        public void Reverse()
+        {
+            if (!_isDynamic) return;
+            if (_isReversed) return;
+            _isReversed = true;
+            _moveSpeed = -Mathf.Abs(_originalMoveSpeed) * GameController.Instance.ReverseMultiplier;
+            _isPaused = false;
+            _isMoving = true;
+        }
+
+        public void StopReverse()
+        {
+            if (!_isDynamic) return;
+            if (!_isReversed) return;
+            _isReversed = false;
+            _moveSpeed = _originalMoveSpeed;
+            _isMoving = _wasMovingBeforePause;
         }
 
         public void OnDespawn()
