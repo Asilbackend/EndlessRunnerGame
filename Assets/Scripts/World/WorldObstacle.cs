@@ -207,6 +207,12 @@ namespace World
             {
                 OnCollided();
                 if (destroyOnDespawn) Destroy(gameObject);
+
+                // camera impact effect
+                if (PlayerCameraController.Instance != null)
+                {
+                    PlayerCameraController.Instance.Impact();
+                }
             }
         }
 

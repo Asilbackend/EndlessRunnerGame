@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
         else // VelocityBased
         {
             if (_isReversing)
-            {  
+            { 
                 SmoothZeroAnimatorParams();
                 return;
             }
@@ -292,6 +292,17 @@ public class PlayerController : MonoBehaviour
 
         if (newY <= _groundY)
         {
+            // landing detected
+            if (!_isGrounded)
+            {
+                // call camera landing bounce
+                var cam = PlayerCameraController.Instance;
+                if (cam != null)
+                {
+                    cam.TriggerLandingBounce();
+                }
+            }
+            
             newY = _groundY;
             _verticalVelocity = 0f;
             _isGrounded = true;

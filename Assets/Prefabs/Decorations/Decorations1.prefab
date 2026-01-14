@@ -110,6 +110,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &503433223903495197
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,6 +291,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &1302531002252468373
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,6 +439,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &1919291676936663292
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,6 +554,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &2221325478247158878
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,6 +669,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &2324807208836729283
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,6 +784,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &2337279733646334394
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,6 +899,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &2484815946968291966
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,6 +1014,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &2780498185725795661
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,6 +1129,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &3592153539455530370
 GameObject:
   m_ObjectHideFlags: 0
@@ -1199,6 +1244,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &3851105198358143785
 GameObject:
   m_ObjectHideFlags: 0
@@ -1381,6 +1431,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &4978865378902132497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1532,6 +1587,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &5515843957261692984
 GameObject:
   m_ObjectHideFlags: 0
@@ -1642,6 +1702,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &5886089579712145431
 GameObject:
   m_ObjectHideFlags: 0
@@ -1817,6 +1882,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &6274248574586052445
 GameObject:
   m_ObjectHideFlags: 0
@@ -1927,6 +1997,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &6492489210042010018
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,6 +2112,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &7073534065375558422
 GameObject:
   m_ObjectHideFlags: 0
@@ -2147,6 +2227,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &8524558247400787014
 GameObject:
   m_ObjectHideFlags: 0
@@ -2289,6 +2374,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &8599527393540954632
 GameObject:
   m_ObjectHideFlags: 0
@@ -2399,6 +2489,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1 &9026544232897499369
 GameObject:
   m_ObjectHideFlags: 0
@@ -2509,6 +2604,11 @@ MonoBehaviour:
   randomScale: 1
   minScale: 1.3
   maxScale: 1.7
+  randomPosition: 1
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -4
+  maxZOffset: 4
 --- !u!1001 &299142423929480404
 PrefabInstance:
   m_ObjectHideFlags: 0

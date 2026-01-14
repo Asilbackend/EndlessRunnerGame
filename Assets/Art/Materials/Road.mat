@@ -94,6 +94,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EarthRadius: -400
+    - _EmmissionDarkLevel: 1
     - _FadeEnd: 150
     - _FadeStart: 40
     - _Feather: 5
@@ -133,7 +134,7 @@ Material:
     - _RevealColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 0}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
-    - _TilingOffset: {r: 0.3, g: 1, b: 0.5, a: 1}
+    - _TilingOffset: {r: 0.29, g: 1, b: 0.5, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2959511927779009136

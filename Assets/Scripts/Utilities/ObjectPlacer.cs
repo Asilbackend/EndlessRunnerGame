@@ -12,6 +12,11 @@ public class ObjectPlacer : MonoBehaviour
     [SerializeField] private bool randomScale = false;
     [SerializeField] private float minScale = 1;
     [SerializeField] private float maxScale = 1.5f;
+    [SerializeField] private bool randomPosition = false;
+    [SerializeField] private float minXOffset = -1f;
+    [SerializeField] private float maxXOffset = 1f;
+    [SerializeField] private float minZOffset = -1f;
+    [SerializeField] private float maxZOffset = 1f;
     private ObjectData _currentObjectData;
     private GameObject _currentObject;
 
@@ -55,7 +60,14 @@ public class ObjectPlacer : MonoBehaviour
                 return;
             }
             
-            _currentObject = Instantiate(_currentObjectData.objectPrefab, transform.position, Quaternion.identity, transform);
+            Vector3 spawnPosition = transform.position;
+            if (randomPosition)
+            {
+                float randomX = Random.Range(minXOffset, maxXOffset);
+                float randomZ = Random.Range(minZOffset, maxZOffset);
+                spawnPosition += new Vector3(randomX, 0f, randomZ);
+            }
+            _currentObject = Instantiate(_currentObjectData.objectPrefab, spawnPosition, Quaternion.identity, transform);
             if (_currentObject == null)
             {
                 Debug.LogError("ObjectPlacer: Failed to instantiate object!", this);
@@ -80,7 +92,14 @@ public class ObjectPlacer : MonoBehaviour
                 _currentObjectData.objectPrefab != null &&
                 _currentObjectData.objectPrefab.GetComponent<WorldObstacle>() != null)
             {
-                _currentObject = Instantiate(_currentObjectData.objectPrefab, transform.position, Quaternion.identity, transform);
+                Vector3 spawnPosition = transform.position;
+                if (randomPosition)
+                {
+                    float randomX = Random.Range(minXOffset, maxXOffset);
+                    float randomZ = Random.Range(minZOffset, maxZOffset);
+                    spawnPosition += new Vector3(randomX, 0f, randomZ);
+                }
+                _currentObject = Instantiate(_currentObjectData.objectPrefab, spawnPosition, Quaternion.identity, transform);
                 if (_currentObject != null)
                 {
                     _currentObject.GetComponent<WorldObstacle>().ConfigureFromObjectData(_currentObjectData);

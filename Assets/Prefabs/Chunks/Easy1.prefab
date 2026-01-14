@@ -6517,6 +6517,11 @@ MonoBehaviour:
   randomScale: 0
   minScale: 1
   maxScale: 1.5
+  randomPosition: 0
+  minXOffset: -1
+  maxXOffset: 1
+  minZOffset: -1
+  maxZOffset: 1
 --- !u!1 &4356767364909607111
 GameObject:
   m_ObjectHideFlags: 0

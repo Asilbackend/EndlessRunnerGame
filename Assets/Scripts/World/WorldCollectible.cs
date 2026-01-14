@@ -70,6 +70,11 @@ namespace World
             if (other.CompareTag("Player"))
             {
                 OnCollided();
+                // camera powerup bounce
+                if (PlayerCameraController.Instance != null)
+                {
+                    PlayerCameraController.Instance.PowerupBounce();
+                }
             }
         }
         
