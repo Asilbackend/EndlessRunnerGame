@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c614b7924ab27f46a021b9f4824c9ec, type: 3}
+  m_Name: WesternDecoration
+  m_EditorClassIdentifier: Assembly-CSharp::World.ObjectsContainerSO
+  objectConfigs:
+  - objectName: Plant1
+    objectPrefab: {fileID: 5182029527382009890, guid: 87fc5b59839b23741ba82f486075d8c7, type: 3}
+    speed: 0
+    damage: 0
+  - objectName: Plant2
+    objectPrefab: {fileID: 48359541731913525, guid: 5525a113bc6c4b44fab34aa9db1b41d1, type: 3}
+    speed: 0
+    damage: 0
+  - objectName: Plant3
+    objectPrefab: {fileID: 2404303055385715382, guid: f0dd97f58249b8949b430dec249457c8, type: 3}
+    speed: 0
+    damage: 0
+  - objectName: Rock1
+    objectPrefab: {fileID: 2250553934167256682, guid: 920f075cb31f2b44eb094672bcf4bb2f, type: 3}
+    speed: 0
+    damage: 0
+  - objectName: Tree2
+    objectPrefab: {fileID: 1478977047096435135, guid: 2c33a07c13f749547ae92452e7433616, type: 3}
+    speed: 0
+    damage: 0
+  - objectName: Tree3
+    objectPrefab: {fileID: 2571565318587721417, guid: 4487b663629a7154dbcc78f8d2a3cfda, type: 3}
+    speed: 0
+    damage: 0
+  - objectName: Tree4
+    objectPrefab: {fileID: 7776653939424268940, guid: a10c27d0153b9ae4688d5d1ac21d14a2, type: 3}
+    speed: 0
+    damage: 0
+  - objectName: Tree5
+    objectPrefab: {fileID: 6196743279009274045, guid: c46ca18b814388f4babd63e9ad63616f, type: 3}
+    speed: 0
+    damage: 0
+  isMoving: 1

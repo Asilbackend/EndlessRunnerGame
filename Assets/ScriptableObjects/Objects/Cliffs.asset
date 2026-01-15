@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c614b7924ab27f46a021b9f4824c9ec, type: 3}
+  m_Name: Cliffs
+  m_EditorClassIdentifier: Assembly-CSharp::World.ObjectsContainerSO
+  objectConfigs:
+  - objectName: Cliff1
+    objectPrefab: {fileID: 5873256261296762860, guid: 1030ff04ef8e1f04aac07cedb9929c4a, type: 3}
+    speed: 0
+    damage: 0
+  - objectName: Cliff2
+    objectPrefab: {fileID: 2220642614065901904, guid: 7575aeb85e9bc54438000268dc5e9329, type: 3}
+    speed: 0
+    damage: 0
+  isMoving: 0

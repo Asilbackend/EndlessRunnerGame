@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::World.ObjectsContainerSO
   objectConfigs:
   - objectName: Decorations1
-    objectPrefab: {fileID: 1302531002252468373, guid: 1b62e3b4881fc9045ba48b4f504c9043, type: 3}
+    objectPrefab: {fileID: 1302531002252468373, guid: d1956ea12f1b2bc4d94a6f93231c6acb, type: 3}
     speed: 0
     damage: 0
   isMoving: 0
