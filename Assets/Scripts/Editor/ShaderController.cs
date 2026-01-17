@@ -51,7 +51,7 @@ public class ShaderController : Editor
 
     static void ApplyToSceneMaterials(ShaderGlobals ctrl)
     {
-        var renderers = Object.FindObjectsOfType<Renderer>(true);
+        var renderers = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         int changed = 0;
 
         foreach (var r in renderers)

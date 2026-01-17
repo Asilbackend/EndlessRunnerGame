@@ -6,7 +6,6 @@ namespace World
 {
     public class ChunkSpawner : MonoBehaviour
     {
-
         [Header("Spawn Settings")]
         [SerializeField] private float spawnDistanceAhead = 20f;
         [SerializeField] private float despawnDistanceBehind = 10f;
@@ -17,8 +16,11 @@ namespace World
         [SerializeField] private ChunkLayoutSO defaultChunkLayout;
 
         private ChunkPool _chunkPool;
+        private DecorationPool _decorationPool;
+        private RoadPool _roadPool;
         private WorldManager worldManager;
-        private List<WorldChunk> _activeChunks = new List<WorldChunk>();
+        private List<WorldChunkComposite> _activeChunks = new List<WorldChunkComposite>();
+        private GameObject _compositeContainer;
 
         private void Awake()
         {
@@ -27,6 +29,22 @@ namespace World
             {
                 Debug.LogError("ChunkSpawner: ChunkPool component not found!");
             }
+
+            _decorationPool = GetComponent<DecorationPool>();
+            if (_decorationPool == null)
+            {
+                Debug.LogError("ChunkSpawner: DecorationPool component not found!");
+            }
+
+            _roadPool = GetComponent<RoadPool>();
+            if (_roadPool == null)
+            {
+                Debug.LogError("ChunkSpawner: RoadPool component not found!");
+            }
+
+            // Create container for composite objects
+            _compositeContainer = new GameObject("ChunkComposites");
+            _compositeContainer.transform.SetParent(transform);
         }
 
         private void Start()
@@ -59,7 +77,7 @@ namespace World
 
         private void SpawnChunk()
         {
-            if (_chunkPool == null) return;
+            if (_chunkPool == null || _decorationPool == null || _roadPool == null) return;
 
             ChunkLayoutSO chosenLayout = ChooseRandomLayout();
             if (chosenLayout == null)
@@ -68,36 +86,73 @@ namespace World
                 return;
             }
 
-            GameObject chunkPrefab = chosenLayout.chunkPrefab;
-            if (chunkPrefab == null)
+            // Get road prefab
+            GameObject roadPrefab = chosenLayout.roadPrefab;
+            if (roadPrefab == null && defaultChunkLayout != null)
             {
-                Debug.LogWarning($"ChunkSpawner: Layout {chosenLayout.name} has no chunkPrefab assigned!");
-                chunkPrefab = defaultChunkLayout != null ? defaultChunkLayout.chunkPrefab : null;
+                roadPrefab = defaultChunkLayout.roadPrefab;
             }
 
-            WorldChunk chunk = _chunkPool.GetChunk(chunkPrefab);
-            if (chunk == null) return;
+            // Get random chunk prefab (obstacles & collectibles)
+            GameObject chunkPrefab = chosenLayout.GetRandomChunkPrefab();
+            if (chunkPrefab == null && defaultChunkLayout != null)
+            {
+                chunkPrefab = defaultChunkLayout.GetRandomChunkPrefab();
+            }
+
+            // Get random decoration prefab
+            GameObject decorationPrefab = chosenLayout.GetRandomDecorationPrefab();
+            if (decorationPrefab == null && defaultChunkLayout != null)
+            {
+                decorationPrefab = defaultChunkLayout.GetRandomDecorationPrefab();
+            }
+
+            // Get road from pool (or create if unique)
+            Road road = null;
+            if (roadPrefab != null)
+            {
+                road = _roadPool.GetRoad(roadPrefab);
+            }
+
+            // Get chunk from pool
+            WorldChunk chunk = null;
+            if (chunkPrefab != null)
+            {
+                chunk = _chunkPool.GetChunk(chunkPrefab);
+            }
+
+            // Get decoration from pool
+            Decoration decoration = null;
+            if (decorationPrefab != null)
+            {
+                decoration = _decorationPool.GetDecoration(decorationPrefab);
+            }
+
+            // Create composite container
+            GameObject compositeObj = new GameObject("ChunkComposite");
+            compositeObj.transform.SetParent(_compositeContainer.transform);
+            WorldChunkComposite composite = compositeObj.AddComponent<WorldChunkComposite>();
 
             float spawnZ = 0;
             if (_activeChunks.Count > 0)
             {
-                WorldChunk lastChunk = _activeChunks[_activeChunks.Count - 1];
-                spawnZ = lastChunk.EndZ;
+                WorldChunkComposite lastComposite = _activeChunks[_activeChunks.Count - 1];
+                spawnZ = lastComposite.EndZ;
             }
-            
-            chunk.Initialize(spawnZ);
-            _activeChunks.Add(chunk);
+
+            composite.Initialize(road, chunk, decoration, spawnZ);
+            _activeChunks.Add(composite);
         }
 
         private ChunkLayoutSO ChooseRandomLayout()
         {
-            // Filter out null layouts and layouts without prefabs
-            var validLayouts = chunkLayouts.FindAll(e => e != null && e.chunkPrefab != null);
+            // Filter out null layouts
+            var validLayouts = chunkLayouts.FindAll(e => e != null);
             
             if (validLayouts == null || validLayouts.Count == 0)
             {
-                // Fallback to default if it has a prefab
-                if (defaultChunkLayout != null && defaultChunkLayout.chunkPrefab != null)
+                // Fallback to default
+                if (defaultChunkLayout != null)
                 {
                     return defaultChunkLayout;
                 }
@@ -114,29 +169,57 @@ namespace World
             {
                 if (_activeChunks[i] == null || _activeChunks[i].HasPassedPlayer(playerZPosition, despawnDistanceBehind))
                 {
-                    WorldChunk chunkToRemove = _activeChunks[i];
+                    WorldChunkComposite compositeToRemove = _activeChunks[i];
                     _activeChunks.RemoveAt(i);
                     
-                    if (_chunkPool != null && chunkToRemove != null)
+                    if (compositeToRemove != null)
                     {
-                        _chunkPool.ReturnChunk(chunkToRemove);
-                    }
+                        // Return components to their pools
+                        if (compositeToRemove.Road != null && _roadPool != null)
+                        {
+                            _roadPool.ReturnRoad(compositeToRemove.Road);
+                        }
+                        if (compositeToRemove.Chunk != null && _chunkPool != null)
+                        {
+                            _chunkPool.ReturnChunk(compositeToRemove.Chunk);
+                        }
+                        if (compositeToRemove.Decoration != null && _decorationPool != null)
+                        {
+                            _decorationPool.ReturnDecoration(compositeToRemove.Decoration);
+                        }
+
+                        compositeToRemove.ResetComposite();
+                        Destroy(compositeToRemove.gameObject);
                 }
             }
+            }
         }
-        
-        public List<WorldChunk> GetActiveChunks()
+
+        public List<WorldChunkComposite> GetActiveChunks()
         {
-            return new List<WorldChunk>(_activeChunks);
+            return new List<WorldChunkComposite>(_activeChunks);
         }
         
         public void DespawnAllChunks()
         {
-            foreach (var chunk in _activeChunks)
+            foreach (var composite in _activeChunks)
             {
-                if (chunk != null && _chunkPool != null)
+                if (composite != null)
                 {
-                    _chunkPool.ReturnChunk(chunk);
+                    if (composite.Road != null && _roadPool != null)
+                    {
+                        _roadPool.ReturnRoad(composite.Road);
+                    }
+                    if (composite.Chunk != null && _chunkPool != null)
+                    {
+                        _chunkPool.ReturnChunk(composite.Chunk);
+                    }
+                    if (composite.Decoration != null && _decorationPool != null)
+                    {
+                        _decorationPool.ReturnDecoration(composite.Decoration);
+                    }
+                    composite.ResetComposite();
+                    Destroy(composite.gameObject);
                 }
             }
             _activeChunks.Clear();

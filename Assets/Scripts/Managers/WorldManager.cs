@@ -41,11 +41,11 @@ namespace Managers
             float movementDelta = worldMover.GetMovementDelta();
             
             var activeChunks = chunkSpawner.GetActiveChunks();
-            foreach (var chunk in activeChunks)
+            foreach (var composite in activeChunks)
             {
-                if (chunk != null && chunk.IsActive)
+                if (composite != null && composite.IsActive)
                 {
-                    chunk.MoveChunk(movementDelta);
+                    composite.MoveComposite(movementDelta);
                 }
             }
         }
@@ -72,11 +72,11 @@ namespace Managers
             if (chunkSpawner != null)
             {
                 var activeChunks = chunkSpawner.GetActiveChunks();
-                foreach (var chunk in activeChunks)
+                foreach (var composite in activeChunks)
                 {
-                    if (chunk != null && chunk.IsActive)
+                    if (composite != null && composite.IsActive && composite.Chunk != null)
                     {
-                        WorldObstacle[] obstacles = chunk.GetComponentsInChildren<WorldObstacle>(true);
+                        WorldObstacle[] obstacles = composite.Chunk.GetComponentsInChildren<WorldObstacle>(true);
                         foreach (var obstacle in obstacles)
                         {
                             if (obstacle != null)
@@ -85,7 +85,7 @@ namespace Managers
                             }
                         }
 
-                        WorldCollectible[] collectibles = chunk.GetComponentsInChildren<WorldCollectible>(true);
+                        WorldCollectible[] collectibles = composite.Chunk.GetComponentsInChildren<WorldCollectible>(true);
                         foreach (var col in collectibles)
                         {
                             if (col != null)
@@ -111,11 +111,11 @@ namespace Managers
             if (chunkSpawner != null)
             {
                 var activeChunks = chunkSpawner.GetActiveChunks();
-                foreach (var chunk in activeChunks)
+                foreach (var composite in activeChunks)
                 {
-                    if (chunk != null && chunk.IsActive)
+                    if (composite != null && composite.IsActive && composite.Chunk != null)
                     {
-                        WorldObstacle[] obstacles = chunk.GetComponentsInChildren<WorldObstacle>(true);
+                        WorldObstacle[] obstacles = composite.Chunk.GetComponentsInChildren<WorldObstacle>(true);
                         foreach (var obstacle in obstacles)
                         {
                             if (obstacle != null)
@@ -124,7 +124,7 @@ namespace Managers
                             }
                         }
 
-                        WorldCollectible[] collectibles = chunk.GetComponentsInChildren<WorldCollectible>(true);
+                        WorldCollectible[] collectibles = composite.Chunk.GetComponentsInChildren<WorldCollectible>(true);
                         foreach (var col in collectibles)
                         {
                             if (col != null)
@@ -142,11 +142,11 @@ namespace Managers
             if (chunkSpawner != null)
             {
                 var activeChunks = chunkSpawner.GetActiveChunks();
-                foreach (var chunk in activeChunks)
+                foreach (var composite in activeChunks)
                 {
-                    if (chunk != null && chunk.IsActive)
+                    if (composite != null && composite.IsActive && composite.Chunk != null)
                     {
-                        WorldObstacle[] obstacles = chunk.GetComponentsInChildren<WorldObstacle>(true);
+                        WorldObstacle[] obstacles = composite.Chunk.GetComponentsInChildren<WorldObstacle>(true);
                         foreach (var obstacle in obstacles)
                         {
                             if (obstacle != null)
@@ -155,7 +155,7 @@ namespace Managers
                             }
                         }
 
-                        WorldCollectible[] collectibles = chunk.GetComponentsInChildren<WorldCollectible>(true);
+                        WorldCollectible[] collectibles = composite.Chunk.GetComponentsInChildren<WorldCollectible>(true);
                         foreach (var col in collectibles)
                         {
                             if (col != null)

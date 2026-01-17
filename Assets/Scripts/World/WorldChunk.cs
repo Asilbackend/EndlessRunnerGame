@@ -13,6 +13,7 @@ namespace World
         }
         [Header("Chunk Settings")]
         [SerializeField] private float chunkLength = 20f;
+        [SerializeField] private Difficulty difficulty = Difficulty.Easy;
         [SerializeField] private Transform LeftLane;
         [SerializeField] private Transform CenterLane;
         [SerializeField] private Transform RightLane;
@@ -34,6 +35,7 @@ namespace World
         }
         
         public float ChunkLength => chunkLength;
+        public Difficulty Difficulty => difficulty;
         public float StartZ => _currentZPosition;
         public float EndZ => _currentZPosition + chunkLength;
         public bool IsActive => _isActive;
@@ -148,6 +150,12 @@ namespace World
             ResetObstaclePositions();
             
             gameObject.SetActive(false);
+        }
+
+        // Update internal position tracking without moving transform (for use when parent handles movement)
+        public void UpdatePosition(float zPosition)
+        {
+            _currentZPosition = zPosition;
         }
         
         private void ResetObstaclePositions()

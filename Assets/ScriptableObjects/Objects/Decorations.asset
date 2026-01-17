@@ -17,4 +17,8 @@ MonoBehaviour:
     objectPrefab: {fileID: 1302531002252468373, guid: d1956ea12f1b2bc4d94a6f93231c6acb, type: 3}
     speed: 0
     damage: 0
+  - objectName: Decorations2
+    objectPrefab: {fileID: 1302531002252468373, guid: 9bbd444e08f170d42b7f1170464ebde9, type: 3}
+    speed: 0
+    damage: 0
   isMoving: 0
