@@ -171,8 +171,8 @@ MonoBehaviour:
   chunksToKeepAhead: 1
   playerZPosition: 0
   chunkLayouts:
-  - {fileID: 11400000, guid: 06767f59309f7c64786ff29767995c15, type: 2}
-  defaultChunkLayout: {fileID: 11400000, guid: 06767f59309f7c64786ff29767995c15, type: 2}
+  - {fileID: 11400000, guid: cf3d7a2341b722a4b9851c952703752f, type: 2}
+  defaultChunkLayout: {fileID: 11400000, guid: cf3d7a2341b722a4b9851c952703752f, type: 2}
 --- !u!114 &166607344
 MonoBehaviour:
   m_ObjectHideFlags: 0

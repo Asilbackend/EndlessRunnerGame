@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ccc18afb8ad7d042a78a812ec301284, type: 3}
+  m_Name: TestChunkLayouts
+  m_EditorClassIdentifier: Assembly-CSharp::World.ChunkLayoutSO
+  lanes: 3
+  roadPrefab: {fileID: 383661237994810150, guid: 3e96fca7beb03aa4291abd97fd70aa06, type: 3}
+  chunkPrefabs:
+  - {fileID: 5064521487612264979, guid: bece674f4e7cd0c45843ffd8c04b3747, type: 3}
+  - {fileID: 5064521487612264979, guid: c1ec5e27a0ff4664a8e398d88ad50365, type: 3}
+  weightedDecorations:
+  - prefab: {fileID: 1302531002252468373, guid: d1956ea12f1b2bc4d94a6f93231c6acb, type: 3}
+    weight: 10
+  - prefab: {fileID: 1302531002252468373, guid: 9bbd444e08f170d42b7f1170464ebde9, type: 3}
+    weight: 1

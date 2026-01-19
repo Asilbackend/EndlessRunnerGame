@@ -19,6 +19,13 @@ namespace World
         [SerializeField] private Transform RightLane;
         [SerializeField] private LaneRandomizationMode laneRandomizationMode = LaneRandomizationMode.LeftRight;
 
+        [Header("Opposite Dynamic Obstacles")]
+        [SerializeField] private OppositeDynamicObstacleConfig[] oppositeDynamicObstacleConfigs = new OppositeDynamicObstacleConfig[0];
+        [SerializeField] private ObjectsContainerSO dynamicObstaclesContainer;
+        [SerializeField] private GameObject warningSignPrefab;
+        [Tooltip("Speed for all opposite dynamic obstacles (normalized)")]
+        [SerializeField] private float oppositeObstacleSpeed = 10f;
+
 
         private Transform chunkStartPoint;
         private Transform chunkEndPoint;
@@ -27,6 +34,7 @@ namespace World
         private bool _isActive = false;
         private Dictionary<Transform, Vector3> _originalObstaclePositions = new Dictionary<Transform, Vector3>();
         private GameObject _sourcePrefab;
+        private List<OppositeDynamicObstacleSpawner> _oppositeObstacleSpawners = new List<OppositeDynamicObstacleSpawner>();
         
         public GameObject SourcePrefab
         {
@@ -39,6 +47,37 @@ namespace World
         public float StartZ => _currentZPosition;
         public float EndZ => _currentZPosition + chunkLength;
         public bool IsActive => _isActive;
+        
+        public float GetRandomizedLaneXPosition(LaneNumber lane)
+        {
+            Transform targetLane = null;
+            switch (lane)
+            {
+                case LaneNumber.Left:
+                    targetLane = LeftLane;
+                    break;
+                case LaneNumber.Center:
+                    targetLane = CenterLane;
+                    break;
+                case LaneNumber.Right:
+                    targetLane = RightLane;
+                    break;
+            }
+
+            if (targetLane != null)
+            {
+                return targetLane.localPosition.x;
+            }
+
+            // Fallback to WorldManager if lane transforms are not set
+            WorldManager worldManager = GameController.Instance != null ? GameController.Instance.WorldManager : null;
+            if (worldManager != null)
+            {
+                return worldManager.GetLaneXPosition(lane);
+            }
+
+            return 0f;
+        }
         
         private void Awake()
         {
@@ -84,6 +123,9 @@ namespace World
             }
             
             StoreOriginalObstaclePositions();
+            
+            // Spawn opposite dynamic obstacles if configured
+            SpawnOppositeDynamicObstacles();
         }
         
         private void StoreOriginalObstaclePositions()
@@ -149,6 +191,9 @@ namespace World
             // Reset all obstacles to their original positions
             ResetObstaclePositions();
             
+            // Clean up spawned opposite obstacles and signs
+            CleanupOppositeDynamicObstacles();
+            
             gameObject.SetActive(false);
         }
 
@@ -156,6 +201,15 @@ namespace World
         public void UpdatePosition(float zPosition)
         {
             _currentZPosition = zPosition;
+            
+            // Update spawner positions
+            foreach (var spawner in _oppositeObstacleSpawners)
+            {
+                if (spawner != null)
+                {
+                    spawner.UpdateChunkPosition(_currentZPosition, EndZ);
+                }
+            }
         }
         
         private void ResetObstaclePositions()
@@ -228,6 +282,63 @@ namespace World
                     RightLane.localPosition = new Vector3(leftX, RightLane.localPosition.y, RightLane.localPosition.z);
                 }
             }
+        }
+
+        private void SpawnOppositeDynamicObstacles()
+        {
+            if (oppositeDynamicObstacleConfigs == null || oppositeDynamicObstacleConfigs.Length == 0)
+            {
+                Debug.Log($"WorldChunk '{gameObject.name}': No opposite dynamic obstacle configs. Skipping.");
+                return;
+            }
+
+            if (dynamicObstaclesContainer == null)
+            {
+                Debug.LogWarning($"WorldChunk '{gameObject.name}': dynamicObstaclesContainer is not set. Cannot spawn opposite dynamic obstacles.");
+                return;
+            }
+
+            Debug.Log($"WorldChunk '{gameObject.name}': Spawning {oppositeDynamicObstacleConfigs.Length} opposite dynamic obstacle spawner(s). Warning sign prefab: {(warningSignPrefab != null ? warningSignPrefab.name : "NULL")}");
+
+            foreach (var config in oppositeDynamicObstacleConfigs)
+            {
+                if (config == null || !config.IsValid())
+                {
+                    Debug.LogWarning($"WorldChunk '{gameObject.name}': Invalid opposite dynamic obstacle config. Skipping.");
+                    continue;
+                }
+
+                // Create a spawner GameObject for this obstacle
+                GameObject spawnerObj = new GameObject($"OppositeObstacleSpawner_{config.lane}");
+                spawnerObj.transform.SetParent(transform);
+                spawnerObj.transform.localPosition = Vector3.zero;
+
+                OppositeDynamicObstacleSpawner spawner = spawnerObj.AddComponent<OppositeDynamicObstacleSpawner>();
+                spawner.Initialize(
+                    config,
+                    dynamicObstaclesContainer,
+                    warningSignPrefab,
+                    oppositeObstacleSpeed,
+                    _currentZPosition,
+                    EndZ
+                );
+
+                _oppositeObstacleSpawners.Add(spawner);
+            }
+        }
+
+        private void CleanupOppositeDynamicObstacles()
+        {
+            // Clean up spawners (they will clean up their obstacles and signs)
+            foreach (var spawner in _oppositeObstacleSpawners)
+            {
+                if (spawner != null)
+                {
+                    spawner.Cleanup();
+                    Destroy(spawner.gameObject);
+                }
+            }
+            _oppositeObstacleSpawners.Clear();
         }
 
         private void OnDrawGizmos()

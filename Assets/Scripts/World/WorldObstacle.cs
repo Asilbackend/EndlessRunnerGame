@@ -11,6 +11,18 @@ namespace World
         [Header("Obstacle Settings")]
         [SerializeField] private bool destroyOnDespawn = false;
         [SerializeField] private float damage = 1;
+        [SerializeField] private bool isOppositeDirection = false; // If true, moves backward and rotates 180 degrees
+
+        public bool IsOppositeDirection => isOppositeDirection;
+        
+        public void SetOppositeDirection(bool value)
+        {
+            isOppositeDirection = value;
+            if (value)
+            {
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+        }
 
         [Header("Collision Detection")]
         [SerializeField] private float lookAheadDistance = 2f;
@@ -31,18 +43,50 @@ namespace World
         private bool _isPaused = false;
         private bool _isReversed = false;
 
+        // For opposite direction obstacles
+        private float _startMovingAtMeters = 0f; // n meters - when obstacle starts moving
+        private float _chunkStartZ = 0f;
+        private bool _forceStartMoving = false;
+
         // Formula = _moveSpeed * (activationDistance / (worldSpeed - _moveSpeed))
 
-        public void ConfigureFromObjectData(ObjectData data)
+        public void ConfigureFromObjectData(ObjectData data, float? overrideSpeed = null)
         {
             if (data == null) return;
 
             _configuredObjectData = data;
 
             damage = data.damage;
-            _moveSpeed = data.speed;
-            _originalMoveSpeed = data.speed;
-            _isDynamic = _moveSpeed > 0f;
+            // If overrideSpeed is provided, use it; otherwise use data.speed
+            // This allows us to overwrite the obstacle's default speed
+            float speedToUse = overrideSpeed.HasValue ? overrideSpeed.Value : data.speed;
+            
+            if (isOppositeDirection)
+            {
+                // For opposite direction, use negative speed (moves backward)
+                _moveSpeed = -Mathf.Abs(speedToUse);
+                // Rotate 180 degrees around Y axis
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+            else
+            {
+                _moveSpeed = speedToUse;
+            }
+            
+            _originalMoveSpeed = _moveSpeed;
+            _isDynamic = Mathf.Abs(_moveSpeed) > 0f;
+        }
+
+        public void SetActivationParameters(float chunkStartZ, float startMovingAtMeters)
+        {
+            _chunkStartZ = chunkStartZ;
+            _startMovingAtMeters = startMovingAtMeters;
+        }
+
+        public void ForceStartMoving()
+        {
+            _forceStartMoving = true;
+            _isMoving = true;
         }
 
         private void Start()
@@ -58,22 +102,55 @@ namespace World
             {
                 _collider.isTrigger = true;
             }
-            ConfigureFromObjectData(_configuredObjectData);
+            
+            // Only configure from data if not already configured (to preserve override speed)
+            if (_configuredObjectData != null && _moveSpeed == 0f && !_isDynamic)
+            {
+                ConfigureFromObjectData(_configuredObjectData);
+            }
         }
 
         private void Update()
         {
-            if (!isActive) return;
+            if (!isActive || _isPaused) return;
 
-            if (_isDynamic && !_isPaused)
+            if (_isDynamic)
             {
-                var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
-                if (player != null && !_isMoving)
+                // Handle opposite direction obstacles
+                if (isOppositeDirection)
                 {
-                    float distanceAhead = transform.position.z - player.transform.position.z;
-                    if (distanceAhead <= activationDistance)
+                    // If forced to start moving, skip player check
+                    if (_forceStartMoving)
                     {
                         _isMoving = true;
+                    }
+                    else
+                    {
+                        var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
+                        if (player != null && !_isMoving)
+                        {
+                            // Check if player has reached the n meter mark in the chunk
+                            float playerZ = player.transform.position.z;
+                            float distanceIntoChunk = playerZ - _chunkStartZ;
+                            
+                            if (distanceIntoChunk >= _startMovingAtMeters)
+                            {
+                                _isMoving = true;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Normal forward direction obstacles
+                    var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
+                    if (player != null && !_isMoving)
+                    {
+                        float distanceAhead = transform.position.z - player.transform.position.z;
+                        if (distanceAhead <= activationDistance)
+                        {
+                            _isMoving = true;
+                        }
                     }
                 }
 
@@ -92,7 +169,7 @@ namespace World
         private bool CheckForObstacleInFront()
         {
             Vector3 origin = transform.position + new Vector3(0, 0.5f, 0);
-            Vector3 direction = Vector3.forward;
+            Vector3 direction = isOppositeDirection ? Vector3.back : Vector3.forward;
             
             // Use Raycast to detect obstacles in front (single line cast)
             RaycastHit hit;
@@ -130,7 +207,14 @@ namespace World
 
         public void MoveWithWorld()
         {
-            transform.Translate(Vector3.forward * _moveSpeed * Time.deltaTime);
+            if (isOppositeDirection)
+            {
+                transform.Translate(Vector3.back * Mathf.Abs(_moveSpeed) * Time.deltaTime, Space.World);
+            }
+            else
+            {
+                transform.Translate(Vector3.forward * _moveSpeed * Time.deltaTime, Space.World);
+            }
         }
 
         public void OnCollided()
@@ -145,6 +229,7 @@ namespace World
         {
             _isMoving = false;
             _isBlocked = false;
+            _forceStartMoving = false;
         }
 
         public void Pause()
