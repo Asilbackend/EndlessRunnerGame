@@ -22,6 +22,9 @@ public class GameController : MonoBehaviour
     [HideInInspector] public float StartTime = 1;
     [HideInInspector] public float PlayerColliderDisabledTime = 2;
 
+    [SerializeField] private World.ParticleEffectsSO _particleEffectsSO;
+    public World.ParticleEffectsSO ParticleEffectsSO => _particleEffectsSO;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

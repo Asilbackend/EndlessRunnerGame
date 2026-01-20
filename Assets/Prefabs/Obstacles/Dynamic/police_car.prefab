@@ -102,6 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::World.WorldObstacle
   destroyOnDespawn: 0
   damage: 1
+  isOppositeDirection: 0
   lookAheadDistance: 4
   obstacleLayerMask:
     serializedVersion: 2

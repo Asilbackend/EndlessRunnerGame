@@ -1,6 +1,7 @@
 using UnityEngine;
 using UI;
 using UnityEngine.SceneManagement;
+using Utilities;
 
 
 namespace World
@@ -290,6 +291,10 @@ namespace World
             if (!isActive) return;
             if (other.CompareTag("Player"))
             {
+                // Spawn impact particle effect at collision point using centralized system
+                Vector3 impactPosition = other.ClosestPoint(transform.position);
+                ParticleEffectSpawner.SpawnParticleEffect(ParticleEffectType.ObstacleImpact, impactPosition);
+
                 OnCollided();
                 if (destroyOnDespawn) Destroy(gameObject);
 

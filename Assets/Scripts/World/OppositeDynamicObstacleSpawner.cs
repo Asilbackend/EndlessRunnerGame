@@ -17,6 +17,7 @@ namespace World
         private GameObject _spawnedWarningSign;
         private OppositeDynamicObstacleWarningSign _warningSignComponent;
         private bool _obstacleSpawned = false;
+        private bool _signSpawned = false;
 
         public void Initialize(
             OppositeDynamicObstacleConfig config,
@@ -35,8 +36,6 @@ namespace World
             _lane = config.lane;
             _obstacleSpawned = false;
 
-            // Spawn warning sign immediately (it will show/hide based on player position)
-            SpawnWarningSign();
         }
 
         public void UpdateChunkPosition(float chunkStartZ, float chunkEndZ)
@@ -81,6 +80,8 @@ namespace World
                 return;
             }
 
+            _signSpawned = true;
+
             // Ensure the sign GameObject is active so its Update() method can run
             _spawnedWarningSign.SetActive(true);
             
@@ -108,6 +109,10 @@ namespace World
 
             float playerZ = player.transform.position.z;
             float distanceIntoChunk = playerZ - _chunkStartZ;
+            if (!_signSpawned && distanceIntoChunk >= _config.signAppearAtMeters)
+            {
+                SpawnWarningSign();
+            }
 
             // Spawn obstacle when player reaches n meters
             if (!_obstacleSpawned && distanceIntoChunk >= _config.obstacleStartAtMeters)

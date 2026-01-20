@@ -18,6 +18,7 @@ MonoBehaviour:
   - {fileID: 2481525731627812251, guid: 92aac84a43e937046b93271e8da01bf4, type: 3}
   - {fileID: 6195114387694972946, guid: 81c47633083f53841bfe7752938a1c00, type: 3}
   - {fileID: 5064521487612264979, guid: 9740134836f06be4b976173f8d47a48b, type: 3}
+  - {fileID: 5064521487612264979, guid: bece674f4e7cd0c45843ffd8c04b3747, type: 3}
   weightedDecorations:
   - prefab: {fileID: 1302531002252468373, guid: d1956ea12f1b2bc4d94a6f93231c6acb, type: 3}
     weight: 10

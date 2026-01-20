@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using World;
+using Utilities;
 using static UnityEngine.Rendering.DebugUI;
 
 // Simple player controller that can move only on three lanes (Left, Center, Right)
@@ -295,6 +296,10 @@ public class PlayerController : MonoBehaviour
             // landing detected
             if (!_isGrounded)
             {
+                // Spawn landing particle effect at ground position using centralized system
+                Vector3 landingPosition = new Vector3(transform.position.x, _groundY, transform.position.z);
+                ParticleEffectSpawner.SpawnParticleEffect(ParticleEffectType.PlayerLanding, landingPosition);
+
                 // call camera landing bounce
                 var cam = PlayerCameraController.Instance;
                 if (cam != null)
