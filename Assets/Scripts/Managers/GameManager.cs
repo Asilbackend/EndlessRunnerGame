@@ -26,10 +26,10 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; }
     private readonly int _defaultHealth = 3;
-    private readonly int _defaultCoins = 0;
+    private readonly int _defaultPoints = 0;
 
     //public int PlayerHealth { get; private set; }
-    public int PlayerCoins { get; private set; }
+    public int PlayerPoints { get; private set; }
     public int PlayerGameNumber { get; private set; }
 
     private void Awake()
@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
         }
 
         //PlayerHealth = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Health, _defaultHealth);
-        PlayerCoins = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Coins, _defaultCoins);
+        PlayerPoints = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, _defaultPoints);
         PlayerGameNumber = PlayerPrefsManager.GetInt(PlayerPrefsKeys.GameNumber, 0);
     }
 
@@ -54,10 +54,10 @@ public class GameManager : MonoBehaviour
     //    PlayerHealth = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Health, health);
     //    PlayerPrefsManager.SetInt(PlayerPrefsKeys.Health, health);
     //}
-    public void SetPlayerCoins(int coins)
+    public void SetPlayerPoints(int points)
     {
-        PlayerCoins = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Coins, coins);
-        PlayerPrefsManager.SetInt(PlayerPrefsKeys.Coins, coins);
+        PlayerPoints = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, points);
+        PlayerPrefsManager.SetInt(PlayerPrefsKeys.Points, points);
     }
 
     public void IncrementGameNumber()

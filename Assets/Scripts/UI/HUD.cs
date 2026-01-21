@@ -8,7 +8,7 @@ namespace UI
     {
         [Header("UI References")]
         [SerializeField] private TMP_Text healthText;
-        [SerializeField] private TMP_Text runCoinsText;
+        [SerializeField] private TMP_Text runPointsText;
 
         private void OnEnable()
         {
@@ -23,26 +23,26 @@ namespace UI
             }
         }
 
-        public void SetRunCoins(int coins)
+        public void SetRunPoints(int points)
         {
-            if (runCoinsText != null)
+            if (runPointsText != null)
             {
-                runCoinsText.text = coins.ToString();
+                runPointsText.text = points.ToString();
             }
         }
 
-        public void AddRunCoins(int amount)
+        public void AddRunPoints(int amount)
         {
-            if (runCoinsText == null) return;
+            if (runPointsText == null) return;
 
-            if (int.TryParse(runCoinsText.text, out int current))
+            if (int.TryParse(runPointsText.text, out int current))
             {
                 current += amount;
-                runCoinsText.text = current.ToString();
+                runPointsText.text = current.ToString();
             }
             else
             {
-                runCoinsText.text = amount.ToString();
+                runPointsText.text = amount.ToString();
             }
         }
 
@@ -51,7 +51,7 @@ namespace UI
             if (GameController.Instance == null) return;
 
             SetHealth(GameController.Instance.GameHealth);
-            SetRunCoins(GameController.Instance.GameCoins);
+            SetRunPoints(GameController.Instance.GamePoints);
         }
 
         public void ForceRefresh()

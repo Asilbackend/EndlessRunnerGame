@@ -105,6 +105,9 @@ MonoBehaviour:
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  pointTriggerCenter: {x: 0, y: 1, z: 0}
+  pointTriggerSize: {x: 3, y: 2, z: 2}
+  pointTriggerZ: 1.7
 --- !u!114 &5353944280924143043
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
     public int GameHealth { get; private set; }
-    public int GameCoins { get; private set; } = 0;
+    public int GamePoints { get; private set; } = 0;
     public bool IsGameOver { get; private set; } = false;
     public float ReverseMultiplier { get; private set; } = 2;
 
@@ -47,18 +47,18 @@ public class GameController : MonoBehaviour
     {
         WorldManager = GetComponent<WorldManager>();
         SetHealth(_defaultHealth);
-        SetCoins(0);
+        SetPoints(0);
     }
 
-    public int GetCoins()
+    public int GetPoints()
     {
-        return GameCoins;
+        return GamePoints;
     }
 
-    public void SetCoins(int amount)
+    public void SetPoints(int amount)
     {
-        GameCoins = amount;
-        _uiManager.PlayerHUD?.SetRunCoins(GameCoins);
+        GamePoints = amount;
+        _uiManager.PlayerHUD?.SetRunPoints(GamePoints);
     }
 
     public int GetHealth()
@@ -86,7 +86,7 @@ public class GameController : MonoBehaviour
 
     public void ResetGame()
     {
-        GameCoins = 0;
+        GamePoints = 0;
         IsGameOver = false;
         _uiManager.PlayerHUD.RefreshFromGameManager();
         WorldManager.ResetWorld();
@@ -101,7 +101,7 @@ public class GameController : MonoBehaviour
 
     public void SaveProgress()
     {
-        _gameManager.SetPlayerCoins(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Coins, 0) + GameCoins);
+        _gameManager.SetPlayerPoints(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0) + GamePoints);
         //_gameManager.SetPlayerHealth(Health);
         _gameManager.IncrementGameNumber();
     }

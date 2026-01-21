@@ -410,6 +410,36 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void StopParticleSystems()
+    {
+        // Stop all particle systems on the player GameObject
+        ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>(true);
+        foreach (var ps in particleSystems)
+        {
+            if (ps != null)
+            {
+                var emission = ps.emission;
+                emission.enabled = false;
+                ps.Stop();
+            }
+        }
+    }
+
+    public void ResumeParticleSystems()
+    {
+        // Resume all particle systems on the player GameObject
+        ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>(true);
+        foreach (var ps in particleSystems)
+        {
+            if (ps != null)
+            {
+                var emission = ps.emission;
+                emission.enabled = true;
+                ps.Play();
+            }
+        }
+    }
+
     public void ResumeAnimationAndWheels()
     {
         if (_animator != null)

@@ -184,6 +184,11 @@ namespace Managers
             worldMover?.ResetSpeed();
             worldMover?.Resume();
             ResumeDynamicObstacles();
+            var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
+            if (player != null)
+            {
+                player.ResumeParticleSystems();
+            }
         }
 
         public void ResetToLastCheckpoint(float duration)
@@ -207,12 +212,32 @@ namespace Managers
             {
                 player.StopAnimationAndWheels();
             }
+            
+            // Reset obstacle positions to their original positions (especially for opposite direction obstacles)
+            ResetObstaclePositionsToOriginal();
+            
             yield return new WaitForSeconds(GameController.Instance.StartTime);
             worldMover?.Resume();
             ResumeDynamicObstacles();
             if (player != null)
             {
                 player.ResumeAnimationAndWheels();
+                player.ResumeParticleSystems();
+            }
+        }
+        
+        private void ResetObstaclePositionsToOriginal()
+        {
+            if (chunkSpawner != null)
+            {
+                var activeChunks = chunkSpawner.GetActiveChunks();
+                foreach (var composite in activeChunks)
+                {
+                    if (composite != null && composite.IsActive && composite.Chunk != null)
+                    {
+                        composite.Chunk.ResetObstaclePositions();
+                    }
+                }
             }
         }
         

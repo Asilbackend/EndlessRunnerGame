@@ -1,4 +1,5 @@
 using UnityEngine;
+using Utilities;
 
 namespace World
 {
@@ -57,7 +58,7 @@ namespace World
 
             if (GameController.Instance != null)
             {
-                GameController.Instance.SetCoins(GameController.Instance.GameCoins + scoreValue);
+                GameController.Instance.SetPoints(GameController.Instance.GamePoints + scoreValue);
             }
             
             OnDespawn();
@@ -69,6 +70,10 @@ namespace World
             
             if (other.CompareTag("Player"))
             {
+                // Spawn floating point text at collection point
+                Vector3 spawnPosition = other.ClosestPoint(transform.position);
+                FloatingPointTextSpawner.SpawnFloatingPointText(scoreValue, spawnPosition);
+                
                 OnCollided();
                 // camera powerup bounce
                 if (PlayerCameraController.Instance != null)

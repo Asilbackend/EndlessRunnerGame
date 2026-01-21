@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public enum PlayerPrefsKeys
 {
-    Coins,
+    Points,
     GameNumber,
     Health,
 }

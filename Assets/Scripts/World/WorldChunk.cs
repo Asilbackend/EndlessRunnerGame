@@ -212,7 +212,7 @@ namespace World
             }
         }
         
-        private void ResetObstaclePositions()
+        public void ResetObstaclePositions()
         {
             // Iterate over a copy of the dictionary entries to avoid potential modification issues
             foreach (var kvp in _originalObstaclePositions)

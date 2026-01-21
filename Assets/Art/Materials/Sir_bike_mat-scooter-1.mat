@@ -35,15 +35,15 @@ Material:
     m_Ints: []
     m_Floats:
     - _EarthRadius: -400
-    - _FadeStart: 70
+    - _FadeStart: 40
     - _LightIntensity: 3
     - _RimPower: 0
     - _RimStrength: 0
-    - _Steps: 5
+    - _Steps: 4
     m_Colors:
     - _RevealColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 0.31446534, g: 0.31446534, b: 0.31446534, a: 0.45882353}
+    - _ShadowColor: {r: 0.408805, g: 0.408805, b: 0.408805, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &5268878440852141354

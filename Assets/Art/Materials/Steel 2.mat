@@ -105,7 +105,7 @@ Material:
     - _EmmissionDarkLevel: 1
     - _EnvironmentReflections: 1
     - _FadeEnd: 150
-    - _FadeStart: 70
+    - _FadeStart: 40
     - _Feather: 5
     - _GlossMapScale: 1
     - _Glossiness: 0.629
@@ -128,7 +128,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Steps: 5
+    - _Steps: 4
     - _Surface: 0
     - _UVSec: 0
     - _WorkflowMode: 1
@@ -141,7 +141,7 @@ Material:
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RevealColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 0.31446534, g: 0.31446534, b: 0.31446534, a: 0.45882353}
+    - _ShadowColor: {r: 0.408805, g: 0.408805, b: 0.408805, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _TilingOffset: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

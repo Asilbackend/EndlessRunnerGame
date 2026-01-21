@@ -29,6 +29,11 @@ namespace World
         [SerializeField] private float lookAheadDistance = 2f;
         [SerializeField] private LayerMask obstacleLayerMask = -1; // Check all layers by default
 
+        [Header("Point Trigger")]
+        [SerializeField] private Vector3 pointTriggerCenter = new Vector3(0, 1f, 0);
+        [SerializeField] private Vector3 pointTriggerSize = new Vector3(3f, 2f, 2f);
+        [SerializeField] private float pointTriggerZ = 2;
+
         private float activationDistance = 60f;
         private WorldChunk _parentChunk;
         private bool isActive = true;
@@ -48,6 +53,8 @@ namespace World
         private float _startMovingAtMeters = 0f; // n meters - when obstacle starts moving
         private float _chunkStartZ = 0f;
         private bool _forceStartMoving = false;
+        private ObstaclePointTrigger _pointTrigger;
+        private Collider _pointTriggerCollider; // Cached reference for performance
 
         // Formula = _moveSpeed * (activationDistance / (worldSpeed - _moveSpeed))
 
@@ -76,6 +83,12 @@ namespace World
             
             _originalMoveSpeed = _moveSpeed;
             _isDynamic = Mathf.Abs(_moveSpeed) > 0f;
+            
+            // Create point trigger for dynamic obstacles
+            if (_isDynamic)
+            {
+                CreatePointTrigger();
+            }
         }
 
         public void SetActivationParameters(float chunkStartZ, float startMovingAtMeters)
@@ -109,6 +122,57 @@ namespace World
             {
                 ConfigureFromObjectData(_configuredObjectData);
             }
+            
+            // Ensure trigger is created if obstacle is dynamic
+            if (_isDynamic && _pointTrigger == null)
+            {
+                CreatePointTrigger();
+            }
+        }
+        
+        private void CreatePointTrigger()
+        {
+            // Don't create if already exists
+            if (_pointTrigger != null) return;
+            
+            // Check if trigger already exists as child
+            _pointTrigger = GetComponentInChildren<ObstaclePointTrigger>();
+            if (_pointTrigger != null) return;
+            
+            // Create trigger GameObject
+            GameObject triggerObject = new GameObject("PointTrigger");
+            triggerObject.transform.SetParent(transform);
+            triggerObject.transform.localRotation = Quaternion.identity;
+            
+            // Add collider component
+            BoxCollider triggerCollider = triggerObject.AddComponent<BoxCollider>();
+            triggerCollider.isTrigger = true;
+            
+            // Cache the collider reference for performance
+            _pointTriggerCollider = triggerCollider;
+            
+            // Position trigger based on obstacle direction using serialized fields
+            Vector3 triggerPosition = pointTriggerCenter;
+            
+            if (isOppositeDirection)
+            {
+                // For opposite direction obstacles, place trigger in front (positive Z)
+                triggerPosition.z = pointTriggerCenter.z + pointTriggerZ;
+            }
+            else
+            {
+                // For normal dynamic obstacles, place trigger at the back (negative Z)
+                triggerPosition.z = pointTriggerCenter.z - pointTriggerZ;
+            }
+            
+            triggerObject.transform.localPosition = triggerPosition;
+            
+            // Set trigger size using serialized field
+            triggerCollider.size = pointTriggerSize;
+            triggerCollider.center = Vector3.zero; // Center is relative to the trigger object
+            
+            // Add ObstaclePointTrigger component
+            _pointTrigger = triggerObject.AddComponent<ObstaclePointTrigger>();
         }
 
         private void Update()
@@ -231,6 +295,12 @@ namespace World
             _isMoving = false;
             _isBlocked = false;
             _forceStartMoving = false;
+            
+            // Reset point trigger if it exists
+            if (_pointTrigger != null)
+            {
+                _pointTrigger.ResetTrigger();
+            }
         }
 
         public void Pause()
@@ -258,7 +328,18 @@ namespace World
             if (!_isDynamic) return;
             if (_isReversed) return;
             _isReversed = true;
-            _moveSpeed = -Mathf.Abs(_originalMoveSpeed) * GameController.Instance.ReverseMultiplier;
+            
+            // For opposite direction obstacles, reverse means moving forward (positive speed)
+            // For normal obstacles, reverse means moving backward (negative speed)
+            if (isOppositeDirection)
+            {
+                _moveSpeed = Mathf.Abs(_originalMoveSpeed) * GameController.Instance.ReverseMultiplier;
+            }
+            else
+            {
+                _moveSpeed = -Mathf.Abs(_originalMoveSpeed) * GameController.Instance.ReverseMultiplier;
+            }
+            
             _isPaused = false;
             _isMoving = true;
         }
@@ -275,6 +356,12 @@ namespace World
         public void OnDespawn()
         {
             isActive = false;
+            
+            // Reset point trigger if it exists
+            if (_pointTrigger != null)
+            {
+                _pointTrigger.ResetTrigger();
+            }
 
             if (destroyOnDespawn)
             {
@@ -291,9 +378,26 @@ namespace World
             if (!isActive) return;
             if (other.CompareTag("Player"))
             {
-                // Spawn impact particle effect at collision point using centralized system
+                // Check if player is actually touching the obstacle's main collider, not just the point trigger
+                if (_collider != null && _pointTriggerCollider != null)
+                {
+                    Bounds obstacleBounds = _collider.bounds;
+                    Bounds playerBounds = other.bounds;
+                    
+                    if (!obstacleBounds.Intersects(playerBounds))
+                    {
+                        return;
+                    }
+                }
+                
                 Vector3 impactPosition = other.ClosestPoint(transform.position);
                 ParticleEffectSpawner.SpawnParticleEffect(ParticleEffectType.ObstacleImpact, impactPosition);
+
+                // Stop player particle systems
+                if (GameController.Instance != null && GameController.Instance.PlayerController != null)
+                {
+                    GameController.Instance.PlayerController.StopParticleSystems();
+                }
 
                 OnCollided();
                 if (destroyOnDespawn) Destroy(gameObject);

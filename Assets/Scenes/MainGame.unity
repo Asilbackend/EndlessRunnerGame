@@ -581,6 +581,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1568674555 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7324013374855080035, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
+  m_PrefabInstance: {fileID: 1441492359151872456}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1688873189
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,6 +699,7 @@ GameObject:
   - component: {fileID: 2005647265}
   - component: {fileID: 2005647266}
   - component: {fileID: 2005647267}
+  - component: {fileID: 2005647268}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -761,7 +773,7 @@ MonoBehaviour:
   FadeStart: 40
   FadeEnd: 150
   RevealColor: {r: 1, g: 1, b: 1, a: 1}
-  ShadowColor: {r: 0, g: 0, b: 0, a: 1}
+  ShadowColor: {r: 0.408805, g: 0.408805, b: 0.408805, a: 1}
   Steps: 4
   LightIntensity: 3
   RimPower: 0
@@ -778,6 +790,19 @@ MonoBehaviour:
   RimPowerProp: _RimPower
   RimStrengthProp: _RimStrength
   RimColorProp: _RimColor
+--- !u!114 &2005647268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005647263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61d4b10fee450e4face13928f4a00db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Utilities.FloatingPointTextSpawner
+  floatingPointTextPrefab: {fileID: 2549256949132839668, guid: 04d07f2dc6783014fac0d2389e7cabd0, type: 3}
 --- !u!1001 &1441492359151872456
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -786,6 +811,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1498264086}
     m_Modifications:
+    - target: {fileID: 50614491165172643, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
+      propertyPath: runPointsText
+      value: 
+      objectReference: {fileID: 1568674555}
+    - target: {fileID: 1388559901640161183, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
+      propertyPath: m_Name
+      value: Point
+      objectReference: {fileID: 0}
     - target: {fileID: 5137303284852723350, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -866,9 +899,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7324013374855080035, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: b321d5f27e1828a4d9f1047227faca2e, type: 2}
+    - target: {fileID: 7324013374855080035, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 9215133973994174857, guid: b321d5f27e1828a4d9f1047227faca2e, type: 2}
+    - target: {fileID: 7324013374855080035, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7792141763996189829, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
       propertyPath: m_Name
       value: HUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822991382568430529, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: b321d5f27e1828a4d9f1047227faca2e, type: 2}
+    - target: {fileID: 8822991382568430529, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 9215133973994174857, guid: b321d5f27e1828a4d9f1047227faca2e, type: 2}
+    - target: {fileID: 8822991382568430529, guid: 95dcfbb45d9f5c140a3cda3189c47c58, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -897,6 +954,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3272077008503605383, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
       propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5025212966178356482, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
+      propertyPath: playableObjectName
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6669171630128160903, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
