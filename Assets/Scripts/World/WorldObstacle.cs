@@ -181,48 +181,55 @@ namespace World
 
             if (_isDynamic)
             {
-                // Handle opposite direction obstacles
-                if (isOppositeDirection)
+                // When reversed, skip activation checks and just move (time is going backwards)
+                if (!_isReversed)
                 {
-                    // If forced to start moving, skip player check
-                    if (_forceStartMoving)
+                    // Handle opposite direction obstacles
+                    if (isOppositeDirection)
                     {
-                        _isMoving = true;
+                        // If forced to start moving, skip player check
+                        if (_forceStartMoving)
+                        {
+                            _isMoving = true;
+                        }
+                        else
+                        {
+                            var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
+                            if (player != null && !_isMoving)
+                            {
+                                // Check if player has reached the n meter mark in the chunk
+                                float playerZ = player.transform.position.z;
+                                float distanceIntoChunk = playerZ - _chunkStartZ;
+                                
+                                if (distanceIntoChunk >= _startMovingAtMeters)
+                                {
+                                    _isMoving = true;
+                                }
+                            }
+                        }
                     }
                     else
                     {
+                        // Normal forward direction obstacles
                         var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
                         if (player != null && !_isMoving)
                         {
-                            // Check if player has reached the n meter mark in the chunk
-                            float playerZ = player.transform.position.z;
-                            float distanceIntoChunk = playerZ - _chunkStartZ;
-                            
-                            if (distanceIntoChunk >= _startMovingAtMeters)
+                            float distanceAhead = transform.position.z - player.transform.position.z;
+                            if (distanceAhead <= activationDistance)
                             {
                                 _isMoving = true;
                             }
                         }
                     }
                 }
-                else
-                {
-                    // Normal forward direction obstacles
-                    var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
-                    if (player != null && !_isMoving)
-                    {
-                        float distanceAhead = transform.position.z - player.transform.position.z;
-                        if (distanceAhead <= activationDistance)
-                        {
-                            _isMoving = true;
-                        }
-                    }
-                }
 
-                // Check for obstacles in front before moving
+                // Check for obstacles in front before moving (skip when reversed - time is going backwards)
                 if (_isMoving && !_isBlocked)
                 {
-                    _isBlocked = CheckForObstacleInFront();
+                    if (!_isReversed)
+                    {
+                        _isBlocked = CheckForObstacleInFront();
+                    }
                     if (!_isBlocked)
                     {
                         MoveWithWorld();
@@ -274,10 +281,23 @@ namespace World
         {
             if (isOppositeDirection)
             {
-                transform.Translate(Vector3.back * Mathf.Abs(_moveSpeed) * Time.deltaTime, Space.World);
+                // For opposite direction obstacles:
+                // Normal: negative speed, moves backward (Vector3.back)
+                // Reversed: positive speed, moves forward (Vector3.forward) to reverse time
+                if (_isReversed)
+                {
+                    transform.Translate(Vector3.forward * _moveSpeed * Time.deltaTime, Space.World);
+                }
+                else
+                {
+                    transform.Translate(Vector3.back * Mathf.Abs(_moveSpeed) * Time.deltaTime, Space.World);
+                }
             }
             else
             {
+                // For normal obstacles:
+                // Normal: positive speed, moves forward (Vector3.forward)
+                // Reversed: negative speed, moves backward (Vector3.back) to reverse time
                 transform.Translate(Vector3.forward * _moveSpeed * Time.deltaTime, Space.World);
             }
         }

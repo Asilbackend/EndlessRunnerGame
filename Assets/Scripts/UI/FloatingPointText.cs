@@ -16,11 +16,13 @@ namespace UI
         [SerializeField] private float lifetime = 1.5f;
         [SerializeField] private AnimationCurve floatCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         [SerializeField] private AnimationCurve fadeCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
+        [SerializeField] private float horizontalRandomRange = 50f; // Random horizontal movement range
         
         private TextMeshProUGUI _textMesh;
         private RectTransform _rectTransform;
         private Vector2 _startPosition;
         private Coroutine _animationCoroutine;
+        private float _randomHorizontalOffset;
 
         private void Awake()
         {
@@ -57,6 +59,9 @@ namespace UI
             
             // Store start position
             _startPosition = _rectTransform.anchoredPosition;
+            
+            // Generate random horizontal offset for this instance
+            _randomHorizontalOffset = Random.Range(-horizontalRandomRange, horizontalRandomRange);
             
             // Start animation
             gameObject.SetActive(true);
@@ -129,6 +134,7 @@ namespace UI
         {
             float elapsedTime = 0f;
             float startY = _startPosition.y;
+            float startX = _startPosition.x;
             
             while (elapsedTime < lifetime)
             {
@@ -138,7 +144,12 @@ namespace UI
                 // Animate position using curve
                 float curveValue = floatCurve.Evaluate(normalizedTime);
                 float newY = startY + (floatSpeed * curveValue);
-                _rectTransform.anchoredPosition = new Vector2(_startPosition.x, newY);
+                
+                // Add slight random horizontal movement (sine wave for smooth oscillation)
+                float horizontalOffset = _randomHorizontalOffset * Mathf.Sin(normalizedTime * Mathf.PI * 2f);
+                float newX = startX + horizontalOffset;
+                
+                _rectTransform.anchoredPosition = new Vector2(newX, newY);
                 
                 // Animate fade using curve
                 float alpha = fadeCurve.Evaluate(normalizedTime);

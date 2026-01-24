@@ -212,10 +212,6 @@ namespace Managers
             {
                 player.StopAnimationAndWheels();
             }
-            
-            // Reset obstacle positions to their original positions (especially for opposite direction obstacles)
-            ResetObstaclePositionsToOriginal();
-            
             yield return new WaitForSeconds(GameController.Instance.StartTime);
             worldMover?.Resume();
             ResumeDynamicObstacles();
@@ -223,21 +219,6 @@ namespace Managers
             {
                 player.ResumeAnimationAndWheels();
                 player.ResumeParticleSystems();
-            }
-        }
-        
-        private void ResetObstaclePositionsToOriginal()
-        {
-            if (chunkSpawner != null)
-            {
-                var activeChunks = chunkSpawner.GetActiveChunks();
-                foreach (var composite in activeChunks)
-                {
-                    if (composite != null && composite.IsActive && composite.Chunk != null)
-                    {
-                        composite.Chunk.ResetObstaclePositions();
-                    }
-                }
             }
         }
         
