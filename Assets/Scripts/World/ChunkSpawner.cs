@@ -58,6 +58,12 @@ namespace World
 
         private void Update()
         {
+            // Update player z position from actual player transform
+            if (GameController.Instance != null && GameController.Instance.PlayerController != null)
+            {
+                playerZPosition = GameController.Instance.PlayerController.transform.position.z;
+            }
+            
             while (_activeChunks.Count < chunksToKeepAhead || 
                    (_activeChunks.Count > 0 && _activeChunks[_activeChunks.Count - 1].EndZ < playerZPosition + spawnDistanceAhead))
             {
@@ -86,6 +92,9 @@ namespace World
                 return;
             }
 
+            // Check if this is the first chunk (empty chunk with only road and decoration)
+            bool isFirstChunk = _activeChunks.Count == 0;
+
             // Get road prefab
             GameObject roadPrefab = chosenLayout.roadPrefab;
             if (roadPrefab == null && defaultChunkLayout != null)
@@ -93,11 +102,15 @@ namespace World
                 roadPrefab = defaultChunkLayout.roadPrefab;
             }
 
-            // Get random chunk prefab (obstacles & collectibles)
-            GameObject chunkPrefab = chosenLayout.GetRandomChunkPrefab();
-            if (chunkPrefab == null && defaultChunkLayout != null)
+            // Get random chunk prefab (obstacles & collectibles) - skip for first chunk
+            GameObject chunkPrefab = null;
+            if (!isFirstChunk)
             {
-                chunkPrefab = defaultChunkLayout.GetRandomChunkPrefab();
+                chunkPrefab = chosenLayout.GetRandomChunkPrefab();
+                if (chunkPrefab == null && defaultChunkLayout != null)
+                {
+                    chunkPrefab = defaultChunkLayout.GetRandomChunkPrefab();
+                }
             }
 
             // Get random decoration prefab
@@ -128,13 +141,45 @@ namespace World
                 decoration = _decorationPool.GetDecoration(decorationPrefab);
             }
 
+            // Calculate chunk length from components (for first chunk positioning)
+            // Use max of all available lengths (road, chunk, decoration)
+            float chunkLength = 0f;
+            
+            // Check instantiated components first
+            if (road != null) chunkLength = Mathf.Max(chunkLength, road.RoadLength);
+            if (chunk != null) chunkLength = Mathf.Max(chunkLength, chunk.ChunkLength);
+            if (decoration != null) chunkLength = Mathf.Max(chunkLength, decoration.DecorationLength);
+            
+            // Also check prefabs for any components we don't have yet (to get accurate max length)
+            if (road == null && roadPrefab != null)
+            {
+                Road roadComponent = roadPrefab.GetComponent<Road>();
+                if (roadComponent != null) chunkLength = Mathf.Max(chunkLength, roadComponent.RoadLength);
+            }
+            if (chunk == null && chunkPrefab != null)
+            {
+                WorldChunk chunkComponent = chunkPrefab.GetComponent<WorldChunk>();
+                if (chunkComponent != null) chunkLength = Mathf.Max(chunkLength, chunkComponent.ChunkLength);
+            }
+            if (decoration == null && decorationPrefab != null)
+            {
+                Decoration decorationComponent = decorationPrefab.GetComponent<Decoration>();
+                if (decorationComponent != null) chunkLength = Mathf.Max(chunkLength, decorationComponent.DecorationLength);
+            }
+
             // Create composite container
             GameObject compositeObj = new GameObject("ChunkComposite");
             compositeObj.transform.SetParent(_compositeContainer.transform);
             WorldChunkComposite composite = compositeObj.AddComponent<WorldChunkComposite>();
 
             float spawnZ = 0;
-            if (_activeChunks.Count > 0)
+            if (isFirstChunk)
+            {
+                // First chunk starts at -(chunkLength - 60) so player at z=0 is positioned at z=40 within the chunk
+                // Example: if chunkLength=100, spawnZ=-(100-60)=-40, so chunk spans from z=-40 to z=60, player at z=0 is 40 units into the chunk
+                spawnZ = -(chunkLength - 60f);
+            }
+            else if (_activeChunks.Count > 0)
             {
                 WorldChunkComposite lastComposite = _activeChunks[_activeChunks.Count - 1];
                 spawnZ = lastComposite.EndZ;

@@ -116,12 +116,14 @@ MonoBehaviour:
   RightLane: {fileID: 3810386476637832776}
   laneRandomizationMode: 1
   oppositeDynamicObstacleConfigs:
-  - signAppearAtMeters: 10
+  - signAppearAtMeters: 30
     obstacleStartAtMeters: 40
     lane: -1
   dynamicObstaclesContainer: {fileID: 11400000, guid: 19c06956829383c4cac16f0dbfb5bd77, type: 2}
   warningSignPrefab: {fileID: 620278877519765559, guid: bb2f302ef51824e448be5d64f418b8cb, type: 3}
   oppositeObstacleSpeed: 40
+  showOppositeObstacleGizmos: 1
+  worldSpeed: 20
 --- !u!1 &6991823088606842219
 GameObject:
   m_ObjectHideFlags: 0

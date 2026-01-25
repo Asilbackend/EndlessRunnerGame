@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Managers;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace World
 {
@@ -25,6 +28,12 @@ namespace World
         [SerializeField] private GameObject warningSignPrefab;
         [Tooltip("Speed for all opposite dynamic obstacles (normalized)")]
         [SerializeField] private float oppositeObstacleSpeed = 10f;
+        [Tooltip("Activation distance - distance ahead where obstacle spawns relative to obstacleStartAtMeters")]
+        [SerializeField] private float activationDistance = 60f;
+        
+        [Header("Gizmo Settings")]
+        [SerializeField] private bool showOppositeObstacleGizmos = true;
+        [SerializeField] private float worldSpeed = 20f;
 
 
         private Transform chunkStartPoint;
@@ -319,6 +328,7 @@ namespace World
                     dynamicObstaclesContainer,
                     warningSignPrefab,
                     oppositeObstacleSpeed,
+                    activationDistance,
                     _currentZPosition,
                     EndZ
                 );
@@ -363,6 +373,71 @@ namespace World
                     Gizmos.DrawLine(start + new Vector3(worldManager.GetLaneXPosition(LaneNumber.Center), 0, 0), end + new Vector3(worldManager.GetLaneXPosition(LaneNumber.Center), 0, 0));
                     Gizmos.DrawLine(start + new Vector3(worldManager.GetLaneXPosition(LaneNumber.Right), 0, 0), end + new Vector3(worldManager.GetLaneXPosition(LaneNumber.Right), 0, 0));
                 }
+            }
+            
+            // Draw gizmos for opposite dynamic obstacles
+            if (showOppositeObstacleGizmos && oppositeDynamicObstacleConfigs != null && oppositeDynamicObstacleConfigs.Length > 0)
+            {
+                DrawOppositeObstacleGizmos();
+            }
+        }
+        
+        private void DrawOppositeObstacleGizmos()
+        {
+            float chunkStartZ = transform.position.z;
+            float chunkEndZ = chunkStartZ + chunkLength;
+            
+            // Get lane X positions (use WorldManager if available, otherwise use local transforms)
+            WorldManager worldManager = GameController.Instance != null ? GameController.Instance.WorldManager : null;
+            
+            foreach (var config in oppositeDynamicObstacleConfigs)
+            {
+                if (config == null || !config.IsValid()) continue;
+                
+                // Get lane X position
+                float laneX = 0f;
+                if (worldManager != null)
+                {
+                    laneX = worldManager.GetLaneXPosition(config.lane);
+                }
+                else
+                {
+                    laneX = GetRandomizedLaneXPosition(config.lane);
+                }
+                
+                float obstacleSpawnZ = chunkStartZ + activationDistance + config.obstacleStartAtMeters;
+                float playerStartZ = chunkStartZ + config.obstacleStartAtMeters;
+                float distanceWhenStarts = activationDistance;
+                float relativeSpeed = worldSpeed + oppositeObstacleSpeed;
+                
+                if (relativeSpeed <= 0) continue; // They'll never meet
+                
+                float timeToMeet = distanceWhenStarts / relativeSpeed;
+                float obstacleTravelDistance = oppositeObstacleSpeed * timeToMeet;
+                float meetingZ = obstacleSpawnZ - obstacleTravelDistance;
+                
+                // Draw obstacle spawn position
+                Vector3 spawnPos = new Vector3(laneX, 0, obstacleSpawnZ);
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawWireSphere(spawnPos, 0.5f);
+                
+                // Draw meeting point
+                Vector3 meetingPoint = new Vector3(laneX, 0, meetingZ);
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireSphere(meetingPoint, 1f);
+                
+                // Draw line from spawn to meeting point
+                Gizmos.DrawLine(spawnPos, meetingPoint);
+                
+                // Draw line showing where obstacle starts moving (player position when obstacle activates)
+                Vector3 startMovingPos = new Vector3(laneX, 0, playerStartZ);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireCube(startMovingPos, new Vector3(2f, 0.5f, 0.5f));
+                
+                // Draw label
+                #if UNITY_EDITOR
+                Handles.Label(meetingPoint + Vector3.up * 2f, $"Lane {config.lane}: Z = {meetingZ:F1}");
+                #endif
             }
         }
     }

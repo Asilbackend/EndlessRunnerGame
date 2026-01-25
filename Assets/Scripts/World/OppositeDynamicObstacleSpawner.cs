@@ -9,6 +9,7 @@ namespace World
         private ObjectsContainerSO _dynamicObstaclesContainer;
         private GameObject _warningSignPrefab;
         private float _oppositeObstacleSpeed;
+        private float _activationDistance;
         private float _chunkStartZ;
         private float _chunkEndZ;
         private LaneNumber _lane;
@@ -24,6 +25,7 @@ namespace World
             ObjectsContainerSO dynamicObstaclesContainer,
             GameObject warningSignPrefab,
             float oppositeObstacleSpeed,
+            float activationDistance,
             float chunkStartZ,
             float chunkEndZ)
         {
@@ -31,10 +33,12 @@ namespace World
             _dynamicObstaclesContainer = dynamicObstaclesContainer;
             _warningSignPrefab = warningSignPrefab;
             _oppositeObstacleSpeed = oppositeObstacleSpeed;
+            _activationDistance = activationDistance;
             _chunkStartZ = chunkStartZ;
             _chunkEndZ = chunkEndZ;
             _lane = config.lane;
             _obstacleSpawned = false;
+            _signSpawned = false;
 
         }
 
@@ -138,13 +142,16 @@ namespace World
 
             // Get randomized lane X position (respects lane randomization mode)
             float laneX = parentChunk.GetRandomizedLaneXPosition(_lane);
-            float chunkLength = parentChunk.ChunkLength;
             
-            Vector3 obstacleLocalPosition = new Vector3(laneX, 0, chunkLength);
+            // Spawn obstacle at activationDistance + obstacleStartAtMeters from chunk start
+            float obstacleSpawnZ = _activationDistance + _config.obstacleStartAtMeters;
+            Vector3 obstacleLocalPosition = new Vector3(laneX, 0, obstacleSpawnZ);
 
             _spawnedObstacle = Instantiate(objectData.objectPrefab, transform);
             _spawnedObstacle.transform.localPosition = obstacleLocalPosition;
             _spawnedObstacle.name = $"OppositeDynamicObstacle_{_lane}_{_config.obstacleStartAtMeters}m";
+            
+            _spawnedObstacle.SetActive(true);
 
             // Add WorldObstacle component if not present and configure as opposite direction
             WorldObstacle obstacle = _spawnedObstacle.GetComponent<WorldObstacle>();
@@ -185,7 +192,9 @@ namespace World
                 _spawnedWarningSign = null;
             }
 
+            _warningSignComponent = null;
             _obstacleSpawned = false;
+            _signSpawned = false;
         }
     }
 }

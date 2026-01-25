@@ -14,9 +14,11 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jump")]
     [Tooltip("Initial upward velocity applied when jumping. Tune this value to adjust jump height.")]
-    [SerializeField] private float jumpVelocity = 6f;
+    [SerializeField] private float jumpVelocity = 8f;
     [Tooltip("Gravity applied to the player (negative value). Tune to change fall speed.")]
-    [SerializeField] private float gravity = -20f;
+    [SerializeField] private float gravity = -30f;
+    [Tooltip("Additional gravity multiplier when falling (after reaching peak height). Makes falling faster.")]
+    [SerializeField] private float fallGravityMultiplier = 4f;
 
     [Tooltip("Speed at which velocity values smoothly transition (for velocity-based mode)")]
     [SerializeField] private float velocitySmoothingSpeed = 10f;
@@ -88,11 +90,11 @@ public class PlayerController : MonoBehaviour
         _lanePositions[1] = _gameController.WorldManager.GetLaneXPosition(LaneNumber.Center);
         _lanePositions[2] = _gameController.WorldManager.GetLaneXPosition(LaneNumber.Right);
 
-        // set initial target position to current lane's x
-        _targetPosition = new Vector3(_lanePositions[_currentLaneIndex], transform.position.y, transform.position.z);
-
         // snap player to center lane on start
         transform.position = new Vector3(_lanePositions[_currentLaneIndex], transform.position.y, transform.position.z);
+
+        // set initial target position to current lane's x
+        _targetPosition = new Vector3(_lanePositions[_currentLaneIndex], transform.position.y, transform.position.z);
 
         // record ground Y (assume starting on ground)
         _groundY = transform.position.y;
@@ -112,7 +114,13 @@ public class PlayerController : MonoBehaviour
             return;
         SmoothMoveToTargetLane();
         ApplyGravityAndJump();
-        HandleInput();
+        
+        // Only allow input if the world is moving forward (not paused or reversing)
+        if (IsWorldMoving())
+        {
+            HandleInput();
+        }
+        
         if (_animatorMode == AnimatorMode.PositionBased)
         {
             if (_isReversing)
@@ -236,6 +244,15 @@ public class PlayerController : MonoBehaviour
         return new Vector2(normalizedx, normalizedy);
     }
 
+    private bool IsWorldMoving()
+    {
+        if (_gameController?.WorldManager == null)
+            return false;
+        
+        // World is moving if speed is positive (forward movement)
+        return _gameController.WorldManager.GetCurrentSpeed() > 0f;
+    }
+
     private void TryChangeLane(int direction)
     {
         int desired = Mathf.Clamp(_currentLaneIndex + direction, 0, 2);
@@ -281,13 +298,19 @@ public class PlayerController : MonoBehaviour
         {
             _verticalVelocity = jumpVelocity;
             _isGrounded = false;
+            StopParticleSystems(); // Stop particles when jumping
         }
     }
 
     private void ApplyGravityAndJump()
     {
-        // apply gravity
-        _verticalVelocity += gravity * Time.deltaTime;
+        // apply gravity - stronger when falling (after reaching peak height)
+        float currentGravity = gravity;
+        if (_verticalVelocity < 0f) // falling
+        {
+            currentGravity *= fallGravityMultiplier;
+        }
+        _verticalVelocity += currentGravity * Time.deltaTime;
 
         float newY = transform.position.y + _verticalVelocity * Time.deltaTime;
 
@@ -306,6 +329,8 @@ public class PlayerController : MonoBehaviour
                 {
                     cam.TriggerLandingBounce();
                 }
+                
+                ResumeParticleSystems(); // Resume particles when landing
             }
             
             newY = _groundY;
@@ -427,6 +452,7 @@ public class PlayerController : MonoBehaviour
 
     public void ResumeParticleSystems()
     {
+            
         // Resume all particle systems on the player GameObject
         ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>(true);
         foreach (var ps in particleSystems)
