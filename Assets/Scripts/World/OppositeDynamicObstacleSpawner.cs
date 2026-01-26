@@ -9,10 +9,12 @@ namespace World
         private ObjectsContainerSO _dynamicObstaclesContainer;
         private GameObject _warningSignPrefab;
         private float _oppositeObstacleSpeed;
+        private float _worldSpeed;
         private float _activationDistance;
         private float _chunkStartZ;
         private float _chunkEndZ;
         private LaneNumber _lane;
+        private float _calculatedSignAppearAtMeters;
         
         private GameObject _spawnedObstacle;
         private GameObject _spawnedWarningSign;
@@ -25,6 +27,7 @@ namespace World
             ObjectsContainerSO dynamicObstaclesContainer,
             GameObject warningSignPrefab,
             float oppositeObstacleSpeed,
+            float worldSpeed,
             float activationDistance,
             float chunkStartZ,
             float chunkEndZ)
@@ -33,6 +36,7 @@ namespace World
             _dynamicObstaclesContainer = dynamicObstaclesContainer;
             _warningSignPrefab = warningSignPrefab;
             _oppositeObstacleSpeed = oppositeObstacleSpeed;
+            _worldSpeed = worldSpeed;
             _activationDistance = activationDistance;
             _chunkStartZ = chunkStartZ;
             _chunkEndZ = chunkEndZ;
@@ -40,6 +44,33 @@ namespace World
             _obstacleSpawned = false;
             _signSpawned = false;
 
+            // Calculate meeting point and sign appear position
+            CalculateSignAppearPosition();
+        }
+        
+        private void CalculateSignAppearPosition()
+        {
+            // Calculate meeting point using same formula as gizmos
+            float obstacleSpawnZ = _chunkStartZ + _activationDistance + _config.obstacleStartAtMeters;
+            float distanceWhenStarts = _activationDistance;
+            float relativeSpeed = _worldSpeed + _oppositeObstacleSpeed;
+            
+            if (relativeSpeed <= 0)
+            {
+                // They'll never meet, use a default value
+                _calculatedSignAppearAtMeters = 0f;
+                return;
+            }
+            
+            float timeToMeet = distanceWhenStarts / relativeSpeed;
+            float obstacleTravelDistance = _oppositeObstacleSpeed * timeToMeet;
+            float meetingZ = obstacleSpawnZ - obstacleTravelDistance;
+            
+            // Sign appears metersBeforeImpact before the meeting point
+            float signAppearZ = meetingZ - _config.metersBeforeImpact;
+            
+            // Convert to distance from chunk start
+            _calculatedSignAppearAtMeters = signAppearZ - _chunkStartZ;
         }
 
         public void UpdateChunkPosition(float chunkStartZ, float chunkEndZ)
@@ -47,10 +78,20 @@ namespace World
             _chunkStartZ = chunkStartZ;
             _chunkEndZ = chunkEndZ;
             
+            // Recalculate sign appear position for new chunk position
+            CalculateSignAppearPosition();
+            
             // Update warning sign chunk start position if it exists
             if (_warningSignComponent != null)
             {
                 _warningSignComponent.UpdateChunkStartZ(_chunkStartZ);
+                // Update the sign appear/disappear meters based on new calculation
+                WorldChunk parentChunk = GetComponentInParent<WorldChunk>();
+                if (parentChunk != null)
+                {
+                    float chunkLength = parentChunk.ChunkLength;
+                    _warningSignComponent.Initialize(_chunkStartZ, chunkLength, _calculatedSignAppearAtMeters, chunkLength);
+                }
             }
         }
 
@@ -98,8 +139,8 @@ namespace World
                 _warningSignComponent = _spawnedWarningSign.AddComponent<OppositeDynamicObstacleWarningSign>();
             }
 
-            // Initialize sign to be visible from beginning (0m) to end (chunkLength) of chunk
-            _warningSignComponent.Initialize(_chunkStartZ, chunkLength, 0f, chunkLength);
+            // Initialize sign to be visible from calculated appear position to end of chunk
+            _warningSignComponent.Initialize(_chunkStartZ, chunkLength, _calculatedSignAppearAtMeters, chunkLength);
             
         }
 
@@ -113,7 +154,7 @@ namespace World
 
             float playerZ = player.transform.position.z;
             float distanceIntoChunk = playerZ - _chunkStartZ;
-            if (!_signSpawned && distanceIntoChunk >= _config.signAppearAtMeters)
+            if (!_signSpawned)
             {
                 SpawnWarningSign();
             }

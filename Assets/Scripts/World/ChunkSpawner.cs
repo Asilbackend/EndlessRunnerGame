@@ -21,6 +21,13 @@ namespace World
         private WorldManager worldManager;
         private List<WorldChunkComposite> _activeChunks = new List<WorldChunkComposite>();
         private GameObject _compositeContainer;
+        
+        // Level generation tracking
+        private int _currentChunkIndex = 0;
+        private const int LEVELS_PER_CYCLE = 10;
+        private List<Difficulty> _currentCycleDifficulties = new List<Difficulty>();
+        private int _currentCycleIndex = 0;
+        private HashSet<GameObject> _usedChunksInCycle = new HashSet<GameObject>();
 
         private void Awake()
         {
@@ -64,10 +71,17 @@ namespace World
                 playerZPosition = GameController.Instance.PlayerController.transform.position.z;
             }
             
+            int chunksBeforeSpawn = _activeChunks.Count;
             while (_activeChunks.Count < chunksToKeepAhead || 
                    (_activeChunks.Count > 0 && _activeChunks[_activeChunks.Count - 1].EndZ < playerZPosition + spawnDistanceAhead))
             {
                 SpawnChunk();
+                if (_activeChunks.Count == chunksBeforeSpawn)
+                {
+                    Debug.LogWarning("ChunkSpawner: SpawnChunk() failed to add a chunk, breaking spawn loop");
+                    break;
+                }
+                chunksBeforeSpawn = _activeChunks.Count;
             }
 
             DespawnPassedChunks();
@@ -75,10 +89,52 @@ namespace World
 
         private void SpawnInitialChunks()
         {
+            InitializeLevelCycle();
             for (int i = 0; i < chunksToKeepAhead; i++)
             {
                 SpawnChunk();
             }
+        }
+
+        private void InitializeLevelCycle()
+        {
+            // Pattern: Level 1 = Easy, Levels 2-7 = Random Easy/Medium (3 Easy + 3 Medium), Levels 8-9 = Hard, Level 10 = Extreme
+            _currentCycleDifficulties.Clear();
+            
+            // Level 1: Always Easy
+            _currentCycleDifficulties.Add(Difficulty.Easy);
+            
+            // Levels 2-7: Create a pool of 3 Easy and 3 Medium, then shuffle
+            List<Difficulty> easyMediumPool = new List<Difficulty>
+            {
+                Difficulty.Easy,
+                Difficulty.Easy,
+                Difficulty.Easy,
+                Difficulty.Medium,
+                Difficulty.Medium,
+                Difficulty.Medium
+            };
+            
+            // Shuffle the pool
+            for (int i = 0; i < easyMediumPool.Count; i++)
+            {
+                Difficulty temp = easyMediumPool[i];
+                int randomIndex = Random.Range(i, easyMediumPool.Count);
+                easyMediumPool[i] = easyMediumPool[randomIndex];
+                easyMediumPool[randomIndex] = temp;
+            }
+            
+            _currentCycleDifficulties.AddRange(easyMediumPool);
+            
+            // Levels 8-9: Hard
+            _currentCycleDifficulties.Add(Difficulty.Hard);
+            _currentCycleDifficulties.Add(Difficulty.Hard);
+            
+            // Level 10: Extreme
+            _currentCycleDifficulties.Add(Difficulty.Extreme);
+            
+            _currentCycleIndex = 0;
+            _usedChunksInCycle.Clear();
         }
 
         private void SpawnChunk()
@@ -106,10 +162,43 @@ namespace World
             GameObject chunkPrefab = null;
             if (!isFirstChunk)
             {
-                chunkPrefab = chosenLayout.GetRandomChunkPrefab();
+                // Get difficulty for current level
+                Difficulty requiredDifficulty = GetDifficultyForCurrentLevel();
+                
+                // Try to get chunk with required difficulty from chosen layout (excluding used chunks)
+                chunkPrefab = chosenLayout.GetRandomChunkPrefabByDifficulty(requiredDifficulty, _usedChunksInCycle);
+                
+                // If not found, search all layouts for a chunk with the required difficulty
+                if (chunkPrefab == null)
+                {
+                    var validLayouts = chunkLayouts.FindAll(l => l != null);
+                    foreach (var layout in validLayouts)
+                    {
+                        chunkPrefab = layout.GetRandomChunkPrefabByDifficulty(requiredDifficulty, _usedChunksInCycle);
+                        if (chunkPrefab != null) break;
+                    }
+                }
+                
+                // If still not found, try default layout
                 if (chunkPrefab == null && defaultChunkLayout != null)
                 {
-                    chunkPrefab = defaultChunkLayout.GetRandomChunkPrefab();
+                    chunkPrefab = defaultChunkLayout.GetRandomChunkPrefabByDifficulty(requiredDifficulty, _usedChunksInCycle);
+                }
+                
+                // Fallback: if still no chunk found with required difficulty, get any random chunk (excluding used)
+                if (chunkPrefab == null)
+                {
+                    chunkPrefab = chosenLayout.GetRandomChunkPrefabExcluding(_usedChunksInCycle);
+                    if (chunkPrefab == null && defaultChunkLayout != null)
+                    {
+                        chunkPrefab = defaultChunkLayout.GetRandomChunkPrefabExcluding(_usedChunksInCycle);
+                    }
+                }
+                
+                // If we found a chunk, mark it as used
+                if (chunkPrefab != null)
+                {
+                    _usedChunksInCycle.Add(chunkPrefab);
                 }
             }
 
@@ -187,6 +276,38 @@ namespace World
 
             composite.Initialize(road, chunk, decoration, spawnZ);
             _activeChunks.Add(composite);
+            
+            // Increment chunk index for level tracking (only for non-first chunks)
+            if (!isFirstChunk)
+            {
+                _currentChunkIndex++;
+                _currentCycleIndex++;
+                
+                // Reset cycle when we complete 10 levels (after incrementing, so we've processed chunk 10)
+                if (_currentCycleIndex >= LEVELS_PER_CYCLE)
+                {
+                    InitializeLevelCycle();
+                }
+            }
+        }
+
+        private Difficulty GetDifficultyForCurrentLevel()
+        {
+            // Ensure cycle is initialized
+            if (_currentCycleDifficulties.Count == 0)
+            {
+                InitializeLevelCycle();
+            }
+            
+            int indexInCycle = _currentCycleIndex % LEVELS_PER_CYCLE;
+            if (indexInCycle >= 0 && indexInCycle < _currentCycleDifficulties.Count)
+            {
+                return _currentCycleDifficulties[indexInCycle];
+            }
+            
+            // Fallback to Easy if something goes wrong
+            Debug.LogWarning($"ChunkSpawner: Invalid cycle index {indexInCycle}, falling back to Easy difficulty");
+            return Difficulty.Easy;
         }
 
         private ChunkLayoutSO ChooseRandomLayout()
@@ -268,6 +389,9 @@ namespace World
                 }
             }
             _activeChunks.Clear();
+            
+            _currentChunkIndex = 0;
+            InitializeLevelCycle();
         }
     }
 }

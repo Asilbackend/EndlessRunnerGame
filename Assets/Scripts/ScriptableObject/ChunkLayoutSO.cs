@@ -51,6 +51,53 @@ namespace World
             return validPrefabs[Random.Range(0, validPrefabs.Count)];
         }
 
+        public GameObject GetRandomChunkPrefabByDifficulty(Difficulty difficulty)
+        {
+            return GetRandomChunkPrefabByDifficulty(difficulty, null);
+        }
+
+        public GameObject GetRandomChunkPrefabByDifficulty(Difficulty difficulty, HashSet<GameObject> excludePrefabs)
+        {
+            if (chunkPrefabs == null || chunkPrefabs.Count == 0) return null;
+            
+            var validPrefabs = new List<GameObject>();
+            foreach (var prefab in chunkPrefabs)
+            {
+                if (prefab == null) continue;
+                
+                // Skip if this prefab is in the exclusion list
+                if (excludePrefabs != null && excludePrefabs.Contains(prefab)) continue;
+                
+                var chunkComponent = prefab.GetComponent<WorldChunk>();
+                if (chunkComponent != null && chunkComponent.Difficulty == difficulty)
+                {
+                    validPrefabs.Add(prefab);
+                }
+            }
+            
+            if (validPrefabs.Count == 0) return null;
+            return validPrefabs[Random.Range(0, validPrefabs.Count)];
+        }
+
+        public GameObject GetRandomChunkPrefabExcluding(HashSet<GameObject> excludePrefabs)
+        {
+            if (chunkPrefabs == null || chunkPrefabs.Count == 0) return null;
+            
+            var validPrefabs = new List<GameObject>();
+            foreach (var prefab in chunkPrefabs)
+            {
+                if (prefab == null) continue;
+                
+                // Skip if this prefab is in the exclusion list
+                if (excludePrefabs != null && excludePrefabs.Contains(prefab)) continue;
+                
+                validPrefabs.Add(prefab);
+            }
+            
+            if (validPrefabs.Count == 0) return null;
+            return validPrefabs[Random.Range(0, validPrefabs.Count)];
+        }
+
         public GameObject GetRandomDecorationPrefab()
         {
             if (weightedDecorations == null || weightedDecorations.Count == 0) return null;

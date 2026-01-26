@@ -27,6 +27,15 @@ public class PlayerController : MonoBehaviour
 
     // New: speed used to smoothly drive animator parameters to zero when reversing
     [SerializeField] private float animatorZeroingSpeed = 4f;
+    [SerializeField] private GameObject resetSign;
+
+    [Header("Touch/Swipe Controls")]
+    [Tooltip("Minimum distance in pixels to register a swipe")]
+    [SerializeField] private float swipeThreshold = 50f;
+    [Tooltip("Maximum time in seconds for a swipe gesture")]
+    [SerializeField] private float swipeMaxTime = 0.5f;
+    [Tooltip("Optional: Prefab for touch feedback effect (simple sprite that fades out)")]
+    [SerializeField] private GameObject touchFeedbackPrefab;
 
     public enum AnimatorMode
     {
@@ -71,6 +80,13 @@ public class PlayerController : MonoBehaviour
 
     private bool _isReversing = false;
 
+    // Touch/Swipe detection
+    private Vector2 _touchStartPos;
+    private float _touchStartTime;
+    private bool _isTouching = false;
+    private Camera _mainCamera;
+    private TouchFeedbackEffect _currentTouchFeedback;
+
     private void Start()
     {
         _gameManager = GameManager.Instance;
@@ -106,6 +122,13 @@ public class PlayerController : MonoBehaviour
         _wheelRotators = _playerModel.GetComponentsInChildren<WheelsRotator>(true);
 
         SetMaterialEmmissionDarkness(1);
+
+        // Get main camera for touch feedback positioning
+        _mainCamera = Camera.main;
+        if (_mainCamera == null)
+        {
+            _mainCamera = FindFirstObjectByType<Camera>();
+        }
     }
 
     private void Update()
@@ -119,6 +142,7 @@ public class PlayerController : MonoBehaviour
         if (IsWorldMoving())
         {
             HandleInput();
+            HandleTouchInput();
         }
         
         if (_animatorMode == AnimatorMode.PositionBased)
@@ -148,19 +172,196 @@ public class PlayerController : MonoBehaviour
         // move left
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
-            TryChangeLane(-1);
+            if (TryChangeLane(-1))
+            {
+                TriggerLaneTilt(-1);
+            }
         }
 
         // move right
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
-            TryChangeLane(1);
+            if (TryChangeLane(1))
+            {
+                TriggerLaneTilt(1);
+            }
         }
 
         // jump (Up arrow or W)
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
         {
             TryJump();
+        }
+    }
+
+    private void HandleTouchInput()
+    {
+        // Handle touch input (mobile)
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            
+            if (touch.phase == TouchPhase.Began)
+            {
+                _touchStartPos = touch.position;
+                _touchStartTime = Time.time;
+                _isTouching = true;
+                ShowTouchFeedback(_touchStartPos);
+            }
+            else if (touch.phase == TouchPhase.Moved && _isTouching)
+            {
+                // Update feedback during swipe
+                UpdateTouchFeedback(touch.position);
+            }
+            else if (touch.phase == TouchPhase.Ended && _isTouching)
+            {
+                ProcessSwipe(_touchStartPos, touch.position, Time.time - _touchStartTime);
+                EndTouchFeedback();
+                _isTouching = false;
+            }
+            else if (touch.phase == TouchPhase.Canceled)
+            {
+                EndTouchFeedback();
+                _isTouching = false;
+            }
+        }
+        // Handle mouse input (for editor testing)
+        else if (Input.GetMouseButtonDown(0))
+        {
+            _touchStartPos = Input.mousePosition;
+            _touchStartTime = Time.time;
+            _isTouching = true;
+            ShowTouchFeedback(_touchStartPos);
+        }
+        else if (Input.GetMouseButton(0) && _isTouching)
+        {
+            // Update feedback during swipe
+            UpdateTouchFeedback(Input.mousePosition);
+        }
+        else if (Input.GetMouseButtonUp(0) && _isTouching)
+        {
+            ProcessSwipe(_touchStartPos, Input.mousePosition, Time.time - _touchStartTime);
+            EndTouchFeedback();
+            _isTouching = false;
+        }
+    }
+
+    private void ProcessSwipe(Vector2 startPos, Vector2 endPos, float duration)
+    {
+        // Only process if swipe was quick enough
+        if (duration > swipeMaxTime)
+            return;
+
+        Vector2 delta = endPos - startPos;
+        float distance = delta.magnitude;
+
+        // Only process if swipe distance is sufficient
+        if (distance < swipeThreshold)
+            return;
+
+        // Determine swipe direction
+        float absX = Mathf.Abs(delta.x);
+        float absY = Mathf.Abs(delta.y);
+
+        bool movementTriggered = false;
+
+        // Horizontal swipe (left or right)
+        if (absX > absY)
+        {
+            if (delta.x > 0)
+            {
+                // Swipe right
+                if (TryChangeLane(1))
+                {
+                    TriggerLaneTilt(1);
+                    movementTriggered = true;
+                }
+            }
+            else
+            {
+                // Swipe left
+                if (TryChangeLane(-1))
+                {
+                    TriggerLaneTilt(-1);
+                    movementTriggered = true;
+                }
+            }
+        }
+        // Vertical swipe (up)
+        else if (absY > absX && delta.y > 0)
+        {
+            // Swipe up
+            movementTriggered = TryJump();
+        }
+
+        // Only change color if movement was actually triggered
+        if (movementTriggered && _currentTouchFeedback != null)
+        {
+            _currentTouchFeedback.OnMovementTriggered();
+        }
+    }
+
+    private void ShowTouchFeedback(Vector2 screenPosition)
+    {
+        if (touchFeedbackPrefab == null || _mainCamera == null)
+            return;
+
+        // Clean up any existing feedback
+        if (_currentTouchFeedback != null)
+        {
+            Destroy(_currentTouchFeedback.gameObject);
+        }
+
+        // Convert screen position to world position at a fixed distance from camera
+        // Using a distance that ensures visibility (2-3 units from camera)
+        float distanceFromCamera = 3f;
+        Vector3 worldPos = _mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, distanceFromCamera));
+        
+        // Make sure the feedback faces the camera
+        Vector3 directionToCamera = (_mainCamera.transform.position - worldPos).normalized;
+        Quaternion rotation = Quaternion.LookRotation(-directionToCamera);
+        
+        // Instantiate feedback effect
+        GameObject feedback = Instantiate(touchFeedbackPrefab, worldPos, rotation);
+        _currentTouchFeedback = feedback.GetComponent<TouchFeedbackEffect>();
+        
+        // Initialize with swipe threshold
+        if (_currentTouchFeedback != null)
+        {
+            _currentTouchFeedback.Initialize(swipeThreshold);
+        }
+        // Auto-destroy after animation (the TouchFeedbackEffect script handles this, but add a safety timeout)
+        // If the prefab doesn't have the script, destroy after a short time
+        else if (feedback.GetComponent<ParticleSystem>() == null)
+        {
+            Destroy(feedback, 0.5f);
+        }
+    }
+
+    private void UpdateTouchFeedback(Vector2 currentScreenPosition)
+    {
+        if (_currentTouchFeedback == null || !_isTouching || _mainCamera == null)
+            return;
+
+        // Calculate current swipe distance
+        Vector2 delta = currentScreenPosition - _touchStartPos;
+        float distance = delta.magnitude;
+
+        // Update feedback position to follow touch
+        float distanceFromCamera = 3f;
+        Vector3 worldPos = _mainCamera.ScreenToWorldPoint(new Vector3(currentScreenPosition.x, currentScreenPosition.y, distanceFromCamera));
+        _currentTouchFeedback.transform.position = worldPos;
+
+        // Update feedback with current swipe progress
+        _currentTouchFeedback.UpdateSwipeProgress(distance);
+    }
+
+    private void EndTouchFeedback()
+    {
+        if (_currentTouchFeedback != null)
+        {
+            _currentTouchFeedback.StartFadeOut();
+            _currentTouchFeedback = null;
         }
     }
 
@@ -253,13 +454,23 @@ public class PlayerController : MonoBehaviour
         return _gameController.WorldManager.GetCurrentSpeed() > 0f;
     }
 
-    private void TryChangeLane(int direction)
+    private void TriggerLaneTilt(int direction)
+    {
+        // Trigger camera tilt when changing lanes (direction: -1 for left, 1 for right)
+        if (PlayerCameraController.Instance != null)
+        {
+            PlayerCameraController.Instance.TriggerLaneTilt(direction);
+        }
+    }
+
+    private bool TryChangeLane(int direction)
     {
         int desired = Mathf.Clamp(_currentLaneIndex + direction, 0, 2);
-        if (desired == _currentLaneIndex) return;
+        if (desired == _currentLaneIndex) return false;
 
         _currentLaneIndex = desired;
         _targetPosition = new Vector3(_lanePositions[_currentLaneIndex], transform.position.y, transform.position.z);
+        return true;
     }
 
     private void SetLane(LaneNumber lane)
@@ -288,18 +499,20 @@ public class PlayerController : MonoBehaviour
         transform.position = newPos;
     }
 
-    private void TryJump()
+    private bool TryJump()
     {
         // Prevent jumping while moving left or right
         if (Mathf.Abs(transform.position.x - _targetPosition.x) > 0.01f && _animatorMode == AnimatorMode.PositionBased)
-            return;
+            return false;
         
         if (_isGrounded)
         {
             _verticalVelocity = jumpVelocity;
             _isGrounded = false;
             StopParticleSystems(); // Stop particles when jumping
+            return true;
         }
+        return false;
     }
 
     private void ApplyGravityAndJump()
@@ -365,8 +578,11 @@ public class PlayerController : MonoBehaviour
     private IEnumerator ResetCollider()
     {
         SetColliderEnabled(false);
-        yield return new WaitForSeconds(_gameController.ReverseTime + _gameController.StartTime + _gameController.PlayerColliderDisabledTime);
+        yield return new WaitForSeconds(_gameController.ReverseTime + _gameController.StartTime);
+        resetSign.SetActive(true);
+        yield return new WaitForSeconds(_gameController.PlayerColliderDisabledTime);
         SetColliderEnabled(true);
+        resetSign.SetActive(false);
     }
 
     private IEnumerator OnDeathFlash(float beginningValue = 1, float endingValue = .3f, float duration = .5f, int numOfFlashing = 3)

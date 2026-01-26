@@ -1,5 +1,6 @@
 using UnityEngine;
 using Utilities;
+using System.Collections;
 
 namespace World
 {
@@ -35,6 +36,10 @@ namespace World
             if (!_pointsAwarded && other.CompareTag("Player"))
             {
                 _hasPlayerInside = true;
+                if(_parentObstacle.IsOppositeDirection)
+                {
+                    StartCoroutine(SlowMotionEffect());
+                }
             }
         }
 
@@ -72,7 +77,12 @@ namespace World
                 );
             }
         }
-
+        private IEnumerator SlowMotionEffect()
+        {
+            Time.timeScale = 0.5f;
+            yield return new WaitForSeconds(0.5f);
+            Time.timeScale = 1f;
+        }
         public void ResetTrigger()
         {
             _hasPlayerInside = false;

@@ -43,6 +43,10 @@ public class PlayerCameraController : MonoBehaviour
     public float laneXOffset = 1f; // amount to offset X when on left/right lane (user requested -1 for left)
     public float laneLerpSpeed = 8f;
 
+    [Header("Lane Tilt")]
+    public float laneTiltAngle = 2f; // maximum Z rotation angle when tilting left/right
+    public float laneTiltDuration = 0.1f; // time to reach peak tilt and return to 0
+
     [Header("Jump")]
     public float jumpYOffset = 1f; // extra Y while jumping
     public float jumpZOffset = 1f; // extra X while jumping
@@ -76,7 +80,9 @@ public class PlayerCameraController : MonoBehaviour
     private float _currentJumpYOffset = 0f;
     private float _currentJumpZOffset = 0f;
     private float _currentJumpRotationX = 0f;
+    private float _currentLaneTiltZ = 0f; // current Z rotation for lane tilt
     private bool _isLanding = false; // flag to quickly reset rotation on landing
+    private Coroutine _laneTiltCoroutine = null;
 
     // shake state
     private Vector3 _shakeOffset = Vector3.zero;
@@ -240,8 +246,8 @@ public class PlayerCameraController : MonoBehaviour
         // Multiply forward to look further ahead, reducing rotation sensitivity
         Quaternion lookYaw = Quaternion.LookRotation(forward * 100f, Vector3.up);
 
-        // Combine pitch and yaw
-        Quaternion desiredRot = Quaternion.Euler(desiredPitch, lookYaw.eulerAngles.y, 0f);
+        // Combine pitch, yaw, and lane tilt (Z rotation)
+        Quaternion desiredRot = Quaternion.Euler(desiredPitch, lookYaw.eulerAngles.y, _currentLaneTiltZ);
         return desiredRot;
     }
 
@@ -342,5 +348,51 @@ public class PlayerCameraController : MonoBehaviour
             yield return null;
         }
         _shakeOffset = Vector3.zero;
+    }
+
+    // Trigger camera tilt when changing lanes
+    public void TriggerLaneTilt(int direction)
+    {
+        // direction: -1 for left, 1 for right
+        if (_laneTiltCoroutine != null)
+        {
+            StopCoroutine(_laneTiltCoroutine);
+        }
+        _laneTiltCoroutine = StartCoroutine(LaneTiltCoroutine(direction));
+    }
+
+    private IEnumerator LaneTiltCoroutine(int direction)
+    {
+        // Calculate target tilt angle (negative for left, positive for right)
+        float targetTilt = direction * laneTiltAngle;
+
+        // Phase 1: Tilt to peak
+        float elapsed = 0f;
+        float startTilt = _currentLaneTiltZ;
+        while (elapsed < laneTiltDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / laneTiltDuration;
+            // Use easeOutQuad for smooth deceleration
+            t = 1f - (1f - t) * (1f - t);
+            _currentLaneTiltZ = Mathf.Lerp(startTilt, targetTilt, t);
+            yield return null;
+        }
+        _currentLaneTiltZ = targetTilt;
+
+        // Phase 2: Return to 0
+        elapsed = 0f;
+        startTilt = _currentLaneTiltZ;
+        while (elapsed < laneTiltDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / laneTiltDuration;
+            // Use easeOutQuad for smooth return
+            t = 1f - (1f - t) * (1f - t);
+            _currentLaneTiltZ = Mathf.Lerp(startTilt, 0f, t);
+            yield return null;
+        }
+        _currentLaneTiltZ = 0f;
+        _laneTiltCoroutine = null;
     }
 }

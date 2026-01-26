@@ -33,6 +33,7 @@ namespace World
         [SerializeField] private Vector3 pointTriggerCenter = new Vector3(0, 1f, 0);
         [SerializeField] private Vector3 pointTriggerSize = new Vector3(3f, 2f, 2f);
         [SerializeField] private float pointTriggerZ = 2;
+        [SerializeField] private GameObject pointBordersPrefab; // Visual borders prefab to show jump area
 
         private float activationDistance = 60f;
         private WorldChunk _parentChunk;
@@ -173,6 +174,30 @@ namespace World
             
             // Add ObstaclePointTrigger component
             _pointTrigger = triggerObject.AddComponent<ObstaclePointTrigger>();
+            
+            // Instantiate visual borders prefab as child of the trigger
+            if (pointBordersPrefab != null)
+            {
+                // First, instantiate as child of the trigger (parent)
+                GameObject bordersInstance = Instantiate(pointBordersPrefab, triggerObject.transform, false);
+                bordersInstance.transform.localRotation = Quaternion.identity;
+                
+                float bordersLocalZ = triggerPosition.z < 0 ? -0.5f : 0.5f;
+                bordersInstance.transform.localPosition = new Vector3(
+                    pointTriggerCenter.x,
+                    -0.95f,
+                    bordersLocalZ
+                );
+                
+                // Scale: use pointTriggerSize values, with z + 1
+                float zSizeWithExtra = pointTriggerSize.z + 1f; // Add 1 to z size
+                Vector3 scaleFactor = new Vector3(
+                    pointTriggerSize.x,
+                    pointTriggerSize.y,
+                    zSizeWithExtra
+                );
+                bordersInstance.transform.localScale = scaleFactor;
+            }
         }
 
         private void Update()

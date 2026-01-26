@@ -108,8 +108,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   pointTriggerCenter: {x: 0, y: 1, z: 0}
-  pointTriggerSize: {x: 3, y: 2, z: 2}
-  pointTriggerZ: 3.3
+  pointTriggerSize: {x: 3, y: 3, z: 3}
+  pointTriggerZ: 3.8
+  pointBordersPrefab: {fileID: 2761050947652941403, guid: 3cc620bb8c6b02b4b8dd19e01d7a356c, type: 3}
 --- !u!114 &4053027697508384228
 MonoBehaviour:
   m_ObjectHideFlags: 0

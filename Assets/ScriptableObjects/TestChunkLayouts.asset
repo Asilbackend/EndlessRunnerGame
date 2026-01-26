@@ -15,7 +15,7 @@ MonoBehaviour:
   lanes: 3
   roadPrefab: {fileID: 383661237994810150, guid: 3e96fca7beb03aa4291abd97fd70aa06, type: 3}
   chunkPrefabs:
-  - {fileID: 6195114387694972946, guid: 81c47633083f53841bfe7752938a1c00, type: 3}
+  - {fileID: 6195114387694972946, guid: 65c868343b27e834d9e001f4e97bfb09, type: 3}
   weightedDecorations:
   - prefab: {fileID: 1302531002252468373, guid: d1956ea12f1b2bc4d94a6f93231c6acb, type: 3}
     weight: 10

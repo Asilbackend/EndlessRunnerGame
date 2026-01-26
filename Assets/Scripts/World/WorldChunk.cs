@@ -328,6 +328,7 @@ namespace World
                     dynamicObstaclesContainer,
                     warningSignPrefab,
                     oppositeObstacleSpeed,
+                    worldSpeed,
                     activationDistance,
                     _currentZPosition,
                     EndZ

@@ -116,7 +116,7 @@ MonoBehaviour:
   LeftLane: {fileID: 704691763659792674}
   CenterLane: {fileID: 1814990637460248000}
   RightLane: {fileID: 3810386476637832776}
-  laneRandomizationMode: 0
+  laneRandomizationMode: 1
   oppositeDynamicObstacleConfigs: []
   dynamicObstaclesContainer: {fileID: 0}
   warningSignPrefab: {fileID: 0}
@@ -247,6 +247,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
+      propertyPath: hasExtraPoints
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: extraPointsPrefab
       value: 
       objectReference: {fileID: 4926681504039503797, guid: d9e92415494dc764dadf8e1152e233a8, type: 3}
@@ -268,7 +272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3505892201275106312, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 35
+      value: 47
       objectReference: {fileID: 0}
     - target: {fileID: 3505892201275106312, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: m_LocalRotation.w
