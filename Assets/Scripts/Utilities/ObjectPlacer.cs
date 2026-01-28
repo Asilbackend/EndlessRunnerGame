@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using World;
 #if UNITY_EDITOR
@@ -9,7 +10,8 @@ public class ObjectPlacer : MonoBehaviour
 
     [SerializeField] private ObjectsContainerSO objectsContainer;
     [SerializeField] private bool isDynamic = false;
-    [SerializeField] private float speed;
+    [Tooltip("Single speed (use one element) or multiple speeds. Empty or only 0 = pick from any speed.")]
+    [SerializeField] private List<float> allowedSpeeds = new List<float>();
     
     [Header("Gizmo Settings")]
     [SerializeField] private bool showMeetingPointGizmos = true;
@@ -63,19 +65,14 @@ public class ObjectPlacer : MonoBehaviour
             return;
         }
         
-        if (speed == 0)
+        bool useAnySpeed = AllowedSpeedsIsEmptyOrAny();
+        if (useAnySpeed)
         {
             _currentObjectData = objectsContainer.GetRandomObject();
             if (_currentObjectData == null || _currentObjectData.objectPrefab == null)
             {
                 Debug.LogWarning("ObjectPlacer: Could not get valid object data or prefab is null!", this);
                 return;
-            }
-            
-            // If dynamic and speed is 0, set speed to the randomly picked object's speed
-            if (isDynamic && _currentObjectData.speed > 0)
-            {
-                speed = _currentObjectData.speed;
             }
             
             Vector3 spawnPosition = transform.position;
@@ -118,7 +115,7 @@ public class ObjectPlacer : MonoBehaviour
         }
         else
         {
-            _currentObjectData = objectsContainer.GetRandomObjectBySpeed(speed);
+            _currentObjectData = objectsContainer.GetRandomObjectBySpeeds(allowedSpeeds);
             if (_currentObjectData != null && 
                 _currentObjectData.objectPrefab != null &&
                 _currentObjectData.objectPrefab.GetComponent<WorldObstacle>() != null)
@@ -145,6 +142,14 @@ public class ObjectPlacer : MonoBehaviour
             }
         }
     }
+
+    private bool AllowedSpeedsIsEmptyOrAny()
+    {
+        if (allowedSpeeds == null || allowedSpeeds.Count == 0) return true;
+        foreach (float s in allowedSpeeds)
+            if (s != 0f) return false;
+        return true;
+    }
     
     private void OnDrawGizmos()
     {
@@ -154,17 +159,19 @@ public class ObjectPlacer : MonoBehaviour
             float[] obstacleSpeeds;
             Color[] gizmoColors;
             
-            if (speed == 0f)
+            if (AllowedSpeedsIsEmptyOrAny())
             {
-                // If speed is 0, show gizmos for obstacle speeds 7, 8, 9
+                // No specific speeds: show gizmos for obstacle speeds 7, 8, 9
                 obstacleSpeeds = new float[] { 7f, 8f, 9f };
                 gizmoColors = new Color[] { Color.red, Color.green, Color.blue };
             }
             else
             {
-                // If speed is not 0, use that speed
-                obstacleSpeeds = new float[] { speed };
-                gizmoColors = new Color[] { Color.cyan };
+                // Use the configured allowed speeds
+                obstacleSpeeds = allowedSpeeds.ToArray();
+                gizmoColors = new Color[obstacleSpeeds.Length];
+                for (int i = 0; i < gizmoColors.Length; i++)
+                    gizmoColors[i] = Color.HSVToRGB((float)i / Mathf.Max(1, gizmoColors.Length), 0.8f, 1f);
             }
             
             for (int i = 0; i < obstacleSpeeds.Length; i++)
@@ -190,13 +197,13 @@ public class ObjectPlacer : MonoBehaviour
                 
                 // Draw label (only in Scene view)
                 #if UNITY_EDITOR
-                if (speed == 0f)
+                if (AllowedSpeedsIsEmptyOrAny())
                 {
                     Handles.Label(meetingPoint + Vector3.up * 2f, $"Obstacle Speed {obstacleSpeed}: Z = {actualZ:F1}");
                 }
                 else
                 {
-                    Handles.Label(meetingPoint + Vector3.up * 2f, $"Z = {actualZ:F1}");
+                    Handles.Label(meetingPoint + Vector3.up * 2f, $"Speed {obstacleSpeed}: Z = {actualZ:F1}");
                 }
                 #endif
             }

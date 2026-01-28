@@ -47,8 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TouchFeedbackEffect
   startScale: 0.1
   endScale: 0.2
-  startColor: {r: 0.836478, g: 0.75848067, b: 0, a: 0.78431374}
-  thresholdReachedColor: {r: 0.7607843, g: 0.3345641, b: 0, a: 0.78431374}
+  startColor: {r: 0.003921569, g: 0.82745105, b: 0.9725491, a: 0.78431374}
+  thresholdReachedColor: {r: 0.9215687, g: 0.7137255, b: 0.4039216, a: 0.78431374}
   fadeOutDuration: 0.2
 --- !u!212 &1723398993930957093
 SpriteRenderer:
@@ -97,12 +97,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9901a65a1d946ed4db1bc132812d1f0b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 226036db0bb49ed4bad33fb49ab1a363, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.56, y: 2.56}
+  m_Size: {x: 0.2, y: 0.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

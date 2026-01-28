@@ -987,7 +987,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5025212966178356482, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
       propertyPath: swipeMaxTime
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5025212966178356482, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
       propertyPath: swipeThreshold
@@ -997,6 +997,10 @@ PrefabInstance:
       propertyPath: touchFeedbackPrefab
       value: 
       objectReference: {fileID: 3992013310302512752, guid: ee19738ed591fe04f92d445eb19d192d, type: 3}
+    - target: {fileID: 5097873944022797976, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
+      propertyPath: isScaling
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5097873944022797976, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
       propertyPath: endScale.x
       value: 0.21
@@ -1008,6 +1012,14 @@ PrefabInstance:
     - target: {fileID: 5097873944022797976, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
       propertyPath: endScale.z
       value: 0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 5097873944022797976, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
+      propertyPath: floatSpeed
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5097873944022797976, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
+      propertyPath: floatHeight
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6669171630128160903, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
       propertyPath: m_LocalPosition.x
