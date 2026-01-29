@@ -17,6 +17,8 @@ namespace World
         [Header("Chunk Settings")]
         [SerializeField] private float chunkLength = 20f;
         [SerializeField] private Difficulty difficulty = Difficulty.Easy;
+        [Tooltip("If true, this chunk has higher pick probability and can be reused every 10-chunk cycle (not added to used set).")]
+        [SerializeField] private bool isOnlyCars = false;
         [SerializeField] private Transform LeftLane;
         [SerializeField] private Transform CenterLane;
         [SerializeField] private Transform RightLane;
@@ -53,6 +55,7 @@ namespace World
         
         public float ChunkLength => chunkLength;
         public Difficulty Difficulty => difficulty;
+        public bool IsOnlyCars => isOnlyCars;
         public float StartZ => _currentZPosition;
         public float EndZ => _currentZPosition + chunkLength;
         public bool IsActive => _isActive;

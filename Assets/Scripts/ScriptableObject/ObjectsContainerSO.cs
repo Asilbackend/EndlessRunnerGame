@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace World
@@ -10,7 +9,6 @@ namespace World
         [Header("Object Properties")]
         public string objectName = "New Object";
         public GameObject objectPrefab;
-        public float speed = 0;
         public float damage = 0;
     }
 
@@ -42,43 +40,6 @@ namespace World
                 }
             }
             Debug.LogWarning($"ObjectConfigSO '{this.name}' has no object configuration with the name '{name}'.");
-            return null;
-        }
-
-        public ObjectData GetRandomObjectBySpeed(float speed)
-        {
-            if (isMoving == false)
-            {
-                return null;
-            }
-            var matchingConfigs = objectConfigs.Where(config => config.speed == speed);
-
-            if (matchingConfigs.Any())
-            {
-                int randomIndex = Random.Range(0, matchingConfigs.Count());
-                return matchingConfigs.ElementAt(randomIndex);
-            }
-
-            Debug.LogWarning($"ObjectConfigSO '{this.name}' has no object configuration with the speed '{speed}'.");
-            return null;
-        }
-
-        public ObjectData GetRandomObjectBySpeeds(IList<float> speeds)
-        {
-            if (isMoving == false || speeds == null || speeds.Count == 0)
-            {
-                return null;
-            }
-            // Shuffle to try speeds in random order, then return first valid result
-            var order = Enumerable.Range(0, speeds.Count).OrderBy(_ => Random.value).ToList();
-            foreach (int i in order)
-            {
-                float s = speeds[i];
-                var result = GetRandomObjectBySpeed(s);
-                if (result != null)
-                    return result;
-            }
-            Debug.LogWarning($"ObjectConfigSO '{this.name}' has no object configuration for any of the speeds [{string.Join(", ", speeds)}].");
             return null;
         }
     }

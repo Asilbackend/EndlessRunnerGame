@@ -66,9 +66,8 @@ namespace World
             _configuredObjectData = data;
 
             damage = data.damage;
-            // If overrideSpeed is provided, use it; otherwise use data.speed
-            // This allows us to overwrite the obstacle's default speed
-            float speedToUse = overrideSpeed.HasValue ? overrideSpeed.Value : data.speed;
+            // Speed is set by the caller (e.g. ObjectPlacer); no speed on scriptable object
+            float speedToUse = overrideSpeed ?? 0f;
             
             if (isOppositeDirection)
             {

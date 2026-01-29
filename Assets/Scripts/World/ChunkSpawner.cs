@@ -195,10 +195,14 @@ namespace World
                     }
                 }
                 
-                // If we found a chunk, mark it as used
+                // If we found a chunk, mark it as used (isOnlyCars chunks can be reused each cycle, so don't add to set)
                 if (chunkPrefab != null)
                 {
-                    _usedChunksInCycle.Add(chunkPrefab);
+                    var chunkComponent = chunkPrefab.GetComponent<WorldChunk>();
+                    if (chunkComponent == null || !chunkComponent.IsOnlyCars)
+                    {
+                        _usedChunksInCycle.Add(chunkPrefab);
+                    }
                 }
             }
 

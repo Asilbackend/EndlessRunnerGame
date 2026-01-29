@@ -10,8 +10,10 @@ public class ObjectPlacer : MonoBehaviour
 
     [SerializeField] private ObjectsContainerSO objectsContainer;
     [SerializeField] private bool isDynamic = false;
-    [Tooltip("Single speed (use one element) or multiple speeds. Empty or only 0 = pick from any speed.")]
+    [Tooltip("Speeds to choose from (one picked at random for this obstacle). Empty = use Default Speed.")]
     [SerializeField] private List<float> allowedSpeeds = new List<float>();
+    [Tooltip("Speed used when Allowed Speeds is empty.")]
+    [SerializeField] private float defaultSpeed = 8f;
     
     [Header("Gizmo Settings")]
     [SerializeField] private bool showMeetingPointGizmos = true;
@@ -64,83 +66,58 @@ public class ObjectPlacer : MonoBehaviour
             Debug.LogError("ObjectPlacer: objectsContainer is not assigned!", this);
             return;
         }
-        
-        bool useAnySpeed = AllowedSpeedsIsEmptyOrAny();
-        if (useAnySpeed)
+
+        _currentObjectData = objectsContainer.GetRandomObject();
+        if (_currentObjectData == null || _currentObjectData.objectPrefab == null)
         {
-            _currentObjectData = objectsContainer.GetRandomObject();
-            if (_currentObjectData == null || _currentObjectData.objectPrefab == null)
-            {
-                Debug.LogWarning("ObjectPlacer: Could not get valid object data or prefab is null!", this);
-                return;
-            }
-            
-            Vector3 spawnPosition = transform.position;
-            if (randomPosition)
-            {
-                float randomX = Random.Range(minXOffset, maxXOffset);
-                float randomZ = Random.Range(minZOffset, maxZOffset);
-                spawnPosition += new Vector3(randomX, 0f, randomZ);
-            }
-            _currentObject = Instantiate(_currentObjectData.objectPrefab, spawnPosition, Quaternion.identity, transform);
-            if (_currentObject == null)
-            {
-                Debug.LogError("ObjectPlacer: Failed to instantiate object!", this);
-                return;
-            }
-            
-            // Configure obstacle if it's dynamic
-            if (isDynamic && _currentObject.GetComponent<WorldObstacle>() != null)
-            {
-                _currentObject.GetComponent<WorldObstacle>().ConfigureFromObjectData(_currentObjectData);
-            }
-            
-            if (randomRotation)
-            {
-                float randomYRotation = Random.Range(minRotation, maxRotation);
-                _currentObject.transform.Rotate(0, randomYRotation, 0);
-            }
-            if (randomScale)
-            {
-                float randomScaleValue = Random.Range(minScale, maxScale);
-                _currentObject.transform.localScale = new Vector3(randomScaleValue, randomScaleValue, randomScaleValue);
-            }
-            
-            // Spawn extra points prefab if enabled
-            if (hasExtraPoints && extraPointsPrefab != null)
-            {
-                Vector3 extraPointsPosition = _currentObject.transform.position + _currentObject.transform.forward * extraPointsDistance;
-                GameObject extraPoints = Instantiate(extraPointsPrefab, extraPointsPosition, Quaternion.identity, _currentObject.transform);
-            }
+            Debug.LogWarning("ObjectPlacer: Could not get valid object data or prefab is null!", this);
+            return;
         }
-        else
+
+        float chosenSpeed = GetChosenSpeed();
+
+        Vector3 spawnPosition = transform.position;
+        if (randomPosition)
         {
-            _currentObjectData = objectsContainer.GetRandomObjectBySpeeds(allowedSpeeds);
-            if (_currentObjectData != null && 
-                _currentObjectData.objectPrefab != null &&
-                _currentObjectData.objectPrefab.GetComponent<WorldObstacle>() != null)
-            {
-                Vector3 spawnPosition = transform.position;
-                if (randomPosition)
-                {
-                    float randomX = Random.Range(minXOffset, maxXOffset);
-                    float randomZ = Random.Range(minZOffset, maxZOffset);
-                    spawnPosition += new Vector3(randomX, 0f, randomZ);
-                }
-                _currentObject = Instantiate(_currentObjectData.objectPrefab, spawnPosition, Quaternion.identity, transform);
-                if (_currentObject != null)
-                {
-                    _currentObject.GetComponent<WorldObstacle>().ConfigureFromObjectData(_currentObjectData);
-                    
-                    // Spawn extra points prefab if enabled
-                    if (hasExtraPoints && extraPointsPrefab != null)
-                    {
-                        Vector3 extraPointsPosition = _currentObject.transform.position + _currentObject.transform.forward * extraPointsDistance;
-                        GameObject extraPoints = Instantiate(extraPointsPrefab, extraPointsPosition, Quaternion.identity, _currentObject.transform);
-                    }
-                }
-            }
+            float randomX = Random.Range(minXOffset, maxXOffset);
+            float randomZ = Random.Range(minZOffset, maxZOffset);
+            spawnPosition += new Vector3(randomX, 0f, randomZ);
         }
+        _currentObject = Instantiate(_currentObjectData.objectPrefab, spawnPosition, Quaternion.identity, transform);
+        if (_currentObject == null)
+        {
+            Debug.LogError("ObjectPlacer: Failed to instantiate object!", this);
+            return;
+        }
+
+        if (isDynamic && _currentObject.GetComponent<WorldObstacle>() != null)
+        {
+            _currentObject.GetComponent<WorldObstacle>().ConfigureFromObjectData(_currentObjectData, chosenSpeed);
+        }
+
+        if (randomRotation)
+        {
+            float randomYRotation = Random.Range(minRotation, maxRotation);
+            _currentObject.transform.Rotate(0, randomYRotation, 0);
+        }
+        if (randomScale)
+        {
+            float randomScaleValue = Random.Range(minScale, maxScale);
+            _currentObject.transform.localScale = new Vector3(randomScaleValue, randomScaleValue, randomScaleValue);
+        }
+
+        if (hasExtraPoints && extraPointsPrefab != null)
+        {
+            Vector3 extraPointsPosition = _currentObject.transform.position + _currentObject.transform.forward * extraPointsDistance;
+            GameObject extraPoints = Instantiate(extraPointsPrefab, extraPointsPosition, Quaternion.identity, _currentObject.transform);
+        }
+    }
+
+    private float GetChosenSpeed()
+    {
+        if (allowedSpeeds != null && allowedSpeeds.Count > 0)
+            return allowedSpeeds[Random.Range(0, allowedSpeeds.Count)];
+        return defaultSpeed;
     }
 
     private bool AllowedSpeedsIsEmptyOrAny()
@@ -161,9 +138,8 @@ public class ObjectPlacer : MonoBehaviour
             
             if (AllowedSpeedsIsEmptyOrAny())
             {
-                // No specific speeds: show gizmos for obstacle speeds 7, 8, 9
-                obstacleSpeeds = new float[] { 7f, 8f, 9f };
-                gizmoColors = new Color[] { Color.red, Color.green, Color.blue };
+                obstacleSpeeds = new float[] { defaultSpeed };
+                gizmoColors = new Color[] { Color.red };
             }
             else
             {

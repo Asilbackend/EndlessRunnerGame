@@ -56,11 +56,14 @@ namespace World
             return GetRandomChunkPrefabByDifficulty(difficulty, null);
         }
 
+        private const float IsOnlyCarsWeightMultiplier = 2.5f;
+
         public GameObject GetRandomChunkPrefabByDifficulty(Difficulty difficulty, HashSet<GameObject> excludePrefabs)
         {
             if (chunkPrefabs == null || chunkPrefabs.Count == 0) return null;
             
             var validPrefabs = new List<GameObject>();
+            var weights = new List<float>();
             foreach (var prefab in chunkPrefabs)
             {
                 if (prefab == null) continue;
@@ -72,11 +75,13 @@ namespace World
                 if (chunkComponent != null && chunkComponent.Difficulty == difficulty)
                 {
                     validPrefabs.Add(prefab);
+                    float w = (chunkComponent.IsOnlyCars) ? IsOnlyCarsWeightMultiplier : 1f;
+                    weights.Add(w);
                 }
             }
             
             if (validPrefabs.Count == 0) return null;
-            return validPrefabs[Random.Range(0, validPrefabs.Count)];
+            return WeightedRandomFrom(validPrefabs, weights);
         }
 
         public GameObject GetRandomChunkPrefabExcluding(HashSet<GameObject> excludePrefabs)
@@ -84,6 +89,7 @@ namespace World
             if (chunkPrefabs == null || chunkPrefabs.Count == 0) return null;
             
             var validPrefabs = new List<GameObject>();
+            var weights = new List<float>();
             foreach (var prefab in chunkPrefabs)
             {
                 if (prefab == null) continue;
@@ -92,10 +98,29 @@ namespace World
                 if (excludePrefabs != null && excludePrefabs.Contains(prefab)) continue;
                 
                 validPrefabs.Add(prefab);
+                var chunkComponent = prefab.GetComponent<WorldChunk>();
+                float w = (chunkComponent != null && chunkComponent.IsOnlyCars) ? IsOnlyCarsWeightMultiplier : 1f;
+                weights.Add(w);
             }
             
             if (validPrefabs.Count == 0) return null;
-            return validPrefabs[Random.Range(0, validPrefabs.Count)];
+            return WeightedRandomFrom(validPrefabs, weights);
+        }
+
+        private static GameObject WeightedRandomFrom(List<GameObject> items, List<float> weights)
+        {
+            if (items == null || weights == null || items.Count == 0 || items.Count != weights.Count) return null;
+            float total = 0f;
+            foreach (var w in weights) total += w;
+            if (total <= 0f) return items[Random.Range(0, items.Count)];
+            float r = Random.Range(0f, total);
+            float acc = 0f;
+            for (int i = 0; i < items.Count; i++)
+            {
+                acc += weights[i];
+                if (r <= acc) return items[i];
+            }
+            return items[items.Count - 1];
         }
 
         public GameObject GetRandomDecorationPrefab()

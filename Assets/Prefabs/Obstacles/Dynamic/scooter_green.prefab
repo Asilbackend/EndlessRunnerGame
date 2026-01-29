@@ -101,7 +101,7 @@ MonoBehaviour:
   destroyOnDespawn: 0
   damage: 1
   isOppositeDirection: 0
-  lookAheadDistance: 3
+  lookAheadDistance: 2.5
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
