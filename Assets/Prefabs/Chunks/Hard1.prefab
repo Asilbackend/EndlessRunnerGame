@@ -124,8 +124,8 @@ MonoBehaviour:
   RightLane: {fileID: 3810386476637832776}
   laneRandomizationMode: 1
   oppositeDynamicObstacleConfigs: []
-  dynamicObstaclesContainer: {fileID: 0}
-  warningSignPrefab: {fileID: 0}
+  dynamicObstaclesContainer: {fileID: 11400000, guid: 19c06956829383c4cac16f0dbfb5bd77, type: 2}
+  warningSignPrefab: {fileID: 620278877519765559, guid: bb2f302ef51824e448be5d64f418b8cb, type: 3}
   oppositeObstacleSpeed: 10
   activationDistance: 60
   showOppositeObstacleGizmos: 1
@@ -185,7 +185,7 @@ PrefabInstance:
       objectReference: {fileID: 4926681504039503797, guid: 754982be05574bb4db644017ac85fe66, type: 3}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: extraPointsDistance
-      value: -9
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: allowedSpeeds.Array.size
@@ -271,7 +271,7 @@ PrefabInstance:
       objectReference: {fileID: 4926681504039503797, guid: 754982be05574bb4db644017ac85fe66, type: 3}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: extraPointsDistance
-      value: -9
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: allowedSpeeds.Array.size
@@ -765,7 +765,7 @@ PrefabInstance:
       objectReference: {fileID: 4926681504039503797, guid: 754982be05574bb4db644017ac85fe66, type: 3}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: extraPointsDistance
-      value: -9
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: allowedSpeeds.Array.size

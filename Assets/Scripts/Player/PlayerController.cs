@@ -92,7 +92,18 @@ public class PlayerController : MonoBehaviour
         _gameManager = GameManager.Instance;
         _gameController = GameController.Instance;
 
-        _playerData = _gameManager.PlayableObjectsSO.GetPlayableObjectDataByName(playableObjectName);
+        string savedVehicleId = _gameManager.GetSelectedVehicleId();
+        if (!string.IsNullOrEmpty(savedVehicleId))
+            _playerData = _gameManager.PlayableObjectsSO.GetPlayableObjectDataById(savedVehicleId);
+        if (_playerData == null)
+            _playerData = _gameManager.PlayableObjectsSO.GetPlayableObjectDataByName(playableObjectName);
+
+        if (_playerData == null)
+        {
+            Debug.LogError("PlayerController: No PlayableObjectData found for selected vehicle or default.");
+            return;
+        }
+
         GameObject playerModel = _playerData.prefab;
         _playerHealth = _playerData.health;
         _gameController.WorldManager.SetWorldSpeed(_playerData.speed);

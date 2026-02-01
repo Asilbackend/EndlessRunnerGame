@@ -115,13 +115,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::World.WorldChunk
   chunkLength: 100
   difficulty: 0
+  isOnlyCars: 0
   LeftLane: {fileID: 704691763659792674}
   CenterLane: {fileID: 1814990637460248000}
   RightLane: {fileID: 3810386476637832776}
   laneRandomizationMode: 1
   oppositeDynamicObstacleConfigs: []
-  dynamicObstaclesContainer: {fileID: 0}
-  warningSignPrefab: {fileID: 0}
+  dynamicObstaclesContainer: {fileID: 11400000, guid: 19c06956829383c4cac16f0dbfb5bd77, type: 2}
+  warningSignPrefab: {fileID: 620278877519765559, guid: bb2f302ef51824e448be5d64f418b8cb, type: 3}
   oppositeObstacleSpeed: 10
   activationDistance: 60
   showOppositeObstacleGizmos: 1
@@ -230,6 +231,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1814990637460248000}
     m_Modifications:
+    - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
+      propertyPath: allowedSpeeds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
+      propertyPath: 'allowedSpeeds.Array.data[0]'
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
+      propertyPath: 'allowedSpeeds.Array.data[1]'
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3487669498707678677, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: m_Name
       value: Dynamic
@@ -354,6 +367,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3810386476637832776}
     m_Modifications:
+    - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
+      propertyPath: allowedSpeeds.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
+      propertyPath: 'allowedSpeeds.Array.data[0]'
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
+      propertyPath: 'allowedSpeeds.Array.data[1]'
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
+      propertyPath: 'allowedSpeeds.Array.data[2]'
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 3487669498707678677, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: m_Name
       value: Dynamic

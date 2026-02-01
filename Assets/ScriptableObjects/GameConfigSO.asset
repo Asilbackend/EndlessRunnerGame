@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db813dabcdb5ea44a8d7645c42d80ab5, type: 3}
+  m_Name: GameConfigSO
+  m_EditorClassIdentifier: Assembly-CSharp::GameConfigSO
+  maps:
+  - {fileID: 11400000, guid: 229199a114ec9f34b95ef67780fcb791, type: 2}
+  - {fileID: 11400000, guid: 220c8880e8bcf244c94e4471ee618260, type: 2}
+  - {fileID: 11400000, guid: 379ec64f8c66ec245837fc336a83759c, type: 2}
+  - {fileID: 11400000, guid: 6a4bbf28b5b0de3429e8794a0ebb397c, type: 2}
+  playableObjects: {fileID: 11400000, guid: 7ed86971c4129ad44915c1ba85192b03, type: 2}
+  defaultMapId: 0
+  defaultVehicleId: 0

@@ -28,6 +28,9 @@ namespace World
         [Tooltip("Decorations with weighted probabilities. Higher weight = more likely to spawn.")]
         public List<WeightedDecoration> weightedDecorations = new List<WeightedDecoration>();
 
+
+        private const float IsOnlyCarsWeightMultiplier = 3f;
+
         // Legacy support - if chunkPrefab is set, add it to chunkPrefabs
         [System.Obsolete("Use chunkPrefabs instead")]
         public GameObject chunkPrefab
@@ -56,7 +59,6 @@ namespace World
             return GetRandomChunkPrefabByDifficulty(difficulty, null);
         }
 
-        private const float IsOnlyCarsWeightMultiplier = 2.5f;
 
         public GameObject GetRandomChunkPrefabByDifficulty(Difficulty difficulty, HashSet<GameObject> excludePrefabs)
         {

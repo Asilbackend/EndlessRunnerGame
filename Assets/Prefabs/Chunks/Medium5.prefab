@@ -117,6 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::World.WorldChunk
   chunkLength: 100
   difficulty: 1
+  isOnlyCars: 0
   LeftLane: {fileID: 704691763659792674}
   CenterLane: {fileID: 1814990637460248000}
   RightLane: {fileID: 3810386476637832776}

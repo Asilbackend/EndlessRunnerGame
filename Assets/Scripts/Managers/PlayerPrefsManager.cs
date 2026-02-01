@@ -11,6 +11,8 @@ public enum PlayerPrefsKeys
     Points,
     GameNumber,
     Health,
+    SelectedMapId,
+    SelectedVehicleId,
 }
 
 /// <summary>

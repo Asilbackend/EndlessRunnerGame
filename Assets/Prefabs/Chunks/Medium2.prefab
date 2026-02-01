@@ -370,7 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 4926681504039503797, guid: 754982be05574bb4db644017ac85fe66, type: 3}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: extraPointsDistance
-      value: -9
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: allowedSpeeds.Array.size
@@ -460,7 +460,7 @@ PrefabInstance:
       objectReference: {fileID: 4926681504039503797, guid: 754982be05574bb4db644017ac85fe66, type: 3}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: extraPointsDistance
-      value: -9
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: allowedSpeeds.Array.size

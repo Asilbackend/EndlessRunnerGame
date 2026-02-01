@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayableObjectsSO _playableObjectsSO;
     public PlayableObjectsSO PlayableObjectsSO => _playableObjectsSO;
 
+    private string _selectedVehicleIdOverride;
+
+    public void SetSelectedVehicleId(string vehicleId) => _selectedVehicleIdOverride = vehicleId;
+    public string GetSelectedVehicleId() => _selectedVehicleIdOverride;
+
     public enum GameState
     {
         MainMenu,
