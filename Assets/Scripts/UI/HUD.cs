@@ -9,6 +9,7 @@ namespace UI
         [Header("UI References")]
         [SerializeField] private TMP_Text healthText;
         [SerializeField] private TMP_Text runPointsText;
+        [SerializeField] private TMP_Text mapName;
 
         private void OnEnable()
         {
@@ -20,6 +21,14 @@ namespace UI
             if (healthText != null)
             {
                 healthText.text = health.ToString();
+            }
+        }
+
+        public void SetMapName(string name)
+        {
+            if (healthText != null)
+            {
+                mapName.text = name;
             }
         }
 

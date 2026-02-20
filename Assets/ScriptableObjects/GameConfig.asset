@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db813dabcdb5ea44a8d7645c42d80ab5, type: 3}
-  m_Name: GameConfigSO
+  m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::GameConfigSO
   maps:
   - {fileID: 11400000, guid: 229199a114ec9f34b95ef67780fcb791, type: 2}

@@ -101,7 +101,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EarthRadius: -400
-    - _EmmissionDarkLevel: 0.80558985
+    - _EmmissionDarkLevel: 1
     - _EnvironmentReflections: 1
     - _FadeEnd: 150
     - _FadeStart: 40

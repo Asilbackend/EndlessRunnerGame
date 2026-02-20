@@ -16,7 +16,7 @@ MonoBehaviour:
   - id: 0
     name: 0
     displayName: Skateboard
-    icon: {fileID: 21300000, guid: dad1da2ca9b01964288f231323af48ec, type: 3}
+    icon: {fileID: 556437504, guid: dbc9760bb0a10654eb05157aac2eaf8e, type: 3}
     previewPrefab: {fileID: 7389316750714263375, guid: 0300080954492454da4061741e867270, type: 3}
     speedStars: 3
     controlStars: 3
@@ -28,7 +28,7 @@ MonoBehaviour:
   - id: 1
     name: 1
     displayName: Bicycle
-    icon: {fileID: 21300000, guid: a16c91ca6a9a60b4596b57635c8a3e71, type: 3}
+    icon: {fileID: -163972788, guid: dbc9760bb0a10654eb05157aac2eaf8e, type: 3}
     previewPrefab: {fileID: 2510993130956720519, guid: abbea6fd91c4a9e41887bb90637dbfe6, type: 3}
     speedStars: 4
     controlStars: 2
@@ -40,7 +40,7 @@ MonoBehaviour:
   - id: 2
     name: 2
     displayName: Scooter
-    icon: {fileID: 21300000, guid: b8ede16274078e4479b1a6b2d1e5ea06, type: 3}
+    icon: {fileID: -566663880, guid: dbc9760bb0a10654eb05157aac2eaf8e, type: 3}
     previewPrefab: {fileID: 817691091575644543, guid: 8feab831b19068b4783db0783483dc14, type: 3}
     speedStars: 2
     controlStars: 4

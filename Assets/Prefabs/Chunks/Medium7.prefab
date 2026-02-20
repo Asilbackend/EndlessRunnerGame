@@ -370,7 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: 'allowedSpeeds.Array.data[0]'
-      value: 8
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: 'allowedSpeeds.Array.data[1]'
@@ -550,7 +550,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: 'allowedSpeeds.Array.data[0]'
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: 'allowedSpeeds.Array.data[1]'
