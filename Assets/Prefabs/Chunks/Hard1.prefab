@@ -122,7 +122,7 @@ MonoBehaviour:
   LeftLane: {fileID: 704691763659792674}
   CenterLane: {fileID: 1814990637460248000}
   RightLane: {fileID: 3810386476637832776}
-  laneRandomizationMode: 1
+  laneRandomizationMode: 0
   oppositeDynamicObstacleConfigs: []
   dynamicObstaclesContainer: {fileID: 11400000, guid: 19c06956829383c4cac16f0dbfb5bd77, type: 2}
   warningSignPrefab: {fileID: 620278877519765559, guid: bb2f302ef51824e448be5d64f418b8cb, type: 3}
