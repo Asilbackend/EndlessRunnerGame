@@ -2,6 +2,7 @@ using Managers;
 using UI;
 using UnityEngine;
 using World;
+using static UnityEngine.Rendering.STP;
 
 public class GameController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class GameController : MonoBehaviour
     [HideInInspector] public float PlayerColliderDisabledTime = 2;
 
     [SerializeField] private World.ParticleEffectsSO _particleEffectsSO;
+    [SerializeField] private GameConfigSO config;
     public World.ParticleEffectsSO ParticleEffectsSO => _particleEffectsSO;
 
     private void Awake()
@@ -48,6 +50,14 @@ public class GameController : MonoBehaviour
         WorldManager = GetComponent<WorldManager>();
         SetHealth(_defaultHealth);
         SetPoints(0);
+
+        if (config == null) return;
+
+        string vehicleId = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedVehicleId, config.defaultVehicleId);
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.SetSelectedVehicleId(vehicleId);
+        GameHealth = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Health, _defaultHealth);
     }
 
     public int GetPoints()
@@ -88,7 +98,7 @@ public class GameController : MonoBehaviour
     {
         GamePoints = 0;
         IsGameOver = false;
-        _uiManager.PlayerHUD.RefreshFromGameManager();
+        _uiManager.PlayerHUD.RefreshFromGameController();
         WorldManager.ResetWorld();
     }
 

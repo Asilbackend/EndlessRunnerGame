@@ -10,8 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8375802552350462792}
   - component: {fileID: 4869252794062200045}
-  - component: {fileID: 7239528531774351399}
-  - component: {fileID: 9204851194535197331}
+  - component: {fileID: 8429928791679333772}
   m_Layer: 0
   m_Name: Prop_StreetSign_Stright
   m_TagString: Untagged
@@ -42,8 +41,8 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9184815084564154866}
   m_Mesh: {fileID: 3783084790769161450, guid: 0841c37057d7d5e4da19f76baa018895, type: 3}
---- !u!23 &7239528531774351399
-MeshRenderer:
+--- !u!137 &8429928791679333772
+SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -57,7 +56,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
+  m_RayTracingMode: 3
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
@@ -89,26 +88,15 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &9204851194535197331
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9184815084564154866}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
+  serializedVersion: 2
+  m_Quality: 0
+  m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
   m_Mesh: {fileID: 3783084790769161450, guid: 0841c37057d7d5e4da19f76baa018895, type: 3}
+  m_Bones: []
+  m_BlendShapeWeights: []
+  m_RootBone: {fileID: 0}
+  m_AABB:
+    m_Center: {x: 0, y: 2.1774738, z: 0.041710135}
+    m_Extent: {x: 1.39, y: 2.79, z: 3.98}
+  m_DirtyAABB: 0

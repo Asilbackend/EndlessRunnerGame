@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1556730471601040362}
   - component: {fileID: 2464952825579398223}
-  - component: {fileID: 419312782837649541}
+  - component: {fileID: 333178535917070136}
   m_Layer: 0
   m_Name: cliff
   m_TagString: Untagged
@@ -41,8 +41,8 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2220642614065901904}
   m_Mesh: {fileID: -8351333336715449528, guid: 79041dc4cacc9e04aa1957f9125d9bab, type: 3}
---- !u!23 &419312782837649541
-MeshRenderer:
+--- !u!137 &333178535917070136
+SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -56,7 +56,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
+  m_RayTracingMode: 3
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
@@ -88,4 +88,15 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
+  serializedVersion: 2
+  m_Quality: 0
+  m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
+  m_Mesh: {fileID: -8351333336715449528, guid: 79041dc4cacc9e04aa1957f9125d9bab, type: 3}
+  m_Bones: []
+  m_BlendShapeWeights: []
+  m_RootBone: {fileID: 0}
+  m_AABB:
+    m_Center: {x: 0, y: 0.76154757, z: 0}
+    m_Extent: {x: 2.48, y: 0.84471, z: 0.63}
+  m_DirtyAABB: 0

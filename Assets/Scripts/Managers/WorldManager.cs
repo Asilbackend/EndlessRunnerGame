@@ -11,9 +11,9 @@ namespace Managers
         [SerializeField] private ChunkPool chunkPool;
 
 
-        private readonly Lane _leftLane = new Lane(LaneNumber.Left, -5f, -1.67f);
-        private readonly Lane _centerLane = new Lane(LaneNumber.Left, -1.66f, 1.66f);
-        private readonly Lane _rightLane = new Lane(LaneNumber.Left, 1.67f, 5f);
+        private readonly Lane _leftLane   = new Lane(LaneNumber.Left,   -5f,   -1.67f);
+        private readonly Lane _centerLane = new Lane(LaneNumber.Center, -1.66f, 1.66f);
+        private readonly Lane _rightLane  = new Lane(LaneNumber.Right,   1.67f,  5f);
 
         public ChunkSpawner ChunkSpawner => chunkSpawner;
 
@@ -104,6 +104,10 @@ namespace Managers
             {
                 worldMover.Resume();
             }
+            // PauseWorld() pauses both the mover and dynamic obstacles, so ResumeWorld()
+            // must resume both.  Previously only the mover was resumed here, leaving
+            // dynamic obstacles frozen while the world continued moving.
+            ResumeDynamicObstacles();
         }
 
         public void ResumeDynamicObstacles()
@@ -208,6 +212,14 @@ namespace Managers
             yield return new WaitForSeconds(duration);
             worldMover?.Pause();
             PauseDynamicObstacles();
+
+            // After the visual rewind completes, teleport every dynamic obstacle back to its
+            // designed start position and clear all motion/reverse/pause flags.  This ensures
+            // that (a) obstacles are at the correct position designed for the level, and (b)
+            // the following ResumeDynamicObstacles() call leaves them idle so they re-activate
+            // at the correct trigger distance — not prematurely from wherever the rewind left them.
+            ResetObstaclesForCheckpoint();
+
             if (player != null)
             {
                 player.StopAnimationAndWheels();
@@ -219,6 +231,24 @@ namespace Managers
             {
                 player.ResumeAnimationAndWheels();
                 player.ResumeParticleSystems();
+            }
+        }
+
+        /// <summary>
+        /// Teleports all dynamic obstacles on every active chunk back to their designed start
+        /// positions and clears all reverse/pause/motion state, in preparation for resuming
+        /// after a checkpoint rewind.
+        /// </summary>
+        private void ResetObstaclesForCheckpoint()
+        {
+            if (chunkSpawner == null) return;
+            var activeChunks = chunkSpawner.GetActiveChunks();
+            foreach (var composite in activeChunks)
+            {
+                if (composite != null && composite.IsActive && composite.Chunk != null)
+                {
+                    composite.Chunk.ResetObstaclesForCheckpoint();
+                }
             }
         }
         

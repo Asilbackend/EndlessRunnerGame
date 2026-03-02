@@ -32,7 +32,6 @@ namespace World
         // Side bend control
         [Header("Side Bend Control")]
         [SerializeField] private float bendAmplitude = 1f; // max amplitude (will be clamped to [-2.5,2.5])
-        [SerializeField] private float bendFrequency = 0.1f; // not used for this simple approach but kept
         [SerializeField] private float bendSmoothTime = 0.35f; // smoothing for runtime updates
         [Tooltip("Chance [0..1] that after a straight period the system will start a bend. Lower = more often straight.")]
         [Range(0f,1f)]
@@ -143,17 +142,6 @@ namespace World
             // If the game is over, stop bending and force zero once
             if (GameController.Instance != null && GameController.Instance.IsGameOver)
             {
-                // ensure shader exists and set zero once
-                if (_shaderGlobals != null)
-                {
-                    _bendCurrent = 0f;
-                    _bendVelocity = 0f;
-                    if (!Mathf.Approximately(_lastAppliedBend, 0f))
-                    {
-                        _shaderGlobals.SetSideBendValue(0f);
-                        _lastAppliedBend = 0f;
-                    }
-                }
                 return;
             }
 

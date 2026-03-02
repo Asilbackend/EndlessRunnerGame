@@ -14,7 +14,6 @@ public class MainMenuController : MonoBehaviour
 
     [Header("Top Bar UI")]
     [SerializeField] private TMP_Text coinsText;
-    [SerializeField] private TMP_Text livesText;
 
     [Header("Buttons")]
     [SerializeField] private Button playButton;
@@ -38,8 +37,7 @@ public class MainMenuController : MonoBehaviour
         if (mapSelector) mapSelector.InitFromSave();
         if (vehicleSelector) vehicleSelector.InitFromSave();
 
-        if (coinsText) coinsText.text = "12450";
-        if (livesText) livesText.text = "3";
+        if (coinsText) coinsText.text = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0).ToString();
     }
 
     private void OnPlayClicked()

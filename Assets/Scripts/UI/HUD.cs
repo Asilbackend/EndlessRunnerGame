@@ -13,7 +13,7 @@ namespace UI
 
         private void OnEnable()
         {
-            RefreshFromGameManager();
+            RefreshFromGameController();
         }
 
         public void SetHealth(int health)
@@ -55,7 +55,7 @@ namespace UI
             }
         }
 
-        public void RefreshFromGameManager()
+        public void RefreshFromGameController()
         {
             if (GameController.Instance == null) return;
 
@@ -65,7 +65,7 @@ namespace UI
 
         public void ForceRefresh()
         {
-            RefreshFromGameManager();
+            RefreshFromGameController();
         }
 
         public void Show()

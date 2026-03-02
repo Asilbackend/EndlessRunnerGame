@@ -432,7 +432,7 @@ public class PlayerController : MonoBehaviour
 
     private void SetAnimatorType()
     {
-        if(playableObjectName == PlayableObjectName.Skateboard)
+        if (_playerData.name == PlayableObjectName.Skateboard)
         {
             _animatorMode = AnimatorMode.PositionBased;
         }

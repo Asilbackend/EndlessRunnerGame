@@ -47,6 +47,7 @@ namespace World
         private bool _isDynamic;
         private bool _isBlocked = false;
         private bool _wasMovingBeforePause = false;
+        private bool _wasMovingBeforeReverse = false;
         private bool _isPaused = false;
         private bool _isReversed = false;
 
@@ -135,9 +136,16 @@ namespace World
             // Don't create if already exists
             if (_pointTrigger != null) return;
             
-            // Check if trigger already exists as child
+            // Check if trigger already exists as child (e.g. baked into the prefab)
             _pointTrigger = GetComponentInChildren<ObstaclePointTrigger>();
-            if (_pointTrigger != null) return;
+            if (_pointTrigger != null)
+            {
+                // Also cache the collider so OnTriggerEnter's bounds-check guard works correctly
+                // for prefab-embedded triggers (without this, _pointTriggerCollider stays null and
+                // the guard is silently skipped, allowing point-trigger touches to deal damage).
+                _pointTriggerCollider = _pointTrigger.GetComponent<Collider>();
+                return;
+            }
             
             // Create trigger GameObject
             GameObject triggerObject = new GameObject("PointTrigger");
@@ -247,8 +255,10 @@ namespace World
                     }
                 }
 
-                // Check for obstacles in front before moving (skip when reversed - time is going backwards)
-                if (_isMoving && !_isBlocked)
+                // Check for obstacles in front before moving (skip when reversed - time is going backwards).
+                // Re-evaluate _isBlocked every frame so that if a blocking obstacle moves away or is
+                // despawned the obstacle behind it can resume immediately instead of staying frozen.
+                if (_isMoving)
                 {
                     if (!_isReversed)
                     {
@@ -339,8 +349,35 @@ namespace World
             _isMoving = false;
             _isBlocked = false;
             _forceStartMoving = false;
-            
+
             // Reset point trigger if it exists
+            if (_pointTrigger != null)
+            {
+                _pointTrigger.ResetTrigger();
+            }
+        }
+
+        /// <summary>
+        /// Full state reset used after a checkpoint rewind. Unlike ResetMoving() (which is
+        /// called on chunk recycle), this also clears ALL reverse/pause bookkeeping so that
+        /// the Resume() call that follows in the coroutine cannot accidentally re-enable
+        /// movement. The caller is responsible for teleporting the transform back to the
+        /// designed start position before calling this.
+        ///
+        /// Key mechanic: setting _isReversed = false makes StopReverse() inside Resume()
+        /// a no-op, so Resume() ends with _isMoving = _wasMovingBeforePause = false. ✓
+        /// </summary>
+        public void ResetForCheckpoint()
+        {
+            _isMoving = false;
+            _isBlocked = false;
+            _forceStartMoving = false;
+            _wasMovingBeforePause = false;      // prevents Resume() from re-enabling motion
+            _wasMovingBeforeReverse = false;    // prevents StopReverse() from re-enabling motion
+            _isPaused = false;
+            _isReversed = false;                // StopReverse() early-returns when false → no-op
+            _moveSpeed = _originalMoveSpeed;    // restore speed (was set to reverse speed)
+
             if (_pointTrigger != null)
             {
                 _pointTrigger.ResetTrigger();
@@ -372,7 +409,12 @@ namespace World
             if (!_isDynamic) return;
             if (_isReversed) return;
             _isReversed = true;
-            
+
+            // Save whether this obstacle was already moving BEFORE the reverse begins.
+            // This is separate from _wasMovingBeforePause so that a Pause() called
+            // while reversing does not overwrite the pre-activation state.
+            _wasMovingBeforeReverse = _isMoving;
+
             // For opposite direction obstacles, reverse means moving forward (positive speed)
             // For normal obstacles, reverse means moving backward (negative speed)
             if (isOppositeDirection)
@@ -383,7 +425,7 @@ namespace World
             {
                 _moveSpeed = -Mathf.Abs(_originalMoveSpeed) * GameController.Instance.ReverseMultiplier;
             }
-            
+
             _isPaused = false;
             _isMoving = true;
         }
@@ -394,7 +436,12 @@ namespace World
             if (!_isReversed) return;
             _isReversed = false;
             _moveSpeed = _originalMoveSpeed;
-            _isMoving = _wasMovingBeforePause;
+            // Restore to the state before the reverse started, NOT _wasMovingBeforePause.
+            // Using _wasMovingBeforePause here would incorrectly activate obstacles that
+            // had not yet reached their activation distance (because Reverse() sets
+            // _isMoving = true, which then gets captured into _wasMovingBeforePause by
+            // the subsequent Pause() call in the checkpoint-reset coroutine).
+            _isMoving = _wasMovingBeforeReverse;
         }
 
         public void OnDespawn()

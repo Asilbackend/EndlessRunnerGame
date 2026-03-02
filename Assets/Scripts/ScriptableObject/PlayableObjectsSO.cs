@@ -8,6 +8,7 @@ namespace Player
         Skateboard,
         Bicycle,
         Scooter,
+        None
     }
 
     [System.Serializable]
@@ -25,9 +26,9 @@ namespace Player
         [Tooltip("Optional 3D preview in menu")]
         public GameObject previewPrefab;
 
-        [Header("Stats (for UI, 1-5 stars)")]
-        [Range(1, 5)] public int speedStars = 3;
-        [Range(1, 5)] public int controlStars = 3;
+        [Header("Stats (for UI, 1-3 stars)")]
+        [Range(1, 3)] public int healthStars = 3;
+        [Range(1, 3)] public int driftStars = 3;
 
         [Header("Gameplay")]
         public GameObject prefab;

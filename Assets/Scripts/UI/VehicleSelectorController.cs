@@ -14,14 +14,10 @@ public class VehicleSelectorController : MonoBehaviour
     [SerializeField] private Image vehicleIcon;
     [SerializeField] private TMP_Text vehicleNameText;
 
-    [Header("Stats (optional)")]
-    [SerializeField] private TMP_Text speedText;
-    [SerializeField] private TMP_Text controlText;
+    [SerializeField] private StarsPanel healthStars;
+    [SerializeField] private StarsPanel driftStars;
 
-    [Header("3D Preview (optional)")]
-    [SerializeField] private Transform previewAnchor;
 
-    private GameObject _previewInstance;
     private int _index;
     private PlayableObjectData _current;
 
@@ -97,16 +93,15 @@ public class VehicleSelectorController : MonoBehaviour
         if (vehicleIcon && _current.icon) vehicleIcon.sprite = _current.icon;
         if (vehicleNameText) vehicleNameText.text = string.IsNullOrEmpty(_current.displayName) ? _current.name.ToString() : _current.displayName;
 
-        if (speedText) speedText.text = "Speed: " + ToStars(_current.speedStars);
-        if (controlText) controlText.text = "Control: " + ToStars(_current.controlStars);
-
-        UpdatePreview(_current);
+        healthStars?.SetStars(Current.healthStars);
+        driftStars?.SetStars(_current.driftStars);
 
         if (save && !locked)
         {
             PlayerPrefsManager.SetString(PlayerPrefsKeys.SelectedVehicleId, _current.EffectiveId);
             UIEventBus.RaiseVehicleChanged(_current.EffectiveId);
         }
+
     }
 
     private bool IsLocked(PlayableObjectData v)
@@ -114,30 +109,5 @@ public class VehicleSelectorController : MonoBehaviour
         if (v == null || !v.lockedByDefault) return false;
         string key = $"unlock_vehicle_{v.EffectiveId}";
         return PlayerPrefs.GetInt(key, 0) != 1;
-    }
-
-    private void UpdatePreview(PlayableObjectData v)
-    {
-        if (!previewAnchor) return;
-
-        if (_previewInstance)
-        {
-            Destroy(_previewInstance);
-            _previewInstance = null;
-        }
-
-        if (v?.previewPrefab != null)
-        {
-            _previewInstance = Instantiate(v.previewPrefab, previewAnchor);
-            _previewInstance.transform.localPosition = Vector3.zero;
-            _previewInstance.transform.localRotation = Quaternion.identity;
-            _previewInstance.transform.localScale = Vector3.one;
-        }
-    }
-
-    private static string ToStars(int value)
-    {
-        value = Mathf.Clamp(value, 1, 5);
-        return new string('★', value) + new string('☆', 5 - value);
     }
 }

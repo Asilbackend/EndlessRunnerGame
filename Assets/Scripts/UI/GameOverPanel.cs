@@ -6,6 +6,7 @@ public class GameOverPanel : MonoBehaviour
 {
     [SerializeField] Button playAgainButton;
     [SerializeField] Button lastCheckpointButton;
+    [SerializeField] Button mainMenuButton;
 
     private void Start()
     {
@@ -17,6 +18,15 @@ public class GameOverPanel : MonoBehaviour
         {
             lastCheckpointButton.onClick.AddListener(OnLastCheckpointClicked);
         }
+        if (mainMenuButton != null)
+        {
+            mainMenuButton.onClick.AddListener(OnMainMenuClicked);
+        }
+    }
+
+    private void OnEnable()
+    {
+        
     }
 
     private void OnPlayAgainClicked()
@@ -29,6 +39,12 @@ public class GameOverPanel : MonoBehaviour
     {
         GameController.Instance?.ResetToLastCheckpoint();
         Hide();
+    }
+
+    private void OnMainMenuClicked()
+    {
+        Hide();
+        SceneLoader.Load("MainMenu");
     }
 
     public void Show()

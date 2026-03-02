@@ -136,7 +136,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -148,6 +153,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &1094719119633046190
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,7 +259,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -263,6 +276,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &1129731730850948453
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,7 +382,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: 18bbebe22d297a94abdd9b3d85e312de, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 88
   maxRotation: 92
@@ -378,6 +399,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: 0
   maxZOffset: 0
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &1302531002252468373
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,7 +553,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -541,6 +570,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &2583694180268050046
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,7 +676,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -656,6 +693,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &3001502156996029922
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,7 +799,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: 18bbebe22d297a94abdd9b3d85e312de, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 88
   maxRotation: 92
@@ -771,6 +816,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: 0
   maxZOffset: 0
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &3132722872156828998
 GameObject:
   m_ObjectHideFlags: 0
@@ -874,7 +922,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -886,6 +939,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &3494885027396806616
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,7 +1045,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -1001,6 +1062,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &3851105198358143785
 GameObject:
   m_ObjectHideFlags: 0
@@ -1138,7 +1202,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -1150,6 +1219,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &4163835101492057072
 GameObject:
   m_ObjectHideFlags: 0
@@ -1253,7 +1325,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -1265,6 +1342,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &4449175209255671128
 GameObject:
   m_ObjectHideFlags: 0
@@ -1409,7 +1489,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -1421,6 +1506,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &4793663573958097370
 GameObject:
   m_ObjectHideFlags: 0
@@ -1524,7 +1612,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -1536,6 +1629,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &4978865378902132497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1680,7 +1776,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -1692,6 +1793,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &5156406137433818327
 GameObject:
   m_ObjectHideFlags: 0
@@ -1795,7 +1899,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: 18bbebe22d297a94abdd9b3d85e312de, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 88
   maxRotation: 92
@@ -1807,6 +1916,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: 0
   maxZOffset: 0
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &5886089579712145431
 GameObject:
   m_ObjectHideFlags: 0
@@ -1943,7 +2055,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -1955,6 +2072,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &6274248574586052445
 GameObject:
   m_ObjectHideFlags: 0
@@ -2058,7 +2178,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -2070,6 +2195,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &6545301072583593381
 GameObject:
   m_ObjectHideFlags: 0
@@ -2173,7 +2301,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -2185,6 +2318,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &6571703633630957186
 GameObject:
   m_ObjectHideFlags: 0
@@ -2288,7 +2424,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -2300,6 +2441,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &6794940891029539914
 GameObject:
   m_ObjectHideFlags: 0
@@ -2437,7 +2581,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -2449,6 +2598,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &7650287257395880268
 GameObject:
   m_ObjectHideFlags: 0
@@ -2552,7 +2704,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -2564,6 +2721,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &8197277807674217714
 GameObject:
   m_ObjectHideFlags: 0
@@ -2667,7 +2827,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -2679,6 +2844,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &8245614578922748921
 GameObject:
   m_ObjectHideFlags: 0
@@ -2782,7 +2950,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: 18bbebe22d297a94abdd9b3d85e312de, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 88
   maxRotation: 92
@@ -2794,6 +2967,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: 0
   maxZOffset: 0
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &8363934159843937626
 GameObject:
   m_ObjectHideFlags: 0
@@ -2897,7 +3073,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -2909,6 +3090,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1 &8500091585986913355
 GameObject:
   m_ObjectHideFlags: 0
@@ -3012,7 +3196,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
   objectsContainer: {fileID: 11400000, guid: ffdf41fd744613343a951b9b2f46270b, type: 2}
-  speed: 0
+  isDynamic: 0
+  allowedSpeeds: []
+  defaultSpeed: 8
+  showMeetingPointGizmos: 1
+  activationDistance: 60
+  worldSpeed: 20
   randomRotation: 1
   minRotation: 0
   maxRotation: 360
@@ -3024,6 +3213,9 @@ MonoBehaviour:
   maxXOffset: 2
   minZOffset: -4.5
   maxZOffset: 4.5
+  hasExtraPoints: 0
+  extraPointsPrefab: {fileID: 0}
+  extraPointsDistance: 1
 --- !u!1001 &1314025817056123950
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3228,7 +3420,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5725147159355386990, guid: 908b6b99cda144b4894221317f6453cf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

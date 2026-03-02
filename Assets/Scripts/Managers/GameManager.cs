@@ -17,7 +17,15 @@ public class GameManager : MonoBehaviour
 
     private string _selectedVehicleIdOverride;
 
-    public void SetSelectedVehicleId(string vehicleId) => _selectedVehicleIdOverride = vehicleId;
+    // Persist and retrieve selected vehicle from PlayerPrefs so PlayerController can read it reliably
+    public void SetSelectedVehicleId(string vehicleId)
+    {
+        _selectedVehicleIdOverride = vehicleId;
+        if (!string.IsNullOrEmpty(vehicleId))
+        {
+            PlayerPrefsManager.SetString(PlayerPrefsKeys.SelectedVehicleId, vehicleId);
+        }
+    }
     public string GetSelectedVehicleId() => _selectedVehicleIdOverride;
 
     public enum GameState
@@ -30,7 +38,6 @@ public class GameManager : MonoBehaviour
 
 
     public static GameManager Instance { get; private set; }
-    private readonly int _defaultHealth = 3;
     private readonly int _defaultPoints = 0;
 
     //public int PlayerHealth { get; private set; }
@@ -48,6 +55,9 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
+
+        // Load selected vehicle from PlayerPrefs so it's available immediately
+        _selectedVehicleIdOverride = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedVehicleId, string.Empty);
 
         //PlayerHealth = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Health, _defaultHealth);
         PlayerPoints = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, _defaultPoints);

@@ -156,22 +156,12 @@ namespace World
         public void MoveChunk(float deltaMovement)
         {
             if (!_isActive) return;
-            
+
             _currentZPosition -= deltaMovement;
             transform.position = new Vector3(transform.position.x, transform.position.y, _currentZPosition);
-
-            var objectsCopy = _worldObjects.ToArray();
-            foreach (var worldObject in objectsCopy)
-            {
-                if (worldObject == null) continue;
-
-                var comp = worldObject as Component;
-                if (comp != null)
-                {
-                    if (comp.transform.IsChildOf(transform))
-                        continue;
-                }
-            }
+            // Child world objects (obstacles, collectibles) move automatically because their
+            // transforms are children of this chunk.  The former loop over _worldObjects
+            // was dead code — it only had a `continue` path and performed no action.
         }
         
         public void AddWorldObject(IWorldObject worldObject)
@@ -238,6 +228,36 @@ namespace World
                 var obstacle = t.GetComponent<WorldObstacle>();
                 if (obstacle != null)
                     obstacle.ResetMoving();
+            }
+        }
+
+        /// <summary>
+        /// Resets all obstacles to their designed start positions after a checkpoint rewind.
+        /// Unlike ResetObstaclePositions() (used on chunk recycle), this also handles
+        /// opposite-direction spawned obstacles (teleported back, not destroyed) and clears
+        /// all motion/reverse/pause bookkeeping so the following Resume() call leaves every
+        /// obstacle idle, waiting to re-activate at the correct trigger distance.
+        /// </summary>
+        public void ResetObstaclesForCheckpoint()
+        {
+            // Baked obstacles: restore original local position + clear all state flags
+            foreach (var kvp in _originalObstaclePositions)
+            {
+                var t = kvp.Key;
+                if (t == null) continue;
+
+                t.localPosition = kvp.Value;
+
+                var obstacle = t.GetComponent<WorldObstacle>();
+                if (obstacle != null)
+                    obstacle.ResetForCheckpoint();
+            }
+
+            // Spawned opposite-direction obstacles: teleport back to spawn position + clear state
+            foreach (var spawner in _oppositeObstacleSpawners)
+            {
+                if (spawner != null)
+                    spawner.ResetForCheckpoint();
             }
         }
 

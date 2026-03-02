@@ -80,7 +80,11 @@ namespace World
         private IEnumerator SlowMotionEffect()
         {
             Time.timeScale = 0.5f;
-            yield return new WaitForSeconds(0.5f);
+            // WaitForSecondsRealtime is unaffected by Time.timeScale, so the effect
+            // lasts exactly 0.5 real seconds.  Using WaitForSeconds(0.5f) here would
+            // actually wait 1.0 real second because 0.5 scaled-seconds = 1.0 real second
+            // at 0.5× timeScale.
+            yield return new WaitForSecondsRealtime(0.5f);
             Time.timeScale = 1f;
         }
         public void ResetTrigger()

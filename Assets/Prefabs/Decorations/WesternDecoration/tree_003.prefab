@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6964791683845638198}
   - component: {fileID: 6271318246637029267}
-  - component: {fileID: 8137096321567372121}
+  - component: {fileID: 3646262015267682736}
   m_Layer: 0
   m_Name: tree_003
   m_TagString: Untagged
@@ -41,8 +41,8 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7776653939424268940}
   m_Mesh: {fileID: 7252620314616412052, guid: a27b0c6a67be5e347932a4268bb2525a, type: 3}
---- !u!23 &8137096321567372121
-MeshRenderer:
+--- !u!137 &3646262015267682736
+SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -56,7 +56,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
+  m_RayTracingMode: 3
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
@@ -88,4 +88,15 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
+  serializedVersion: 2
+  m_Quality: 0
+  m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
+  m_Mesh: {fileID: 7252620314616412052, guid: a27b0c6a67be5e347932a4268bb2525a, type: 3}
+  m_Bones: []
+  m_BlendShapeWeights: []
+  m_RootBone: {fileID: 0}
+  m_AABB:
+    m_Center: {x: -0.015035123, y: 0.516206, z: 0.030070245}
+    m_Extent: {x: 1.16, y: 0.5208099, z: 1.36}
+  m_DirtyAABB: 0
