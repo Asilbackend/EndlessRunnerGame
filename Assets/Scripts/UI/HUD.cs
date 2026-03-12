@@ -26,7 +26,7 @@ namespace UI
 
         public void SetMapName(string name)
         {
-            if (healthText != null)
+            if (mapName != null)
             {
                 mapName.text = name;
             }

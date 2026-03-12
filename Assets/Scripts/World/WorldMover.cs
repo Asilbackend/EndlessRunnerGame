@@ -139,7 +139,7 @@ namespace World
                 }
             }
 
-            // If the game is over, stop bending and force zero once
+            // If the game is over, freeze the bend at its current value (don't change it)
             if (GameController.Instance != null && GameController.Instance.IsGameOver)
             {
                 return;
@@ -271,6 +271,19 @@ namespace World
         public void Reverse()
         {
             _currentSpeed = -1 * baseSpeed * GameController.Instance.ReverseMultiplier;
+        }
+
+        public void ResetBend()
+        {
+            _bendCurrent = 0f;
+            _bendVelocity = 0f;
+            _lastAppliedBend = float.NaN; // force shader update next frame
+            EnterState(BendState.Straight);
+            if (_shaderGlobals != null)
+            {
+                _shaderGlobals.SetSideBendValue(0f);
+                _lastAppliedBend = 0f;
+            }
         }
     }
 }

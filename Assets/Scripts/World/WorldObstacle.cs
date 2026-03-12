@@ -13,6 +13,7 @@ namespace World
         [SerializeField] private bool destroyOnDespawn = false;
         [SerializeField] private float damage = 1;
         [SerializeField] private bool isOppositeDirection = false; // If true, moves backward and rotates 180 degrees
+        [SerializeField] private GameObject oppositeDirectionSign;
 
         public bool IsOppositeDirection => isOppositeDirection;
         
@@ -22,6 +23,12 @@ namespace World
             if (value)
             {
                 transform.rotation = Quaternion.Euler(0, 180, 0);
+                if (oppositeDirectionSign != null) oppositeDirectionSign.SetActive(true);
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+                if (oppositeDirectionSign != null) oppositeDirectionSign.SetActive(false);
             }
         }
 
@@ -57,6 +64,12 @@ namespace World
         private bool _forceStartMoving = false;
         private ObstaclePointTrigger _pointTrigger;
         private Collider _pointTriggerCollider; // Cached reference for performance
+
+        // Rewind clamping — track the local position where the obstacle first started moving
+        // so the reverse animation can stop naturally there instead of overshooting.
+        private Vector3 _activationLocalPosition;    // local pos at the moment movement began
+        private bool _hasActivationPosition = false; // true once the above is captured
+        private float _reverseClampDirection = 0f;   // +1 if localZ grew during play, -1 if it shrank
 
         // Formula = _moveSpeed * (activationDistance / (worldSpeed - _moveSpeed))
 
@@ -100,6 +113,11 @@ namespace World
 
         public void ForceStartMoving()
         {
+            if (!_hasActivationPosition)
+            {
+                _activationLocalPosition = transform.localPosition;
+                _hasActivationPosition = true;
+            }
             _forceStartMoving = true;
             _isMoving = true;
         }
@@ -229,12 +247,20 @@ namespace World
                             var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
                             if (player != null && !_isMoving)
                             {
-                                // Check if player has reached the n meter mark in the chunk
+                                // Check if player has reached the n meter mark in the chunk.
+                                // Use the live chunk StartZ so post-rewind re-activation is correct;
+                                // _chunkStartZ is only set once at spawn time and drifts after rewinds.
                                 float playerZ = player.transform.position.z;
-                                float distanceIntoChunk = playerZ - _chunkStartZ;
-                                
+                                float currentChunkStartZ = _parentChunk != null ? _parentChunk.StartZ : _chunkStartZ;
+                                float distanceIntoChunk = playerZ - currentChunkStartZ;
+
                                 if (distanceIntoChunk >= _startMovingAtMeters)
                                 {
+                                    if (!_hasActivationPosition)
+                                    {
+                                        _activationLocalPosition = transform.localPosition;
+                                        _hasActivationPosition = true;
+                                    }
                                     _isMoving = true;
                                 }
                             }
@@ -249,6 +275,11 @@ namespace World
                             float distanceAhead = transform.position.z - player.transform.position.z;
                             if (distanceAhead <= activationDistance)
                             {
+                                if (!_hasActivationPosition)
+                                {
+                                    _activationLocalPosition = transform.localPosition;
+                                    _hasActivationPosition = true;
+                                }
                                 _isMoving = true;
                             }
                         }
@@ -313,6 +344,29 @@ namespace World
 
         public void MoveWithWorld()
         {
+            // When reversing, stop the obstacle the moment it reaches its designed start position
+            // so it never overshoots. The clamp direction tells us whether the obstacle's local Z
+            // was increasing (+1) or decreasing (-1) during normal play, so we know which side
+            // of _activationLocalPosition counts as "back to start."
+            if (_isReversed && _hasActivationPosition && _reverseClampDirection != 0f)
+            {
+                float localZ = transform.localPosition.z;
+                bool reachedStart = _reverseClampDirection > 0f
+                    ? localZ <= _activationLocalPosition.z   // moved in +Z during play → reverse goes -Z
+                    : localZ >= _activationLocalPosition.z;  // moved in -Z during play → reverse goes +Z
+
+                if (reachedStart)
+                {
+                    transform.localPosition = _activationLocalPosition;
+                    _isMoving = false;
+                    _forceStartMoving = false;
+                    _hasActivationPosition = false; // clear so re-activation captures a fresh position
+                    _reverseClampDirection = 0f;
+                    if (_pointTrigger != null) _pointTrigger.ResetTrigger();
+                    return;
+                }
+            }
+
             if (isOppositeDirection)
             {
                 // For opposite direction obstacles:
@@ -349,6 +403,8 @@ namespace World
             _isMoving = false;
             _isBlocked = false;
             _forceStartMoving = false;
+            _hasActivationPosition = false;  // clear so next run captures a fresh position
+            _reverseClampDirection = 0f;
 
             // Reset point trigger if it exists
             if (_pointTrigger != null)
@@ -372,6 +428,8 @@ namespace World
             _isMoving = false;
             _isBlocked = false;
             _forceStartMoving = false;
+            _hasActivationPosition = false;     // clear so re-activation captures a fresh position
+            _reverseClampDirection = 0f;
             _wasMovingBeforePause = false;      // prevents Resume() from re-enabling motion
             _wasMovingBeforeReverse = false;    // prevents StopReverse() from re-enabling motion
             _isPaused = false;
@@ -410,10 +468,26 @@ namespace World
             if (_isReversed) return;
             _isReversed = true;
 
-            // Save whether this obstacle was already moving BEFORE the reverse begins.
-            // This is separate from _wasMovingBeforePause so that a Pause() called
-            // while reversing does not overwrite the pre-activation state.
-            _wasMovingBeforeReverse = _isMoving;
+            // _isMoving is false for everyone at call-time (PauseDynamicObstacles already ran).
+            // Use _wasMovingBeforePause — it captured the pre-death state before Pause() cleared
+            // _isMoving, so it correctly identifies which obstacles were actually activated.
+            _wasMovingBeforeReverse = _wasMovingBeforePause;
+
+            if (!_wasMovingBeforeReverse)
+            {
+                // Obstacle was never activated — leave it exactly where it is.
+                // _isMoving stays false; no movement occurs during the rewind.
+                _isPaused = false;
+                return;
+            }
+
+            // Record which direction the obstacle moved in local space during normal play.
+            // This is used by MoveWithWorld() to know when we've reversed back to start.
+            if (_hasActivationPosition)
+            {
+                float diff = transform.localPosition.z - _activationLocalPosition.z;
+                _reverseClampDirection = Mathf.Approximately(diff, 0f) ? 0f : Mathf.Sign(diff);
+            }
 
             // For opposite direction obstacles, reverse means moving forward (positive speed)
             // For normal obstacles, reverse means moving backward (negative speed)
@@ -442,6 +516,11 @@ namespace World
             // _isMoving = true, which then gets captured into _wasMovingBeforePause by
             // the subsequent Pause() call in the checkpoint-reset coroutine).
             _isMoving = _wasMovingBeforeReverse;
+            // Clear activation bookkeeping so the next activation captures a fresh position.
+            _hasActivationPosition = false;
+            _forceStartMoving = false;
+            _reverseClampDirection = 0f;
+            if (_pointTrigger != null) _pointTrigger.ResetTrigger();
         }
 
         public void OnDespawn()

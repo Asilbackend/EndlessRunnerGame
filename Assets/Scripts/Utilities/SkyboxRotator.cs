@@ -19,6 +19,7 @@ public class SkyboxRotator : MonoBehaviour
 
     private List<GameObject> cloudPool = new List<GameObject>();
     private List<GameObject> activeClouds = new List<GameObject>();
+    private Dictionary<GameObject, float> cloudSpeeds = new Dictionary<GameObject, float>();
     private Transform poolContainer;
     private float nextSpawnTime;
     private float spawnTimer;
@@ -49,6 +50,7 @@ public class SkyboxRotator : MonoBehaviour
     void Update()
     {
         if (cloudPool == null || cloudPool.Count == 0) return;
+        if (GameController.Instance != null && GameController.Instance.IsGameOver) return;
 
         // Update spawn timer
         spawnTimer += Time.deltaTime;
@@ -71,8 +73,9 @@ public class SkyboxRotator : MonoBehaviour
                 continue;
             }
 
-            // Move cloud from right to left
-            var moveSpeed = Random.Range(minMoveSpeed, maxMoveSpeed);
+            // Move cloud from right to left using its assigned speed
+            if (!cloudSpeeds.TryGetValue(cloud, out float moveSpeed))
+                moveSpeed = minMoveSpeed;
             cloud.transform.position += Vector3.left * moveSpeed * Time.deltaTime;
 
             // If cloud goes off screen on the left, recycle it
@@ -99,10 +102,11 @@ public class SkyboxRotator : MonoBehaviour
 
         if (cloudToActivate != null)
         {
-            // Set random Y and Z position
+            // Set random Y and Z position and assign a fixed speed for this activation
             float randomY = Random.Range(minY, maxY);
             float randomZ = Random.Range(minZ, maxZ);
             cloudToActivate.transform.position = new Vector3(rightBoundary, randomY, randomZ);
+            cloudSpeeds[cloudToActivate] = Random.Range(minMoveSpeed, maxMoveSpeed);
 
             cloudToActivate.SetActive(true);
             activeClouds.Add(cloudToActivate);

@@ -185,6 +185,7 @@ namespace Managers
         private IEnumerator ResetWorldProcess()
         {
             yield return new WaitForSeconds(GameController.Instance.StartTime);
+            worldMover?.ResetBend();
             worldMover?.ResetSpeed();
             worldMover?.Resume();
             ResumeDynamicObstacles();
@@ -202,6 +203,9 @@ namespace Managers
 
         private IEnumerator ResetToLastCheckpointProcess(float duration)
         {
+            // Ensure time scale is normal (slow-motion from ObstaclePointTrigger may still be active)
+            Time.timeScale = 1f;
+
             worldMover?.Reverse();
             ReverseDynamicObstacles();
             var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
@@ -213,12 +217,11 @@ namespace Managers
             worldMover?.Pause();
             PauseDynamicObstacles();
 
-            // After the visual rewind completes, teleport every dynamic obstacle back to its
-            // designed start position and clear all motion/reverse/pause flags.  This ensures
-            // that (a) obstacles are at the correct position designed for the level, and (b)
-            // the following ResumeDynamicObstacles() call leaves them idle so they re-activate
-            // at the correct trigger distance — not prematurely from wherever the rewind left them.
-            ResetObstaclesForCheckpoint();
+            // Do NOT teleport obstacles here — that caused a visible snap during the pre-resume
+            // pause. The clamp in WorldObstacle.MoveWithWorld() smoothly returns each obstacle
+            // to its activation start position during the rewind, so by the time we reach this
+            // point they are already at (or near) their designed positions. StopReverse() called
+            // from ResumeDynamicObstacles() below finishes clearing their state.
 
             if (player != null)
             {

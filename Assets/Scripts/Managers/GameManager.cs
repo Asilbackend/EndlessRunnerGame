@@ -71,13 +71,13 @@ public class GameManager : MonoBehaviour
     //}
     public void SetPlayerPoints(int points)
     {
-        PlayerPoints = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, points);
+        PlayerPoints = points;
         PlayerPrefsManager.SetInt(PlayerPrefsKeys.Points, points);
     }
 
     public void IncrementGameNumber()
     {
-        PlayerGameNumber = PlayerPrefsManager.GetInt(PlayerPrefsKeys.GameNumber, 0);
-        PlayerPrefsManager.SetInt(PlayerPrefsKeys.GameNumber, PlayerGameNumber + 1);
+        PlayerGameNumber = PlayerPrefsManager.GetInt(PlayerPrefsKeys.GameNumber, 0) + 1;
+        PlayerPrefsManager.SetInt(PlayerPrefsKeys.GameNumber, PlayerGameNumber);
     }
 }

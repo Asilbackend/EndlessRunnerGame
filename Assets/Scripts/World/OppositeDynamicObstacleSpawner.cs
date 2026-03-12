@@ -99,10 +99,10 @@ namespace World
             // Only call UpdateChunkStartZ (not Initialize) to avoid resetting _isVisible
             // and toggling renderer visibility every frame, which causes unnecessary work
             // and potential flickering.
-            if (_warningSignComponent != null)
-            {
-                _warningSignComponent.UpdateChunkStartZ(_chunkStartZ);
-            }
+            //if (_warningSignComponent != null)
+            //{
+            //    _warningSignComponent.UpdateChunkStartZ(_chunkStartZ);
+            //}
         }
 
         private void SpawnWarningSign()
@@ -143,14 +143,14 @@ namespace World
             _spawnedWarningSign.transform.localPosition = signLocalPosition;
             _spawnedWarningSign.name = $"WarningSign_{_lane}_Middle";
 
-            _warningSignComponent = _spawnedWarningSign.GetComponent<OppositeDynamicObstacleWarningSign>();
-            if (_warningSignComponent == null)
-            {
-                _warningSignComponent = _spawnedWarningSign.AddComponent<OppositeDynamicObstacleWarningSign>();
-            }
+            //_warningSignComponent = _spawnedWarningSign.GetComponent<OppositeDynamicObstacleWarningSign>();
+            //if (_warningSignComponent == null)
+            //{
+            //    _warningSignComponent = _spawnedWarningSign.AddComponent<OppositeDynamicObstacleWarningSign>();
+            //}
 
-            // Initialize sign to be visible from calculated appear position to end of chunk
-            _warningSignComponent.Initialize(_chunkStartZ, chunkLength, _calculatedSignAppearAtMeters, chunkLength);
+            //// Initialize sign to be visible from calculated appear position to end of chunk
+            //_warningSignComponent.Initialize(_chunkStartZ, chunkLength, _calculatedSignAppearAtMeters, chunkLength);
             
         }
 
@@ -164,10 +164,10 @@ namespace World
 
             float playerZ = player.transform.position.z;
             float distanceIntoChunk = playerZ - _chunkStartZ;
-            if (!_signSpawned)
-            {
-                SpawnWarningSign();
-            }
+            //if (!_signSpawned)
+            //{
+            //    SpawnWarningSign();
+            //}
 
             // Spawn obstacle when player reaches n meters
             if (!_obstacleSpawned && distanceIntoChunk >= _config.obstacleStartAtMeters)
@@ -224,10 +224,10 @@ namespace World
             obstacle.ForceStartMoving();
 
             // Tell the warning sign to track this obstacle
-            if (_warningSignComponent != null)
-            {
-                _warningSignComponent.SetTrackedObstacle(_spawnedObstacle);
-            }
+            //if (_warningSignComponent != null)
+            //{
+            //    _warningSignComponent.SetTrackedObstacle(_spawnedObstacle);
+            //}
 
             _obstacleSpawned = true;
         }
@@ -250,8 +250,8 @@ namespace World
                     obstacle.ResetForCheckpoint();
 
                 // Re-register the (same) obstacle with the warning sign so its reference is fresh
-                if (_warningSignComponent != null)
-                    _warningSignComponent.SetTrackedObstacle(_spawnedObstacle);
+                //if (_warningSignComponent != null)
+                //    _warningSignComponent.SetTrackedObstacle(_spawnedObstacle);
             }
             // _obstacleSpawned stays true  — obstacle exists and will self-activate at right distance
             // _signSpawned stays true       — existing warning sign is reused
