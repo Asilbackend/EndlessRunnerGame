@@ -2,6 +2,7 @@ using Player;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -26,10 +27,39 @@ public class MainMenuController : MonoBehaviour
     {
         if (playButton) playButton.onClick.AddListener(OnPlayClicked);
 
-        if (shopButton) shopButton.onClick.AddListener(() => Debug.Log("Shop"));
-        if (leaderboardButton) leaderboardButton.onClick.AddListener(() => Debug.Log("Leaderboard"));
-        if (settingsButton) settingsButton.onClick.AddListener(() => Debug.Log("Settings"));
-        if (dailyRewardButton) dailyRewardButton.onClick.AddListener(() => Debug.Log("Daily Reward"));
+        if (shopButton) shopButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Shop"); });
+        if (leaderboardButton) leaderboardButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Leaderboard"); });
+        if (settingsButton) settingsButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Settings"); });
+        if (dailyRewardButton) dailyRewardButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Daily Reward"); });
+
+        // Add hover sounds to all buttons
+        AddButtonHoverSound(playButton);
+        AddButtonHoverSound(shopButton);
+        AddButtonHoverSound(leaderboardButton);
+        AddButtonHoverSound(settingsButton);
+        AddButtonHoverSound(dailyRewardButton);
+    }
+
+    private void AddButtonHoverSound(Button button)
+    {
+        if (button == null) return;
+
+        EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
+        if (trigger == null)
+        {
+            trigger = button.gameObject.AddComponent<EventTrigger>();
+        }
+
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerEnter;
+        entry.callback.AddListener((data) =>
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(AudioEventSFX.ButtonHover);
+            }
+        });
+        trigger.triggers.Add(entry);
     }
 
     private void Start()
@@ -38,10 +68,24 @@ public class MainMenuController : MonoBehaviour
         if (vehicleSelector) vehicleSelector.InitFromSave();
 
         if (coinsText) coinsText.text = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0).ToString();
+
+        // Play main menu music
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayMusic(AudioEventMusic.MainMenu, loop: true);
+        }
+
+        // Play menu open sound
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioEventSFX.MenuOpen);
+        }
     }
 
     private void OnPlayClicked()
     {
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
+
         var selectedMap = mapSelector != null ? mapSelector.Current : null;
         var selectedVehicle = vehicleSelector != null ? vehicleSelector.Current : null;
 
@@ -53,6 +97,12 @@ public class MainMenuController : MonoBehaviour
 
         PlayerPrefsManager.SetString(PlayerPrefsKeys.SelectedMapId, selectedMap.id);
         PlayerPrefsManager.SetString(PlayerPrefsKeys.SelectedVehicleId, selectedVehicle.EffectiveId);
+
+        // Play menu close sound
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioEventSFX.MenuClose);
+        }
 
         if (!string.IsNullOrWhiteSpace(selectedMap.sceneName))
             SceneLoader.Load(selectedMap.sceneName);

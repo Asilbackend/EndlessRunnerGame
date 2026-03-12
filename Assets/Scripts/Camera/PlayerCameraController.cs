@@ -90,8 +90,18 @@ public class PlayerCameraController : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this) Destroy(this.gameObject);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
         Instance = this;
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 
     private void Start()

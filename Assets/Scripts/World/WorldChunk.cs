@@ -320,7 +320,6 @@ namespace World
         {
             if (oppositeDynamicObstacleConfigs == null || oppositeDynamicObstacleConfigs.Length == 0)
             {
-                Debug.Log($"WorldChunk '{gameObject.name}': No opposite dynamic obstacle configs. Skipping.");
                 return;
             }
 
@@ -329,8 +328,6 @@ namespace World
                 Debug.LogWarning($"WorldChunk '{gameObject.name}': dynamicObstaclesContainer is not set. Cannot spawn opposite dynamic obstacles.");
                 return;
             }
-
-            Debug.Log($"WorldChunk '{gameObject.name}': Spawning {oppositeDynamicObstacleConfigs.Length} opposite dynamic obstacle spawner(s). Warning sign prefab: {(warningSignPrefab != null ? warningSignPrefab.name : "NULL")}");
 
             foreach (var config in oppositeDynamicObstacleConfigs)
             {

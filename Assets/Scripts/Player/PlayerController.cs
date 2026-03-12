@@ -2,10 +2,8 @@ using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 using World;
 using Utilities;
-using static UnityEngine.Rendering.DebugUI;
 
 // Simple player controller that can move only on three lanes (Left, Center, Right)
 public class PlayerController : MonoBehaviour
@@ -481,6 +479,16 @@ public class PlayerController : MonoBehaviour
 
         _currentLaneIndex = desired;
         _targetPosition = new Vector3(_lanePositions[_currentLaneIndex], transform.position.y, transform.position.z);
+
+        // Play lane change sound
+        if (AudioManager.Instance != null)
+        {
+            if (direction > 0)
+                AudioManager.Instance.PlaySFX(AudioEventSFX.LaneChangeRight);
+            else
+                AudioManager.Instance.PlaySFX(AudioEventSFX.LaneChangeLeft);
+        }
+
         return true;
     }
 
@@ -515,12 +523,19 @@ public class PlayerController : MonoBehaviour
         // Prevent jumping while moving left or right
         if (Mathf.Abs(transform.position.x - _targetPosition.x) > 0.01f && _animatorMode == AnimatorMode.PositionBased)
             return false;
-        
+
         if (_isGrounded)
         {
             _verticalVelocity = jumpVelocity;
             _isGrounded = false;
             StopParticleSystems(); // Stop particles when jumping
+
+            // Play jump sound
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(AudioEventSFX.Jump);
+            }
+
             return true;
         }
         return false;
@@ -553,7 +568,13 @@ public class PlayerController : MonoBehaviour
                 {
                     cam.TriggerLandingBounce();
                 }
-                
+
+                // Play land sound
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySFX(AudioEventSFX.Land);
+                }
+
                 ResumeParticleSystems(); // Resume particles when landing
             }
             
@@ -579,9 +600,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnDeath()
     {
-        Debug.Log(GetDifferenceFromCenterLane());
         SetLane(LaneNumber.Center);
-        TryChangeLane(GetDifferenceFromCenterLane());
         StartCoroutine(ResetCollider());
         StartCoroutine(OnDeathFlash());
     }

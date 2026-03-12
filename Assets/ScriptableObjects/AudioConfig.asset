@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cb8f9752b1fd844d9afa6b1c407c555, type: 3}
+  m_Name: AudioConfig
+  m_EditorClassIdentifier: Assembly-CSharp::AudioConfigSO
+  sfxClips:
+  - sfxEvent: 0
+    clip: {fileID: 8300000, guid: d46323e22e74e46baa241cbf48c85671, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 1
+    clip: {fileID: 8300000, guid: d46323e22e74e46baa241cbf48c85671, type: 3}
+    volume: 1
+    pitch: 1.1
+  - sfxEvent: 2
+    clip: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 3
+    clip: {fileID: 8300000, guid: f00987a42f7ab8443a41deedd5bbc21a, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 4
+    clip: {fileID: 8300000, guid: 1c0ac38b89444d2439a88370c6df7fce, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 5
+    clip: {fileID: 8300000, guid: d2887d2a2f5b32f48990c32d3de41609, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 6
+    clip: {fileID: 8300000, guid: c7d1cb4680b3b6b41b2559bf02cd231c, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 7
+    clip: {fileID: 8300000, guid: b019d1c134f733c41bc80b8528613153, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 8
+    clip: {fileID: 8300000, guid: f00987a42f7ab8443a41deedd5bbc21a, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 9
+    clip: {fileID: 8300000, guid: eaa96b09b1855c24ea0cbb9132d654e7, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 10
+    clip: {fileID: 8300000, guid: eaa96b09b1855c24ea0cbb9132d654e7, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 11
+    clip: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 12
+    clip: {fileID: 8300000, guid: 7478151cf36724a7dada558f746c3633, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 13
+    clip: {fileID: 8300000, guid: 4b4dd7245f6104c8c8eb07ccf6b386ed, type: 3}
+    volume: 1
+    pitch: 1
+  musicClips:
+  - musicEvent: 0
+    clip: {fileID: 8300000, guid: 22a806c9b68a3c446b6a2fe861ac91cc, type: 3}
+    volume: 1
+    pitch: 1
+  - musicEvent: 1
+    clip: {fileID: 8300000, guid: 22a806c9b68a3c446b6a2fe861ac91cc, type: 3}
+    volume: 1
+    pitch: 1
+  - musicEvent: 2
+    clip: {fileID: 8300000, guid: 6e7f23ef945c235438595e89d6332d46, type: 3}
+    volume: 1
+    pitch: 1

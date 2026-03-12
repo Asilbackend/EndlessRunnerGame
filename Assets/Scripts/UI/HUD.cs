@@ -10,6 +10,7 @@ namespace UI
         [SerializeField] private TMP_Text healthText;
         [SerializeField] private TMP_Text runPointsText;
         [SerializeField] private TMP_Text mapName;
+        [SerializeField] private TMP_Text distanceMeterText;
 
         private void OnEnable()
         {
@@ -52,6 +53,15 @@ namespace UI
             else
             {
                 runPointsText.text = amount.ToString();
+            }
+        }
+
+        public void SetDistanceMeter(float distance)
+        {
+            if (distanceMeterText != null)
+            {
+                // Convert distance to meters (assuming world units = meters)
+                distanceMeterText.text = $"{distance:F1}m";
             }
         }
 

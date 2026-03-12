@@ -96,6 +96,12 @@ public class VehicleSelectorController : MonoBehaviour
         healthStars?.SetStars(Current.healthStars);
         driftStars?.SetStars(_current.driftStars);
 
+        // Play vehicle selection sound on every vehicle change (browse or select)
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioEventSFX.SelectVehicle);
+        }
+
         if (save && !locked)
         {
             PlayerPrefsManager.SetString(PlayerPrefsKeys.SelectedVehicleId, _current.EffectiveId);

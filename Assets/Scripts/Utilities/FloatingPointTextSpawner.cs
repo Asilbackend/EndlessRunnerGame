@@ -21,6 +21,12 @@ namespace Utilities
                 Instance = this;
             }
         }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
         
         public static void SpawnFloatingPointText(int points, Vector3 worldPosition)
         {

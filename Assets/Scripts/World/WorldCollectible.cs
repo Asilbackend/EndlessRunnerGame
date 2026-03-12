@@ -53,14 +53,23 @@ namespace World
         public void OnCollided()
         {
             if (_isCollected) return;
-            
+
             _isCollected = true;
 
+            // Track streak and get pitch multiplier
+            float pitchMultiplier = 1f;
             if (GameController.Instance != null)
             {
+                pitchMultiplier = GameController.Instance.OnCoinCollected();
                 GameController.Instance.SetPoints(GameController.Instance.GamePoints + scoreValue);
             }
-            
+
+            // Play collection sound with streak-based pitch
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(AudioEventSFX.Collect, pitchMultiplier: pitchMultiplier);
+            }
+
             OnDespawn();
         }
         
@@ -131,7 +140,8 @@ namespace World
             if (_isReversed) return;
             _isReversed = true;
             _isPaused = false;
-            rotationSpeed = -Mathf.Abs(_originalRotationSpeed) * GameController.Instance.ReverseMultiplier;
+            float reverseMultiplier = GameController.Instance != null ? GameController.Instance.ReverseMultiplier : 2f;
+            rotationSpeed = -Mathf.Abs(_originalRotationSpeed) * reverseMultiplier;
         }
 
         public void StopReverse()

@@ -206,6 +206,12 @@ namespace Managers
             // Ensure time scale is normal (slow-motion from ObstaclePointTrigger may still be active)
             Time.timeScale = 1f;
 
+            // Play checkpoint rewind sound
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(AudioEventSFX.CheckpointRewind);
+            }
+
             worldMover?.Reverse();
             ReverseDynamicObstacles();
             var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
@@ -237,24 +243,6 @@ namespace Managers
             }
         }
 
-        /// <summary>
-        /// Teleports all dynamic obstacles on every active chunk back to their designed start
-        /// positions and clears all reverse/pause/motion state, in preparation for resuming
-        /// after a checkpoint rewind.
-        /// </summary>
-        private void ResetObstaclesForCheckpoint()
-        {
-            if (chunkSpawner == null) return;
-            var activeChunks = chunkSpawner.GetActiveChunks();
-            foreach (var composite in activeChunks)
-            {
-                if (composite != null && composite.IsActive && composite.Chunk != null)
-                {
-                    composite.Chunk.ResetObstaclesForCheckpoint();
-                }
-            }
-        }
-        
         public float GetCurrentSpeed()
         {
             return worldMover != null ? worldMover.CurrentSpeed : 0f;
@@ -273,7 +261,7 @@ namespace Managers
         
         private void OnGUI()
         {
-            if (GameManager.Instance.DebugMode) return;
+            if (GameManager.Instance == null || !GameManager.Instance.DebugMode) return;
             
             GUILayout.BeginArea(new Rect(10, 10, 300, 200));
             GUILayout.Box("World Manager Debug");

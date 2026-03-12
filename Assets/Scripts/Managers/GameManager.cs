@@ -80,4 +80,12 @@ public class GameManager : MonoBehaviour
         PlayerGameNumber = PlayerPrefsManager.GetInt(PlayerPrefsKeys.GameNumber, 0) + 1;
         PlayerPrefsManager.SetInt(PlayerPrefsKeys.GameNumber, PlayerGameNumber);
     }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
 }

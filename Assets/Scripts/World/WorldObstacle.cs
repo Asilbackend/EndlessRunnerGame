@@ -24,6 +24,12 @@ namespace World
             {
                 transform.rotation = Quaternion.Euler(0, 180, 0);
                 if (oppositeDirectionSign != null) oppositeDirectionSign.SetActive(true);
+
+                // Play warning sound when obstacle direction changes
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySFX(AudioEventSFX.DynamicObstacleWarning);
+                }
             }
             else
             {
@@ -392,6 +398,18 @@ namespace World
 
         public void OnCollided()
         {
+            // Prevent multiple collisions after game over
+            if (GameController.Instance != null && GameController.Instance.IsGameOver)
+            {
+                return;
+            }
+
+            // Play collision sound
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(AudioEventSFX.Collision);
+            }
+
             if (GameController.Instance != null)
             {
                 GameController.Instance.GameOver();
@@ -491,13 +509,14 @@ namespace World
 
             // For opposite direction obstacles, reverse means moving forward (positive speed)
             // For normal obstacles, reverse means moving backward (negative speed)
+            float reverseMultiplier = GameController.Instance != null ? GameController.Instance.ReverseMultiplier : 2f;
             if (isOppositeDirection)
             {
-                _moveSpeed = Mathf.Abs(_originalMoveSpeed) * GameController.Instance.ReverseMultiplier;
+                _moveSpeed = Mathf.Abs(_originalMoveSpeed) * reverseMultiplier;
             }
             else
             {
-                _moveSpeed = -Mathf.Abs(_originalMoveSpeed) * GameController.Instance.ReverseMultiplier;
+                _moveSpeed = -Mathf.Abs(_originalMoveSpeed) * reverseMultiplier;
             }
 
             _isPaused = false;
@@ -546,6 +565,13 @@ namespace World
         private void OnTriggerEnter(Collider other)
         {
             if (!isActive) return;
+
+            // Don't process collisions if game is already over
+            if (GameController.Instance != null && GameController.Instance.IsGameOver)
+            {
+                return;
+            }
+
             if (other.CompareTag("Player"))
             {
                 // Check if player is actually touching the obstacle's main collider, not just the point trigger

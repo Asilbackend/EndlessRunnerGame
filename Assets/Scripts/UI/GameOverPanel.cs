@@ -1,6 +1,7 @@
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class GameOverPanel : MonoBehaviour
 {
@@ -13,36 +14,60 @@ public class GameOverPanel : MonoBehaviour
         if (playAgainButton != null)
         {
             playAgainButton.onClick.AddListener(OnPlayAgainClicked);
+            AddButtonHoverSound(playAgainButton);
         }
         if (lastCheckpointButton != null)
         {
             lastCheckpointButton.onClick.AddListener(OnLastCheckpointClicked);
+            AddButtonHoverSound(lastCheckpointButton);
         }
         if (mainMenuButton != null)
         {
             mainMenuButton.onClick.AddListener(OnMainMenuClicked);
+            AddButtonHoverSound(mainMenuButton);
         }
     }
 
-    private void OnEnable()
+    private void AddButtonHoverSound(Button button)
     {
-        
+        if (button == null) return;
+
+        EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
+        if (trigger == null)
+        {
+            trigger = button.gameObject.AddComponent<EventTrigger>();
+        }
+
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerEnter;
+        entry.callback.AddListener((data) =>
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(AudioEventSFX.ButtonHover);
+            }
+        });
+        trigger.triggers.Add(entry);
     }
+
 
     private void OnPlayAgainClicked()
     {
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
         GameController.Instance?.ResetGame();
         Hide();
     }
 
     private void OnLastCheckpointClicked()
     {
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
         GameController.Instance?.ResetToLastCheckpoint();
         Hide();
     }
 
     private void OnMainMenuClicked()
     {
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
         Hide();
         SceneLoader.Load("MainMenu");
     }

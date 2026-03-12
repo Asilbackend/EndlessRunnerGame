@@ -327,7 +327,7 @@ namespace World
                 }
             }
 
-            UIManager.Instance.PlayerHUD.SetMapName(string.IsNullOrEmpty(mapDisplayName) ? (chunkPrefab != null ? chunkPrefab.name : "Unknown") : mapDisplayName);
+            UIManager.Instance?.PlayerHUD?.SetMapName(string.IsNullOrEmpty(mapDisplayName) ? (chunkPrefab != null ? chunkPrefab.name : "Unknown") : mapDisplayName);
         }
 
         private Difficulty GetDifficultyForCurrentLevel()
@@ -379,6 +379,12 @@ namespace World
 
                     if (compositeToRemove != null)
                     {
+                        // Notify GameController that a chunk has been passed
+                        if (GameController.Instance != null)
+                        {
+                            GameController.Instance.OnChunkPassed();
+                        }
+
                         // Return components to their pools
                         if (compositeToRemove.Road != null && _roadPool != null)
                         {

@@ -6,21 +6,43 @@ namespace World
     public class WorldMover : MonoBehaviour
     {
         [Header("Movement Settings")]
-        [SerializeField] private float baseSpeed = 10f;
+        [SerializeField] private float baseSpeed = 15f;
         [SerializeField] private bool useAcceleration = true;
         [SerializeField] private float accelerationRate = 0.1f;
-        [SerializeField] private float maxSpeed = 30f;
-        
+        [SerializeField] private float maxSpeed = 25f;
+
+        [Header("Chunk-based Speed Increase")]
+        [SerializeField] private float speedIncreasePerChunk = 0.02f; // 2% speed increase per chunk
+
+        private float _initialBaseSpeed; // Stores the original baseSpeed for resets
         private float _currentSpeed;
         private float _totalDistanceTraveled = 0f;
         private bool _isBeginning = true;
+        private int _chunksPassedCount = 0; // Tracks chunks passed for progressive speed increase
+        private bool _isPaused = false;
+        private bool _isReversing = false;
 
         public float CurrentSpeed => _currentSpeed;
         public float BaseSpeed => baseSpeed;
         public float TotalDistanceTraveled => _totalDistanceTraveled;
 
+        /// <summary>
+        /// Returns the current speed multiplier (1.0 = base speed, >1.0 = accelerated).
+        /// Used for music pitch scaling. Based on chunks passed.
+        /// </summary>
+        public float CurrentSpeedMultiplier
+        {
+            get
+            {
+                if (_isBeginning) return 1f; // During initial acceleration, multiplier is 1.0
+                float multiplier = 1f + (_chunksPassedCount * speedIncreasePerChunk);
+                return Mathf.Clamp(multiplier, 1f, 2f); // Cap at 2x speed
+            }
+        }
+
         private void Awake()
         {
+            _initialBaseSpeed = baseSpeed; // Cache the original value before it gets overwritten
             _currentSpeed = baseSpeed;
         }
 
@@ -123,26 +145,34 @@ namespace World
 
         private void Update()
         {
-            float deltaTime = Time.deltaTime;
-            float movement = _currentSpeed * deltaTime;
-
-            _totalDistanceTraveled += movement;
-            
-            if (useAcceleration && _isBeginning)
-            {
-                _currentSpeed = Mathf.Min(_currentSpeed + accelerationRate * deltaTime, maxSpeed);
-                if (_currentSpeed >= maxSpeed)
-                {
-                    _currentSpeed = maxSpeed;
-                    _isBeginning = false;
-                    baseSpeed = maxSpeed;
-                }
-            }
-
-            // If the game is over, freeze the bend at its current value (don't change it)
+            // If the game is over, don't update anything
             if (GameController.Instance != null && GameController.Instance.IsGameOver)
             {
                 return;
+            }
+
+            float deltaTime = Time.deltaTime;
+            float movement = _currentSpeed * deltaTime;
+            _totalDistanceTraveled += movement;
+
+            if (!_isPaused && !_isReversing)
+            {
+                if (useAcceleration && _isBeginning)
+                {
+                    _currentSpeed = Mathf.Min(_currentSpeed + accelerationRate * deltaTime, maxSpeed);
+                    if (_currentSpeed >= maxSpeed)
+                    {
+                        _currentSpeed = maxSpeed;
+                        _isBeginning = false;
+                        baseSpeed = maxSpeed;
+                    }
+                }
+                else if (!_isBeginning)
+                {
+                    // After initial acceleration phase, apply chunk-based speed multiplier
+                    float speedMultiplier = CurrentSpeedMultiplier;
+                    _currentSpeed = maxSpeed * speedMultiplier;
+                }
             }
 
             if (_shaderGlobals == null) return;
@@ -254,23 +284,46 @@ namespace World
         
         public void ResetSpeed()
         {
+            baseSpeed = _initialBaseSpeed; // Restore original baseSpeed (was overwritten to maxSpeed)
             _currentSpeed = baseSpeed;
             _totalDistanceTraveled = 0f;
+            _chunksPassedCount = 0; // Reset chunks passed counter
+            _isBeginning = true; // Reset to initial acceleration phase
+            _isPaused = false;
+            _isReversing = false;
+        }
+
+        /// <summary>
+        /// Called when a chunk is passed to increase speed multiplier.
+        /// </summary>
+        public void OnChunkPassed()
+        {
+            _chunksPassedCount++;
         }
         
         public void Pause()
         {
+            _isPaused = true;
+            _isReversing = false;
             _currentSpeed = 0f;
         }
-        
+
         public void Resume()
         {
-            if (_currentSpeed <= 0f) _currentSpeed = baseSpeed;
+            _isPaused = false;
+            _isReversing = false;
+            if (_isBeginning)
+                _currentSpeed = baseSpeed;
+            else
+                _currentSpeed = maxSpeed * CurrentSpeedMultiplier;
         }
 
         public void Reverse()
         {
-            _currentSpeed = -1 * baseSpeed * GameController.Instance.ReverseMultiplier;
+            float reverseMultiplier = GameController.Instance != null ? GameController.Instance.ReverseMultiplier : 2f;
+            _isPaused = false;
+            _isReversing = true;
+            _currentSpeed = -1 * baseSpeed * reverseMultiplier;
         }
 
         public void ResetBend()
