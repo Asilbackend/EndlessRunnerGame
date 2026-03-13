@@ -25,6 +25,14 @@ public enum AudioEventSFX
     // Checkpoint/Game Over
     GameOver,
     CheckpointRewind,
+
+    // Powerups
+    PowerupMagnet,
+    PowerupHealth,
+    PowerupDoubleLane,
+    PowerupDoubleCoin,
+    PowerupInvincibility,
+    PowerupInvincibilityDeflect,
 }
 
 public enum AudioEventMusic

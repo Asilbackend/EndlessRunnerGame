@@ -1,4 +1,5 @@
 using Player;
+using Powerup;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -511,8 +512,9 @@ public class PlayerController : MonoBehaviour
 
     private void SmoothMoveToTargetLane()
     {
+        float speedMult = PowerupManager.Instance != null ? PowerupManager.Instance.LaneChangeSpeedMultiplier : 1f;
         Vector3 newPos = transform.position;
-        newPos.x = Mathf.MoveTowards(transform.position.x, _targetPosition.x, _laneChangeSpeed * Time.deltaTime);
+        newPos.x = Mathf.MoveTowards(transform.position.x, _targetPosition.x, _laneChangeSpeed * speedMult * Time.deltaTime);
         newPos.y = transform.position.y;
         newPos.z = transform.position.z;
         transform.position = newPos;

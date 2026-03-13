@@ -256,6 +256,25 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Get the current playback time of the music (in seconds).
+    /// </summary>
+    public float GetMusicPlaybackTime()
+    {
+        return musicSource != null ? musicSource.time : 0f;
+    }
+
+    /// <summary>
+    /// Set the current playback time of the music (in seconds).
+    /// </summary>
+    public void SetMusicPlaybackTime(float time)
+    {
+        if (musicSource != null)
+        {
+            musicSource.time = Mathf.Max(0f, time);
+        }
+    }
+
+    /// <summary>
     /// Set master volume (affects both music and SFX).
     /// </summary>
     public void SetMasterVolume(float volume)

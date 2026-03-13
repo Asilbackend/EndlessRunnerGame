@@ -8,7 +8,14 @@ namespace World
     {
         ObstacleImpact,
         PlayerLanding,
-        // Add more effect types here as needed
+
+        // Powerups
+        PowerupCollect,
+        PowerupMagnet,
+        PowerupHealth,
+        PowerupDoubleLane,
+        PowerupDoubleCoin,
+        PowerupInvincibility,
     }
 
     [System.Serializable]

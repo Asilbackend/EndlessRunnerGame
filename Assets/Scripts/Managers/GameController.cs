@@ -1,4 +1,5 @@
 using Managers;
+using Powerup;
 using UI;
 using UnityEngine;
 using World;
@@ -69,7 +70,11 @@ public class GameController : MonoBehaviour
     {
         WorldManager = GetComponent<WorldManager>();
         _worldMover = GetComponent<WorldMover>();
-        SetHealth(_defaultHealth);
+
+        // Ensure PowerupManager exists on this GameObject
+        if (GetComponent<PowerupManager>() == null)
+            gameObject.AddComponent<PowerupManager>();
+
         SetPoints(0);
 
         if (config == null) return;
@@ -78,7 +83,16 @@ public class GameController : MonoBehaviour
 
         if (GameManager.Instance != null)
             GameManager.Instance.SetSelectedVehicleId(vehicleId);
-        GameHealth = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Health, _defaultHealth);
+
+        // Get vehicle health from the selected vehicle's data
+        int vehicleHealth = _defaultHealth;
+        if (GameManager.Instance != null && GameManager.Instance.PlayableObjectsSO != null)
+        {
+            var vehicleData = GameManager.Instance.PlayableObjectsSO.GetPlayableObjectDataById(vehicleId);
+            if (vehicleData != null && vehicleData.health > 0)
+                vehicleHealth = vehicleData.health;
+        }
+        SetHealth(vehicleHealth);
 
         // Play background music
         StartCoroutine(PlayGameplayMusicDelayed());
@@ -177,6 +191,10 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
+        // Clear all active powerup effects
+        if (PowerupManager.Instance != null)
+            PowerupManager.Instance.ClearAll();
+
         PlayerController.StopAnimationAndWheels();
         int currentHealth = GetHealth();
         currentHealth = Mathf.Max(0, --currentHealth);
@@ -196,6 +214,10 @@ public class GameController : MonoBehaviour
 
     public void ResetGame()
     {
+        // Clear powerup state on full reset
+        if (PowerupManager.Instance != null)
+            PowerupManager.Instance.ClearAll();
+
         GamePoints = 0;
         IsGameOver = false;
         coinStreak = 0; // Reset coin streak on game restart

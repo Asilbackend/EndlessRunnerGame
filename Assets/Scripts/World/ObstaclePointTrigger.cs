@@ -80,12 +80,21 @@ namespace World
         private IEnumerator SlowMotionEffect()
         {
             Time.timeScale = 0.5f;
+
+            // Lower music pitch during slow motion (only in-game, not in menu)
+            if (GameController.Instance != null && AudioManager.Instance != null)
+                AudioManager.Instance.SetMusicPitch(0.7f);
+
             // WaitForSecondsRealtime is unaffected by Time.timeScale, so the effect
             // lasts exactly 0.5 real seconds.  Using WaitForSeconds(0.5f) here would
             // actually wait 1.0 real second because 0.5 scaled-seconds = 1.0 real second
             // at 0.5× timeScale.
             yield return new WaitForSecondsRealtime(0.5f);
             Time.timeScale = 1f;
+
+            // Restore music pitch after slow motion ends
+            if (GameController.Instance != null && AudioManager.Instance != null)
+                AudioManager.Instance.SetMusicPitch(1f);
         }
         public void ResetTrigger()
         {

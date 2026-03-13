@@ -1,4 +1,5 @@
 using System.Collections;
+using Powerup;
 using UnityEngine;
 using World;
 
@@ -93,6 +94,12 @@ namespace Managers
                                 col.Pause();
                             }
                         }
+
+                        WorldPowerup[] powerups = composite.Chunk.GetComponentsInChildren<WorldPowerup>(true);
+                        foreach (var p in powerups)
+                        {
+                            if (p != null) p.Pause();
+                        }
                     }
                 }
             }
@@ -136,6 +143,12 @@ namespace Managers
                                 col.Resume();
                             }
                         }
+
+                        WorldPowerup[] powerups = composite.Chunk.GetComponentsInChildren<WorldPowerup>(true);
+                        foreach (var p in powerups)
+                        {
+                            if (p != null) p.Resume();
+                        }
                     }
                 }
             }
@@ -166,6 +179,12 @@ namespace Managers
                             {
                                 col.Reverse();
                             }
+                        }
+
+                        WorldPowerup[] powerups = composite.Chunk.GetComponentsInChildren<WorldPowerup>(true);
+                        foreach (var p in powerups)
+                        {
+                            if (p != null) p.Reverse();
                         }
                     }
                 }
@@ -206,6 +225,14 @@ namespace Managers
             // Ensure time scale is normal (slow-motion from ObstaclePointTrigger may still be active)
             Time.timeScale = 1f;
 
+            // Capture music state before rewind
+            float musicPlaybackTime = 0f;
+            if (AudioManager.Instance != null)
+            {
+                musicPlaybackTime = AudioManager.Instance.GetMusicPlaybackTime();
+                AudioManager.Instance.PauseMusic();
+            }
+
             // Play checkpoint rewind sound
             if (AudioManager.Instance != null)
             {
@@ -214,6 +241,7 @@ namespace Managers
 
             worldMover?.Reverse();
             ReverseDynamicObstacles();
+
             var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
             if (player != null)
             {
@@ -222,6 +250,15 @@ namespace Managers
             yield return new WaitForSeconds(duration);
             worldMover?.Pause();
             PauseDynamicObstacles();
+
+            // Resume music from an earlier point to simulate rewinding
+            if (AudioManager.Instance != null)
+            {
+                // Rewind the music playback time by the duration of the rewind
+                float rewindedTime = Mathf.Max(0f, musicPlaybackTime - duration);
+                AudioManager.Instance.SetMusicPlaybackTime(rewindedTime);
+                AudioManager.Instance.ResumeMusic();
+            }
 
             // Do NOT teleport obstacles here — that caused a visible snap during the pre-resume
             // pause. The clamp in WorldObstacle.MoveWithWorld() smoothly returns each obstacle

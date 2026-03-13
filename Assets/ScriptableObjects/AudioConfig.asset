@@ -69,6 +69,26 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 4b4dd7245f6104c8c8eb07ccf6b386ed, type: 3}
     volume: 1
     pitch: 1
+  - sfxEvent: 14
+    clip: {fileID: 8300000, guid: 568470e29bef88c4aaa027db357be957, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 15
+    clip: {fileID: 8300000, guid: 568470e29bef88c4aaa027db357be957, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 16
+    clip: {fileID: 8300000, guid: 568470e29bef88c4aaa027db357be957, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 17
+    clip: {fileID: 8300000, guid: 568470e29bef88c4aaa027db357be957, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 18
+    clip: {fileID: 8300000, guid: 568470e29bef88c4aaa027db357be957, type: 3}
+    volume: 1
+    pitch: 1
   musicClips:
   - musicEvent: 0
     clip: {fileID: 8300000, guid: 22a806c9b68a3c446b6a2fe861ac91cc, type: 3}
@@ -76,9 +96,5 @@ MonoBehaviour:
     pitch: 1
   - musicEvent: 1
     clip: {fileID: 8300000, guid: 22a806c9b68a3c446b6a2fe861ac91cc, type: 3}
-    volume: 1
-    pitch: 1
-  - musicEvent: 2
-    clip: {fileID: 8300000, guid: 6e7f23ef945c235438595e89d6332d46, type: 3}
     volume: 1
     pitch: 1

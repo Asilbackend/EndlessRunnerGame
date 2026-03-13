@@ -547,6 +547,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI.UIManager
   playerHUD: {fileID: 892913707}
   gameOverPanel: {fileID: 1747695422}
+  settingsPanel: {fileID: 0}
+  confirmationPanel: {fileID: 0}
+  countdownUI: {fileID: 0}
 --- !u!1 &1688873189
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,6 +658,7 @@ GameObject:
   - component: {fileID: 2005647266}
   - component: {fileID: 2005647267}
   - component: {fileID: 2005647268}
+  - component: {fileID: 2005647269}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -823,6 +827,8 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 7a6ea77746828b94ab099afff5a6965b, type: 2}
   - {fileID: 2100000, guid: e693240d725361745aa59affa27bf055, type: 2}
   - {fileID: 2100000, guid: 086e2ddba7b15fb428a73df620a24eb2, type: 2}
+  - {fileID: 2100000, guid: 37727aac696b43f4087d351c3288b588, type: 2}
+  - {fileID: 2100000, guid: b2a3920bb3da02d4980e6fdee4780c23, type: 2}
 --- !u!114 &2005647268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -836,6 +842,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Utilities.FloatingPointTextSpawner
   floatingPointTextPrefab: {fileID: 2549256949132839668, guid: 04d07f2dc6783014fac0d2389e7cabd0, type: 3}
+--- !u!114 &2005647269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005647263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 101df13c70d1b884591fe2b4b3eb0586, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Powerup.PowerupManager
+  magnetDuration: 8
+  magnetRadius: 12
+  magnetPullSpeed: 40
+  magnetAutoCollectRadius: 1.5
+  extraLaneChanges: 2
+  doubleCoinDuration: 10
+  invincibilityDuration: 6
 --- !u!1001 &1175891452873105481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1074,6 +1099,10 @@ PrefabInstance:
       propertyPath: touchFeedbackPrefab
       value: 
       objectReference: {fileID: 3992013310302512752, guid: ee19738ed591fe04f92d445eb19d192d, type: 3}
+    - target: {fileID: 5060375112786841141, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5097873944022797976, guid: 649b95866c2d0af4cab90976f6b73378, type: 3}
       propertyPath: isScaling
       value: 0

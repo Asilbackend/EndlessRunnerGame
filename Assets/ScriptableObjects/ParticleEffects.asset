@@ -19,3 +19,21 @@ MonoBehaviour:
   - effectType: 1
     particlePrefab: {fileID: 3432958286849152088, guid: 80d442569544dc54a839ee6403afc48e, type: 3}
     useRandomSelection: 0
+  - effectType: 3
+    particlePrefab: {fileID: 7053385775836331393, guid: 5730db40fc0496b4cb40694e88c0a38f, type: 3}
+    useRandomSelection: 0
+  - effectType: 4
+    particlePrefab: {fileID: 7155335147208632822, guid: 4229ba98a6147b34e8bcd2c39af7a7f8, type: 3}
+    useRandomSelection: 0
+  - effectType: 5
+    particlePrefab: {fileID: 7155335147208632822, guid: 3f22cdcfa1487bb4589e46d012302183, type: 3}
+    useRandomSelection: 0
+  - effectType: 7
+    particlePrefab: {fileID: 7053385775836331393, guid: 90faf27e3ae647d498c83703cc67bd0c, type: 3}
+    useRandomSelection: 0
+  - effectType: 6
+    particlePrefab: {fileID: 7053385775836331393, guid: b0843502b4730a9468a17958bfc5e81f, type: 3}
+    useRandomSelection: 0
+  - effectType: 2
+    particlePrefab: {fileID: 2883797502249945402, guid: 51cabe0118c5b6b48b42f8aac64b6d5b, type: 3}
+    useRandomSelection: 0

@@ -2,6 +2,7 @@ using UnityEngine;
 using UI;
 using UnityEngine.SceneManagement;
 using Utilities;
+using Powerup;
 
 
 namespace World
@@ -579,13 +580,22 @@ namespace World
                 {
                     Bounds obstacleBounds = _collider.bounds;
                     Bounds playerBounds = other.bounds;
-                    
+
                     if (!obstacleBounds.Intersects(playerBounds))
                     {
                         return;
                     }
                 }
-                
+
+                // Invincibility powerup — deflect: show particles + SFX but skip damage
+                if (PowerupManager.Instance != null && PowerupManager.Instance.IsInvincible)
+                {
+                    Vector3 deflectPos = other.ClosestPoint(transform.position);
+                    ParticleEffectSpawner.SpawnParticleEffect(ParticleEffectType.ObstacleImpact, deflectPos);
+                    AudioManager.Instance?.PlaySFX(AudioEventSFX.PowerupInvincibilityDeflect);
+                    return;
+                }
+
                 Vector3 impactPosition = other.ClosestPoint(transform.position);
                 ParticleEffectSpawner.SpawnParticleEffect(ParticleEffectType.ObstacleImpact, impactPosition);
 

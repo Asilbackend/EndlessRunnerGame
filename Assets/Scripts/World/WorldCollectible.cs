@@ -1,5 +1,6 @@
 using UnityEngine;
 using Utilities;
+using Powerup;
 
 namespace World
 {
@@ -58,11 +59,20 @@ namespace World
 
             // Track streak and get pitch multiplier
             float pitchMultiplier = 1f;
+            int pointsToAward = scoreValue;
+
+            // Apply double-coin powerup multiplier
+            if (PowerupManager.Instance != null)
+                pointsToAward *= PowerupManager.Instance.CoinMultiplier;
+
             if (GameController.Instance != null)
             {
                 pitchMultiplier = GameController.Instance.OnCoinCollected();
-                GameController.Instance.SetPoints(GameController.Instance.GamePoints + scoreValue);
+                GameController.Instance.SetPoints(GameController.Instance.GamePoints + pointsToAward);
             }
+
+            // Floating text shows the actual awarded value (reflects x2 if active)
+            FloatingPointTextSpawner.SpawnFloatingPointText(pointsToAward, transform.position);
 
             // Play collection sound with streak-based pitch
             if (AudioManager.Instance != null)
@@ -72,17 +82,13 @@ namespace World
 
             OnDespawn();
         }
-        
+
         private void OnTriggerEnter(Collider other)
         {
             if (_isCollected) return;
-            
+
             if (other.CompareTag("Player"))
             {
-                // Spawn floating point text at collection point
-                Vector3 spawnPosition = other.ClosestPoint(transform.position);
-                FloatingPointTextSpawner.SpawnFloatingPointText(scoreValue, spawnPosition);
-                
                 OnCollided();
                 // camera powerup bounce
                 if (PlayerCameraController.Instance != null)
