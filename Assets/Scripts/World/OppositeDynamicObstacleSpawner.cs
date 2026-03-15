@@ -217,7 +217,22 @@ namespace World
             // IMPORTANT: Set as opposite direction BEFORE configuring, so ConfigureFromObjectData uses the correct logic
             obstacle.SetOppositeDirection(true);
 
-            obstacle.ConfigureFromObjectData(objectData, _oppositeObstacleSpeed);
+            // Scale obstacle speed proportionally to the live world speed so the
+            // challenge ratio stays constant as the game accelerates.
+            // _worldSpeed is the designer reference; we substitute the actual live speed.
+            float scaledSpeed = _oppositeObstacleSpeed;
+            if (_worldSpeed > 0f)
+            {
+                float liveWorldSpeed = _worldSpeed;
+                if (GameController.Instance?.WorldManager != null)
+                {
+                    float live = GameController.Instance.WorldManager.GetCurrentSpeed();
+                    if (live > 0f) liveWorldSpeed = live;
+                }
+                scaledSpeed = _oppositeObstacleSpeed * (liveWorldSpeed / _worldSpeed);
+            }
+
+            obstacle.ConfigureFromObjectData(objectData, scaledSpeed);
             obstacle.SetActivationParameters(_chunkStartZ, _config.obstacleStartAtMeters);
             
             // Force it to start moving immediately

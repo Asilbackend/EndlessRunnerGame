@@ -18,6 +18,7 @@ public class ObjectPlacer : MonoBehaviour
     [Header("Gizmo Settings")]
     [SerializeField] private bool showMeetingPointGizmos = true;
     [SerializeField] private float activationDistance = 60f;
+    [Tooltip("Designer reference world speed used for gizmo preview AND as the base for proportional speed scaling at runtime.")]
     [SerializeField] private float worldSpeed = 20f;
     [SerializeField] private bool randomRotation = false;
     [SerializeField] private float minRotation = 0;
@@ -75,6 +76,21 @@ public class ObjectPlacer : MonoBehaviour
         }
 
         float chosenSpeed = GetChosenSpeed();
+
+        // Scale obstacle speed proportionally to the live world speed so the
+        // challenge ratio (obstacle/world) stays constant as the game accelerates.
+        // worldSpeed is the designer reference: the world speed assumed when the
+        // speed values were authored. At runtime we substitute the actual speed.
+        if (isDynamic && Application.isPlaying && worldSpeed > 0f)
+        {
+            float liveWorldSpeed = worldSpeed;
+            if (GameController.Instance?.WorldManager != null)
+            {
+                float live = GameController.Instance.WorldManager.GetCurrentSpeed();
+                if (live > 0f) liveWorldSpeed = live;
+            }
+            chosenSpeed = chosenSpeed * (liveWorldSpeed / worldSpeed);
+        }
 
         Vector3 spawnPosition = transform.position;
         if (randomPosition)
@@ -173,14 +189,13 @@ public class ObjectPlacer : MonoBehaviour
                 
                 // Draw label (only in Scene view)
                 #if UNITY_EDITOR
-                if (AllowedSpeedsIsEmptyOrAny())
-                {
-                    Handles.Label(meetingPoint + Vector3.up * 2f, $"Obstacle Speed {obstacleSpeed}: Z = {actualZ:F1}");
-                }
-                else
-                {
-                    Handles.Label(meetingPoint + Vector3.up * 2f, $"Speed {obstacleSpeed}: Z = {actualZ:F1}");
-                }
+                // Formula: meetingDist = v × d / (W − v)
+                // where v = obstacle speed, d = activationDistance, W = world speed
+                float ratio = worldSpeed > 0f ? obstacleSpeed / worldSpeed : 0f;
+                string label = $"v={obstacleSpeed} ({ratio*100:F0}% of W={worldSpeed})\n" +
+                               $"v×d/(W−v) = {obstacleSpeed}×{activationDistance:F0}/({worldSpeed:F0}−{obstacleSpeed:F0}) = {meetingDistance:F1}m\n" +
+                               $"Z = {actualZ:F1}";
+                Handles.Label(meetingPoint + Vector3.up * 2f, label);
                 #endif
             }
         }

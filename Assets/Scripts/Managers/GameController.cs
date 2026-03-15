@@ -269,6 +269,14 @@ public class GameController : MonoBehaviour
         WorldManager.ResetToLastCheckpoint(ReverseTime);
     }
 
+    /// <summary>
+    /// Adds one life (e.g. after watching a rewarded ad). Caps at the vehicle's starting health.
+    /// </summary>
+    public void AddLife()
+    {
+        SetHealth(GameHealth + 1);
+    }
+
     public void SaveProgress()
     {
         _gameManager.SetPlayerPoints(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0) + GamePoints);

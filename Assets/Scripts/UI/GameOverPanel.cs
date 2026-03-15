@@ -8,6 +8,7 @@ public class GameOverPanel : MonoBehaviour
     [SerializeField] Button playAgainButton;
     [SerializeField] Button lastCheckpointButton;
     [SerializeField] Button mainMenuButton;
+    [SerializeField] Button watchAdButton;
 
     private void Start()
     {
@@ -26,6 +27,11 @@ public class GameOverPanel : MonoBehaviour
             mainMenuButton.onClick.AddListener(OnMainMenuClicked);
             AddButtonHoverSound(mainMenuButton);
         }
+        if (watchAdButton != null)
+        {
+            watchAdButton.onClick.AddListener(OnWatchAdClicked);
+            AddButtonHoverSound(watchAdButton);
+        }
     }
 
     private void AddButtonHoverSound(Button button)
@@ -34,15 +40,31 @@ public class GameOverPanel : MonoBehaviour
 
         EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
         if (trigger == null)
-        {
             trigger = button.gameObject.AddComponent<EventTrigger>();
-        }
 
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerEnter;
         trigger.triggers.Add(entry);
     }
 
+    public void Show()
+    {
+        gameObject.SetActive(true);
+        RefreshCheckpointButton();
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
+    // Disable the checkpoint button when the player has no health left
+    private void RefreshCheckpointButton()
+    {
+        if (lastCheckpointButton == null) return;
+        bool hasHealth = GameController.Instance != null && GameController.Instance.GameHealth > 0;
+        lastCheckpointButton.interactable = hasHealth;
+    }
 
     private void OnPlayAgainClicked()
     {
@@ -65,13 +87,15 @@ public class GameOverPanel : MonoBehaviour
         SceneLoader.Load("MainMenu");
     }
 
-    public void Show()
+    private void OnWatchAdClicked()
     {
-        gameObject.SetActive(true);
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
+        AdService.Instance.ShowRewardedAd(OnAdCompleted);
     }
 
-    public void Hide()
+    private void OnAdCompleted()
     {
-        gameObject.SetActive(false);
+        GameController.Instance?.AddLife();
+        RefreshCheckpointButton();
     }
 }

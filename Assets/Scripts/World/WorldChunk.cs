@@ -457,7 +457,12 @@ namespace World
                 
                 // Draw label
                 #if UNITY_EDITOR
-                Handles.Label(meetingPoint + Vector3.up * 2f, $"Lane {config.lane}: Z = {meetingZ:F1}");
+                // Formula: relSpeed = W + v  →  time = d / relSpeed  →  dist = v × time
+                string label = $"Lane {config.lane} | v={oppositeObstacleSpeed}, W={worldSpeed}\n" +
+                               $"relSpeed = W+v = {relativeSpeed:F1}\n" +
+                               $"time = d/relSpeed = {distanceWhenStarts:F0}/{relativeSpeed:F1} = {timeToMeet:F2}s\n" +
+                               $"dist = v×time = {obstacleTravelDistance:F1}m → Z = {meetingZ:F1}";
+                Handles.Label(meetingPoint + Vector3.up * 2f, label);
                 #endif
             }
         }

@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 namespace World
@@ -7,54 +6,44 @@ namespace World
     {
         [Header("Movement Settings")]
         [SerializeField] private float baseSpeed = 15f;
-        [SerializeField] private bool useAcceleration = true;
-        [SerializeField] private float accelerationRate = 0.1f;
-        [SerializeField] private float maxSpeed = 25f;
+        [SerializeField] private float maxSpeed = 50f;
+        [Tooltip("Number of chunks (levels) to go from baseSpeed to maxSpeed. Implicit rate = (max - base) / levels.")]
+        [SerializeField] private int levelsToMax = 50;
 
-        [Header("Chunk-based Speed Increase")]
-        [SerializeField] private float speedIncreasePerChunk = 0.02f; // 2% speed increase per chunk
+        // Computed in Awake — visible in Inspector debug view as a sanity check.
+        private float accelerationRate;
 
-        private float _initialBaseSpeed; // Stores the original baseSpeed for resets
         private float _currentSpeed;
         private float _totalDistanceTraveled = 0f;
-        private bool _isBeginning = true;
-        private int _chunksPassedCount = 0; // Tracks chunks passed for progressive speed increase
+        private int _chunksPassedCount = 0;
         private bool _isPaused = false;
         private bool _isReversing = false;
 
         public float CurrentSpeed => _currentSpeed;
-        public float BaseSpeed => baseSpeed;
         public float TotalDistanceTraveled => _totalDistanceTraveled;
 
         /// <summary>
-        /// Returns the current speed multiplier (1.0 = base speed, >1.0 = accelerated).
-        /// Used for music pitch scaling. Based on chunks passed.
+        /// Normalised progress from baseSpeed to maxSpeed (0 = start, 1 = max).
+        /// Mapped to 1..2 so existing music pitch code (pitchProgress = multiplier - 1) still works.
         /// </summary>
         public float CurrentSpeedMultiplier
         {
             get
             {
-                if (_isBeginning) return 1f; // During initial acceleration, multiplier is 1.0
-                float multiplier = 1f + (_chunksPassedCount * speedIncreasePerChunk);
-                return Mathf.Clamp(multiplier, 1f, 2f); // Cap at 2x speed
+                float t = Mathf.Clamp01((float)_chunksPassedCount / Mathf.Max(1, levelsToMax));
+                return Mathf.Lerp(1f, 2f, t);
             }
         }
 
         private void Awake()
         {
-            _initialBaseSpeed = baseSpeed; // Cache the original value before it gets overwritten
+            accelerationRate = (maxSpeed - baseSpeed) / Mathf.Max(1, levelsToMax);
             _currentSpeed = baseSpeed;
         }
 
-        private void Start()
-        {
-            _currentSpeed = baseSpeed;
-        }
-        
         // Side bend control
         [Header("Side Bend Control")]
-        [SerializeField] private float bendAmplitude = 1f; // max amplitude (will be clamped to [-2.5,2.5])
-        [SerializeField] private float bendSmoothTime = 0.35f; // smoothing for runtime updates
+        [SerializeField] private float bendSmoothTime = 0.35f;
         [Tooltip("Chance [0..1] that after a straight period the system will start a bend. Lower = more often straight.")]
         [Range(0f,1f)]
         [SerializeField] private float bendChance = 0.1f;
@@ -62,7 +51,6 @@ namespace World
         [Range(0f,1f)]
         [SerializeField] private float flipToOppositeChance = 0.25f;
 
-        // Timing
         [Header("Timing")]
         [Tooltip("Time between bends (straight) in seconds - randomized between min and max")]
         [SerializeField] private float minStraightDuration = 10f;
@@ -70,10 +58,10 @@ namespace World
         [Tooltip("Time the road stays at bend value (seconds)")]
         [SerializeField] private float minHoldDuration = 5f;
         [SerializeField] private float maxHoldDuration = 12f;
-        [Tooltip("Approach duration (seconds) - faster than hold")]
+        [Tooltip("Approach duration (seconds)")]
         [SerializeField] private float minApproachDuration = 0.6f;
         [SerializeField] private float maxApproachDuration = 1.2f;
-        [Tooltip("Return duration (seconds) - faster than approach")]
+        [Tooltip("Return duration (seconds)")]
         [SerializeField] private float minReturnDuration = 0.4f;
         [SerializeField] private float maxReturnDuration = 0.9f;
 
@@ -87,28 +75,23 @@ namespace World
         private float _stateTimer = 0f;
         private float _stateDuration = 0f;
 
-        // target magnitude for current bend (signed)
         private float _targetBendValue = 0f;
-        // when true, Approach will reuse _targetBendValue instead of picking a new one
         private bool _useExistingTargetForApproach = false;
 
-        // optimization: cache last value applied to shader to avoid redundant Set calls
         private float _lastAppliedBend = float.NaN;
 
         private void OnEnable()
         {
-            // cache shader globals once
             _shaderGlobals = FindObjectOfType<ShaderGlobals>();
             if (_shaderGlobals != null)
             {
-                _bendCurrent = _shaderGlobals.SideBendStrength; // intentionally use persisted baseline
-                _lastAppliedBend = float.NaN; // force first update
+                _bendCurrent = _shaderGlobals.SideBendStrength;
+                _lastAppliedBend = float.NaN;
             }
 
             EnterState(BendState.Straight);
         }
 
-        // EnterState optionally can reuse existing target when entering Approach
         private void EnterState(BendState newState, bool reuseExistingTarget = false)
         {
             _bendState = newState;
@@ -125,17 +108,13 @@ namespace World
                     _stateDuration = Random.Range(minApproachDuration, maxApproachDuration);
                     if (!_useExistingTargetForApproach)
                     {
-                        // pick direction and magnitude for this bend within requested ranges
                         float mag = Random.Range(1.5f, 2.5f);
-                        // randomly choose left or right
                         _targetBendValue = (Random.value < 0.5f ? -1f : 1f) * mag;
                     }
-                    // ensure within absolute max
                     _targetBendValue = Mathf.Clamp(_targetBendValue, -2.5f, 2.5f);
                     break;
                 case BendState.Hold:
                     _stateDuration = Random.Range(minHoldDuration, maxHoldDuration);
-                    // keep previously chosen _targetBendValue
                     break;
                 case BendState.Return:
                     _stateDuration = Random.Range(minReturnDuration, maxReturnDuration);
@@ -145,66 +124,36 @@ namespace World
 
         private void Update()
         {
-            // If the game is over, don't update anything
             if (GameController.Instance != null && GameController.Instance.IsGameOver)
-            {
                 return;
-            }
 
             float deltaTime = Time.deltaTime;
-            float movement = _currentSpeed * deltaTime;
-            _totalDistanceTraveled += movement;
+            _totalDistanceTraveled += _currentSpeed * deltaTime;
 
             if (!_isPaused && !_isReversing)
             {
-                if (useAcceleration && _isBeginning)
-                {
-                    _currentSpeed = Mathf.Min(_currentSpeed + accelerationRate * deltaTime, maxSpeed);
-                    if (_currentSpeed >= maxSpeed)
-                    {
-                        _currentSpeed = maxSpeed;
-                        _isBeginning = false;
-                        baseSpeed = maxSpeed;
-                    }
-                }
-                else if (!_isBeginning)
-                {
-                    // After initial acceleration phase, apply chunk-based speed multiplier
-                    float speedMultiplier = CurrentSpeedMultiplier;
-                    _currentSpeed = maxSpeed * speedMultiplier;
-                }
+                float t = Mathf.Clamp01((float)_chunksPassedCount / Mathf.Max(1, levelsToMax));
+                _currentSpeed = Mathf.Lerp(baseSpeed, maxSpeed, t);
             }
 
             if (_shaderGlobals == null) return;
 
             _stateTimer += deltaTime;
-            // handle state transitions
             if (_stateTimer >= _stateDuration)
             {
                 switch (_bendState)
                 {
                     case BendState.Straight:
-                        // bias heavily to remain straight: only start a bend with bendChance
-                        if (Random.value < bendChance)
-                        {
-                            EnterState(BendState.Approach);
-                        }
-                        else
-                        {
-                            // extend straight period without extra branching: reset straight state
-                            EnterState(BendState.Straight);
-                        }
+                        EnterState(Random.value < bendChance ? BendState.Approach : BendState.Straight);
                         break;
                     case BendState.Approach:
                         EnterState(BendState.Hold);
                         break;
                     case BendState.Hold:
-                        // decide whether to return to zero or go directly to an opposite bend
                         if (Random.value < flipToOppositeChance)
                         {
-                            // flip sign and slightly vary magnitude
                             float mag = Mathf.Abs(_targetBendValue);
-                            if (mag < 1.5f) mag = Random.Range(1.5f, 2.5f); // ensure magnitude in range
+                            if (mag < 1.5f) mag = Random.Range(1.5f, 2.5f);
                             else mag = Mathf.Clamp(mag * Random.Range(0.9f, 1.1f), 1.5f, 2.5f);
                             _targetBendValue = -Mathf.Sign(_targetBendValue == 0f ? 1f : _targetBendValue) * mag;
                             EnterState(BendState.Approach, true);
@@ -220,35 +169,24 @@ namespace World
                 }
             }
 
-            // compute desired target based on state and progress
             float desiredTarget = 0f;
-            if (_bendState == BendState.Straight)
-            {
-                desiredTarget = 0f;
-            }
-            else if (_bendState == BendState.Approach)
+            if (_bendState == BendState.Approach)
             {
                 float p = Mathf.Clamp01(_stateTimer / Mathf.Max(_stateDuration, 0.0001f));
-                // ease-out for fast approach:1 - (1-p)^3
-                float eased = 1f - Mathf.Pow(1f - p, 3f);
-                desiredTarget = _targetBendValue * eased;
+                desiredTarget = _targetBendValue * (1f - Mathf.Pow(1f - p, 3f));
             }
             else if (_bendState == BendState.Hold)
             {
                 desiredTarget = _targetBendValue;
             }
-            else // Return
+            else if (_bendState == BendState.Return)
             {
                 float p = Mathf.Clamp01(_stateTimer / Mathf.Max(_stateDuration, 0.0001f));
-                // fast return: value = target * (1 - easeFast), use (1-p)^3 to drop quickly
-                float eased = Mathf.Pow(1f - p, 3f);
-                desiredTarget = _targetBendValue * eased;
+                desiredTarget = _targetBendValue * Mathf.Pow(1f - p, 3f);
             }
 
-            // clamp
             desiredTarget = Mathf.Clamp(desiredTarget, -2.5f, 2.5f);
 
-            // Optimization: if straight and already essentially zero, avoid SmoothDamp and Set calls
             if (_bendState == BendState.Straight && Mathf.Abs(_bendCurrent) < 0.0005f)
             {
                 _bendCurrent = 0f;
@@ -261,46 +199,40 @@ namespace World
                 return;
             }
 
-            // smooth toward target
             _bendCurrent = Mathf.SmoothDamp(_bendCurrent, desiredTarget, ref _bendVelocity, bendSmoothTime);
 
-            // only update shader if changed enough
             if (float.IsNaN(_lastAppliedBend) || Mathf.Abs(_bendCurrent - _lastAppliedBend) > 0.0005f)
             {
                 _shaderGlobals.SetSideBendValue(_bendCurrent);
                 _lastAppliedBend = _bendCurrent;
             }
         }
-        
+
         public float GetMovementDelta()
         {
             return _currentSpeed * Time.deltaTime;
         }
-        
+
         public void SetSpeed(float speed)
         {
             maxSpeed = speed;
+            accelerationRate = (maxSpeed - baseSpeed) / Mathf.Max(1, levelsToMax);
         }
-        
+
         public void ResetSpeed()
         {
-            baseSpeed = _initialBaseSpeed; // Restore original baseSpeed (was overwritten to maxSpeed)
             _currentSpeed = baseSpeed;
             _totalDistanceTraveled = 0f;
-            _chunksPassedCount = 0; // Reset chunks passed counter
-            _isBeginning = true; // Reset to initial acceleration phase
+            _chunksPassedCount = 0;
             _isPaused = false;
             _isReversing = false;
         }
 
-        /// <summary>
-        /// Called when a chunk is passed to increase speed multiplier.
-        /// </summary>
         public void OnChunkPassed()
         {
             _chunksPassedCount++;
         }
-        
+
         public void Pause()
         {
             _isPaused = true;
@@ -312,10 +244,8 @@ namespace World
         {
             _isPaused = false;
             _isReversing = false;
-            if (_isBeginning)
-                _currentSpeed = baseSpeed;
-            else
-                _currentSpeed = maxSpeed * CurrentSpeedMultiplier;
+            float t = Mathf.Clamp01((float)_chunksPassedCount / Mathf.Max(1, levelsToMax));
+            _currentSpeed = Mathf.Lerp(baseSpeed, maxSpeed, t);
         }
 
         public void Reverse()
@@ -323,14 +253,14 @@ namespace World
             float reverseMultiplier = GameController.Instance != null ? GameController.Instance.ReverseMultiplier : 2f;
             _isPaused = false;
             _isReversing = true;
-            _currentSpeed = -1 * baseSpeed * reverseMultiplier;
+            _currentSpeed = -maxSpeed * reverseMultiplier;
         }
 
         public void ResetBend()
         {
             _bendCurrent = 0f;
             _bendVelocity = 0f;
-            _lastAppliedBend = float.NaN; // force shader update next frame
+            _lastAppliedBend = float.NaN;
             EnterState(BendState.Straight);
             if (_shaderGlobals != null)
             {

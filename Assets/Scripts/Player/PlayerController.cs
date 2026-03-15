@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float gravity = -30f;
     [Tooltip("Additional gravity multiplier when falling (after reaching peak height). Makes falling faster.")]
     [SerializeField] private float fallGravityMultiplier = 4f;
+    [Tooltip("Gravity multiplier applied when the player fast-falls (Down input while airborne). Should be larger than fallGravityMultiplier.")]
+    [SerializeField] private float fastFallGravityMultiplier = 10f;
 
     [Tooltip("Speed at which velocity values smoothly transition (for velocity-based mode)")]
     [SerializeField] private float velocitySmoothingSpeed = 10f;
@@ -68,6 +70,7 @@ public class PlayerController : MonoBehaviour
     private float _verticalVelocity = 0f;
     private bool _isGrounded = true;
     private float _groundY;
+    private bool _isFastFalling = false;
 
     // smoothed velocity values for animator
     private float _smoothedXVelocity = 0f;
@@ -202,6 +205,12 @@ public class PlayerController : MonoBehaviour
         {
             TryJump();
         }
+
+        // fast fall (Down arrow or S while airborne)
+        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+        {
+            TryFastFall();
+        }
     }
 
     private void HandleTouchInput()
@@ -297,11 +306,19 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        // Vertical swipe (up)
-        else if (absY > absX && delta.y > 0)
+        // Vertical swipe
+        else if (absY > absX)
         {
-            // Swipe up
-            movementTriggered = TryJump();
+            if (delta.y > 0)
+            {
+                // Swipe up → jump
+                movementTriggered = TryJump();
+            }
+            else
+            {
+                // Swipe down → fast fall
+                movementTriggered = TryFastFall();
+            }
         }
 
         // Only change color if movement was actually triggered
@@ -543,14 +560,27 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    private bool TryFastFall()
+    {
+        if (!_isGrounded && !_isFastFalling)
+        {
+            _isFastFalling = true;
+            // Cancel any remaining upward velocity so the drop feels immediate
+            if (_verticalVelocity > 0f)
+                _verticalVelocity = 0f;
+            return true;
+        }
+        return false;
+    }
+
     private void ApplyGravityAndJump()
     {
-        // apply gravity - stronger when falling (after reaching peak height)
+        // apply gravity
         float currentGravity = gravity;
-        if (_verticalVelocity < 0f) // falling
-        {
+        if (_isFastFalling)
+            currentGravity *= fastFallGravityMultiplier;
+        else if (_verticalVelocity < 0f) // normal fall after peak
             currentGravity *= fallGravityMultiplier;
-        }
         _verticalVelocity += currentGravity * Time.deltaTime;
 
         float newY = transform.position.y + _verticalVelocity * Time.deltaTime;
@@ -583,6 +613,7 @@ public class PlayerController : MonoBehaviour
             newY = _groundY;
             _verticalVelocity = 0f;
             _isGrounded = true;
+            _isFastFalling = false;
         }
 
         Vector3 p = transform.position;

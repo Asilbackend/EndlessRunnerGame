@@ -22,7 +22,7 @@ MonoBehaviour:
     driftStars: 3
     prefab: {fileID: 7389316750714263375, guid: 0300080954492454da4061741e867270, type: 3}
     laneChangeSpeed: 18
-    speed: 20
+    speed: 25
     health: 1
     lockedByDefault: 0
   - id: 1
