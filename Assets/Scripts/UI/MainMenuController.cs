@@ -52,13 +52,6 @@ public class MainMenuController : MonoBehaviour
 
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerEnter;
-        entry.callback.AddListener((data) =>
-        {
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlaySFX(AudioEventSFX.ButtonHover);
-            }
-        });
         trigger.triggers.Add(entry);
     }
 
@@ -73,12 +66,6 @@ public class MainMenuController : MonoBehaviour
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayMusic(AudioEventMusic.MainMenu, loop: true);
-        }
-
-        // Play menu open sound
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlaySFX(AudioEventSFX.MenuOpen);
         }
     }
 
@@ -97,12 +84,6 @@ public class MainMenuController : MonoBehaviour
 
         PlayerPrefsManager.SetString(PlayerPrefsKeys.SelectedMapId, selectedMap.id);
         PlayerPrefsManager.SetString(PlayerPrefsKeys.SelectedVehicleId, selectedVehicle.EffectiveId);
-
-        // Play menu close sound
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlaySFX(AudioEventSFX.MenuClose);
-        }
 
         if (!string.IsNullOrWhiteSpace(selectedMap.sceneName))
             SceneLoader.Load(selectedMap.sceneName);

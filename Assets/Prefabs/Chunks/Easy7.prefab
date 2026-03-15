@@ -191,7 +191,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: 'allowedSpeeds.Array.data[0]'
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3487669498707678677, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: m_Name
@@ -397,7 +397,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: allowedSpeeds.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 375063213314537531, guid: 72e811a6ee7f09e4a93c580b95348ffd, type: 3}
       propertyPath: 'allowedSpeeds.Array.data[0]'

@@ -11,7 +11,7 @@ namespace Managers
         [SerializeField] private ChunkSpawner chunkSpawner;
         [SerializeField] private ChunkPool chunkPool;
 
-
+        public WorldMover WorldMover { get => worldMover; }
         private readonly Lane _leftLane   = new Lane(LaneNumber.Left,   -5f,   -1.67f);
         private readonly Lane _centerLane = new Lane(LaneNumber.Center, -1.66f, 1.66f);
         private readonly Lane _rightLane  = new Lane(LaneNumber.Right,   1.67f,  5f);

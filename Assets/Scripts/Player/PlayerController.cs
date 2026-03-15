@@ -611,10 +611,9 @@ public class PlayerController : MonoBehaviour
     {
         SetColliderEnabled(false);
         yield return new WaitForSeconds(_gameController.ReverseTime + _gameController.StartTime);
-        resetSign.SetActive(true);
-        yield return new WaitForSeconds(_gameController.PlayerColliderDisabledTime);
         SetColliderEnabled(true);
-        resetSign.SetActive(false);
+        if (PowerupManager.Instance != null)
+            PowerupManager.Instance.ActivateCheckpointInvincibility(_gameController.PlayerColliderDisabledTime);
     }
 
     private IEnumerator OnDeathFlash(float beginningValue = 1, float endingValue = .3f, float duration = .5f, int numOfFlashing = 3)

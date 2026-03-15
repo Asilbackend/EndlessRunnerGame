@@ -19,7 +19,8 @@ namespace World
         // New fields to support reverse behavior
         private float _originalRotationSpeed = 0f;
         private bool _isReversed = false;
-        
+        private Vector3 _originalLocalPosition;
+
         private void Awake()
         {
             _parentChunk = GetComponentInParent<WorldChunk>();
@@ -29,6 +30,7 @@ namespace World
             }
 
             _originalRotationSpeed = rotationSpeed;
+            _originalLocalPosition = transform.localPosition;
         }
         
         private void Update()
@@ -112,9 +114,10 @@ namespace World
             _isCollected = false;
             _isPaused = false;
             _isReversed = false;
-            
+
             rotationSpeed = _originalRotationSpeed;
-            
+            transform.localPosition = _originalLocalPosition;
+
             gameObject.SetActive(true);
             var col = GetComponent<Collider>();
             if (col != null) col.enabled = true;

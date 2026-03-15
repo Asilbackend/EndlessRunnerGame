@@ -212,6 +212,21 @@ namespace Powerup
         }
 
         // ===================================================================
+        //  CHECKPOINT INVINCIBILITY
+        // ===================================================================
+
+        /// <summary>
+        /// Activates real invincibility (obstacles deflect) for <paramref name="duration"/> seconds
+        /// with the invincibility VFX. Used after a checkpoint restart.
+        /// Does not play the powerup SFX. Does not shorten an already-longer invincibility window.
+        /// </summary>
+        public void ActivateCheckpointInvincibility(float duration)
+        {
+            _invincibilityTimer = Mathf.Max(_invincibilityTimer, duration);
+            SpawnLoopingVFX(ParticleEffectType.PowerupInvincibility, ref _invincibilityVFX);
+        }
+
+        // ===================================================================
         //  VFX helpers
         // ===================================================================
 

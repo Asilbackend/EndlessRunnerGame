@@ -40,13 +40,6 @@ public class GameOverPanel : MonoBehaviour
 
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerEnter;
-        entry.callback.AddListener((data) =>
-        {
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlaySFX(AudioEventSFX.ButtonHover);
-            }
-        });
         trigger.triggers.Add(entry);
     }
 

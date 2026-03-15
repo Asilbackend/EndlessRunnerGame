@@ -24,9 +24,10 @@ public class GameController : MonoBehaviour
     [HideInInspector] public float PlayerColliderDisabledTime = 2;
 
     [Header("Coin Streak")]
-    [SerializeField] private float streakResetTime = 1.5f; // Reset streak if no collect for this long
+    [SerializeField] private float streakResetTime = 1.3f; // Reset streak if no collect for this long
     [SerializeField] private float minStreakPitch = 1f;
-    [SerializeField] private float maxStreakPitch = 1.8f;
+    [SerializeField] private float maxStreakPitch = 1.7f;
+    [SerializeField] private int maxStreakForPitch = 12; // Number of coins in a row to reach max pitch
 
     [Header("Speed-based Music Pitch")]
     [SerializeField] private float minMusicPitch = 1f; // Pitch at baseSpeed
@@ -69,7 +70,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         WorldManager = GetComponent<WorldManager>();
-        _worldMover = GetComponent<WorldMover>();
+        _worldMover = WorldManager.WorldMover;
 
         // Ensure PowerupManager exists on this GameObject
         if (GetComponent<PowerupManager>() == null)
@@ -100,20 +101,20 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        // Decrease streak timer and reset if expired
+        // Decrease streak timer and commit bonus when it expires
         if (coinStreak > 0 && !IsGameOver)
         {
             streakTimer -= Time.deltaTime;
             if (streakTimer <= 0)
             {
-                coinStreak = 0;
+                CommitStreak();
             }
         }
 
-        // Update distance meter display (always, so it's visible during game over too)
-        if (!IsGameOver && _worldMover != null && _uiManager?.PlayerHUD != null)
+        // Update distance meter display
+        if (!IsGameOver && _worldMover != null && UIManager.Instance?.PlayerHUD != null)
         {
-            _uiManager.PlayerHUD.SetDistanceMeter(_worldMover.TotalDistanceTraveled);
+            UIManager.Instance.PlayerHUD.SetDistanceMeter(_worldMover.TotalDistanceTraveled);
         }
 
         // Update music pitch based on current speed multiplier (chunk-based)
@@ -143,8 +144,13 @@ public class GameController : MonoBehaviour
 
     public void SetPoints(int amount)
     {
+        int pointsAdded = amount - GamePoints;
         GamePoints = amount;
-        _uiManager.PlayerHUD?.SetRunPoints(GamePoints);
+
+        if (pointsAdded > 0)
+            _uiManager?.PlayerHUD?.SetRunPointsWithAnimation(GamePoints, pointsAdded);
+        else
+            _uiManager?.PlayerHUD?.SetRunPoints(GamePoints);
     }
 
     public int GetHealth()
@@ -164,13 +170,27 @@ public class GameController : MonoBehaviour
     public float OnCoinCollected()
     {
         coinStreak++;
-        streakTimer = streakResetTime; // Reset the timer
+        streakTimer = streakResetTime;
+
+        // Update streak display on HUD
+        _uiManager?.PlayerHUD?.ShowStreak(coinStreak);
 
         // Calculate pitch based on streak (0 = minPitch, maxStreak = maxPitch)
-        float streakProgress = Mathf.Clamp01((coinStreak - 1) / 10f); // Assume maxStreak ~10
+        float streakProgress = Mathf.Clamp01((coinStreak - 1) / (float)maxStreakForPitch);
         float pitchMultiplier = Mathf.Lerp(minStreakPitch, maxStreakPitch, streakProgress);
 
         return pitchMultiplier;
+    }
+
+    /// <summary>
+    /// Adds the streak count as a bonus to the score and triggers the HUD commit animation.
+    /// </summary>
+    private void CommitStreak()
+    {
+        int bonus = coinStreak;
+        coinStreak = 0;
+        SetPoints(GamePoints + bonus);
+        _uiManager?.PlayerHUD?.CommitStreak(bonus);
     }
 
     /// <summary>
@@ -194,6 +214,9 @@ public class GameController : MonoBehaviour
         // Clear all active powerup effects
         if (PowerupManager.Instance != null)
             PowerupManager.Instance.ClearAll();
+
+        coinStreak = 0;
+        _uiManager?.PlayerHUD?.HideStreak();
 
         PlayerController.StopAnimationAndWheels();
         int currentHealth = GetHealth();
@@ -220,7 +243,8 @@ public class GameController : MonoBehaviour
 
         GamePoints = 0;
         IsGameOver = false;
-        coinStreak = 0; // Reset coin streak on game restart
+        coinStreak = 0;
+        _uiManager?.PlayerHUD?.HideStreak();
         _uiManager.PlayerHUD.RefreshFromGameController();
 
         // ResetWorld() resets speed and chunk count, so the speed multiplier
