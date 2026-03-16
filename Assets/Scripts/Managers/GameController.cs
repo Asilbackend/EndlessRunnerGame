@@ -23,6 +23,13 @@ public class GameController : MonoBehaviour
     [HideInInspector] public float StartTime = 1;
     [HideInInspector] public float PlayerColliderDisabledTime = 2;
 
+    private int _highestScore = 0;
+    private float _highestDistance = 0f;
+    public bool IsNewHighestScore { get; private set; } = false;
+    public bool IsNewHighestDistance { get; private set; } = false;
+    public int HighestScore => _highestScore;
+    public float HighestDistance => _highestDistance;
+
     [Header("Coin Streak")]
     [SerializeField] private float streakResetTime = 1.3f; // Reset streak if no collect for this long
     [SerializeField] private float minStreakPitch = 1f;
@@ -77,6 +84,10 @@ public class GameController : MonoBehaviour
             gameObject.AddComponent<PowerupManager>();
 
         SetPoints(0);
+
+        // Load records
+        _highestScore = PlayerPrefsManager.GetInt(PlayerPrefsKeys.HighestScore, 0);
+        _highestDistance = PlayerPrefsManager.GetFloat(PlayerPrefsKeys.HighestDistance, 0f);
 
         if (config == null) return;
 
@@ -222,6 +233,7 @@ public class GameController : MonoBehaviour
         int currentHealth = GetHealth();
         currentHealth = Mathf.Max(0, --currentHealth);
         SetHealth(currentHealth);
+        CheckAndSaveRecords();
         SaveProgress();
         IsGameOver = true;
         WorldManager.PauseWorld();
@@ -275,6 +287,33 @@ public class GameController : MonoBehaviour
     public void AddLife()
     {
         SetHealth(GameHealth + 1);
+    }
+
+    /// <summary>
+    /// Check if current run beat any records and save them.
+    /// </summary>
+    private void CheckAndSaveRecords()
+    {
+        IsNewHighestScore = false;
+        IsNewHighestDistance = false;
+
+        float currentDistance = _worldMover?.TotalDistanceTraveled ?? 0f;
+
+        // Check score record
+        if (GamePoints > _highestScore)
+        {
+            _highestScore = GamePoints;
+            PlayerPrefsManager.SetInt(PlayerPrefsKeys.HighestScore, _highestScore);
+            IsNewHighestScore = true;
+        }
+
+        // Check distance record
+        if (currentDistance > _highestDistance)
+        {
+            _highestDistance = currentDistance;
+            PlayerPrefsManager.SetFloat(PlayerPrefsKeys.HighestDistance, _highestDistance);
+            IsNewHighestDistance = true;
+        }
     }
 
     public void SaveProgress()

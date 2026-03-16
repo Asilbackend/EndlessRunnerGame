@@ -33,6 +33,12 @@ public enum AudioEventSFX
     PowerupDoubleCoin,
     PowerupInvincibility,
     PowerupInvincibilityDeflect,
+
+    // Medals
+    MedalBronze,
+    MedalSilver,
+    MedalGold,
+    MedalChamp,
 }
 
 public enum AudioEventMusic

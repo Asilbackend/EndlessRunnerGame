@@ -114,7 +114,7 @@ Material:
     - _RimStrength: 0
     - _SideBendFrequency: 0
     - _SideBendStartZ: 0
-    - _SideBendStrength: 0
+    - _SideBendStrength: 1.5326427
     - _SideRadius: 1338.9
     - _SidewaysStrength: 0
     - _Smoothness: 0

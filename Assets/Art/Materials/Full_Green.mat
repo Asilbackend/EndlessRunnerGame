@@ -118,7 +118,7 @@ Material:
     - _Radius: 10
     - _RimPower: 0
     - _RimStrength: 0
-    - _SideBendStrength: 0
+    - _SideBendStrength: 1.5326427
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

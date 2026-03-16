@@ -13,6 +13,8 @@ public enum PlayerPrefsKeys
     Health,
     SelectedMapId,
     SelectedVehicleId,
+    HighestScore,
+    HighestDistance,
 }
 
 /// <summary>
