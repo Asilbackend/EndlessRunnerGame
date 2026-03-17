@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8203357444603928720}
   - component: {fileID: 5955474857827506388}
   - component: {fileID: 6452984133478336928}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Settings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -686.0001, y: -231}
+  m_AnchoredPosition: {x: -250, y: -140}
   m_SizeDelta: {x: 120.884, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2323907352401787735
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 2881312380025117553}
   - component: {fileID: 6205396873278015524}
   - component: {fileID: 7414288962178570681}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,9 +202,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8cf19c34d56e6404fb2c15a980f98290, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e2c3b430cf011f840bf7011b4e4060a2, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -221,7 +221,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4544909396717701313}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Streak
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,10 +243,10 @@ RectTransform:
   - {fileID: 3445857978392397608}
   m_Father: {fileID: 5137303284852723350}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 792.1, y: -499.99}
-  m_SizeDelta: {x: 397.596, y: 84.337}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0.000010014, y: -463}
+  m_SizeDelta: {x: 179.73, y: 109.118}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1282716598809094657
 GameObject:
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 5653245072774259932}
   - component: {fileID: 327236334114749626}
   - component: {fileID: 2376201376100855624}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Heart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -283,8 +283,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 12.5, y: 3.9580002}
-  m_SizeDelta: {x: 140, y: 140}
+  m_AnchoredPosition: {x: 12.5, y: 7.7}
+  m_SizeDelta: {x: 140, y: 147.484}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5653245072774259932
 CanvasRenderer:
@@ -314,7 +314,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1095917349, guid: 24a04ba1c3b25bd48b20bb8c7ea649d2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c82f69e028fea76439407f418c49d816, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 4659280716556885224}
   - component: {fileID: 1425213915077306557}
   - component: {fileID: 4159190452203271789}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CoinImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,7 +374,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -10.1, y: 0.000062943}
+  m_AnchoredPosition: {x: -10.100006, y: 0.000062943}
   m_SizeDelta: {x: 140, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4659280716556885224
@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 7237675233496178724}
   - component: {fileID: 6774399593071795078}
   - component: {fileID: 8078464224657594830}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DistanceMeterText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -577,7 +577,7 @@ GameObject:
   - component: {fileID: 6288049578572290247}
   - component: {fileID: 2575978166882260638}
   - component: {fileID: 7510329135174299630}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -653,7 +653,7 @@ GameObject:
   - component: {fileID: 407314242504936296}
   - component: {fileID: 54825816431289245}
   - component: {fileID: 2153683381403569856}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -678,7 +678,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 788.30005, y: -358.6098}
+  m_AnchoredPosition: {x: 208.00003, y: -289.99988}
   m_SizeDelta: {x: 233.362, y: 107.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &407314242504936296
@@ -702,7 +702,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.98823535, g: 0.10588236, b: 0, a: 1}
+  m_Color: {r: 0.9960785, g: 0.21568629, b: 0.2627451, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -745,13 +745,13 @@ GameObject:
   - component: {fileID: 2468825896264870883}
   - component: {fileID: 5902123085476538538}
   - component: {fileID: 5787035836188065719}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MapName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2468825896264870883
 RectTransform:
   m_ObjectHideFlags: 0
@@ -883,7 +883,7 @@ GameObject:
   - component: {fileID: 8579407349673057110}
   - component: {fileID: 1121396341659460817}
   - component: {fileID: 8287342266335695167}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Home
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -907,7 +907,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -686.0001, y: -381.59988}
+  m_AnchoredPosition: {x: -95, y: -140}
   m_SizeDelta: {x: 120.884, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9143054112306005964
@@ -1018,7 +1018,7 @@ GameObject:
   - component: {fileID: 3445857978392397608}
   - component: {fileID: 5997414712867265190}
   - component: {fileID: 7343052039999874687}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: StreakText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1039,10 +1039,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4544909396717701313}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015259, y: -0.000026703}
-  m_SizeDelta: {x: 351.93, y: 75}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -0.0007324219, y: -0.000030517578}
+  m_SizeDelta: {x: -0.11999512, y: -9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5997414712867265190
 CanvasRenderer:
@@ -1072,17 +1072,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: +33
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b321d5f27e1828a4d9f1047227faca2e, type: 2}
-  m_sharedMaterial: {fileID: 9215133973994174857, guid: b321d5f27e1828a4d9f1047227faca2e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8e80e44e7fbd4ef4bb9267b17b8b0492, type: 2}
+  m_sharedMaterial: {fileID: 9215133973994174857, guid: 8e80e44e7fbd4ef4bb9267b17b8b0492, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4282760181
+  m_fontColor: {r: 0.9607844, g: 0.73333335, b: 0.27058825, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1099,12 +1099,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64.7
+  m_fontSize: 86.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 150
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1154,13 +1154,13 @@ GameObject:
   - component: {fileID: 4098967743375165731}
   - component: {fileID: 3569762090084080626}
   - component: {fileID: 863762482443260779}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DistanceMeter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4098967743375165731
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1178,8 +1178,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 296.65, y: -50}
-  m_SizeDelta: {x: -593.3, y: 100}
+  m_AnchoredPosition: {x: 0, y: -59.30713}
+  m_SizeDelta: {x: 0, y: 118.612}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3569762090084080626
 CanvasRenderer:
@@ -1209,7 +1209,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 70bf9f88ce97de04894ab56607815d4c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 55d3170fad93c1847a1a249bf443c9f0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1229,7 +1229,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5137303284852723350}
   - component: {fileID: 50614491165172643}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1274,12 +1274,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcc88feef38094e42883d4b0be726973, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.HUD
-  healthText: {fileID: 0}
+  healthText: {fileID: 1326962647662265565}
   runPointsText: {fileID: 6100553460710008107}
   mapName: {fileID: 5787035836188065719}
   distanceMeterText: {fileID: 8078464224657594830}
-  settingsButton: {fileID: 0}
-  returnToMenuButton: {fileID: 0}
+  settingsButton: {fileID: 5955474857827506388}
+  returnToMenuButton: {fileID: 1121396341659460817}
   streakContainer: {fileID: 652460047480134147}
   streakText: {fileID: 7343052039999874687}
 --- !u!1 &8437615853801260805
@@ -1294,7 +1294,7 @@ GameObject:
   - component: {fileID: 1835718182612604083}
   - component: {fileID: 6879809359785519139}
   - component: {fileID: 2593324821585310703}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Coins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1319,7 +1319,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 825, y: -202}
+  m_AnchoredPosition: {x: 248, y: -140}
   m_SizeDelta: {x: 269.398, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1835718182612604083
@@ -1386,7 +1386,7 @@ GameObject:
   - component: {fileID: 2838592664189022005}
   - component: {fileID: 8552534518599778400}
   - component: {fileID: 6100553460710008107}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1409,7 +1409,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 23.694, y: 3.763}
+  m_AnchoredPosition: {x: 23.694, y: 3.7630005}
   m_SizeDelta: {x: -72.413, y: -29.129}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8552534518599778400
@@ -1522,7 +1522,7 @@ GameObject:
   - component: {fileID: 1800568568339723395}
   - component: {fileID: 6765004372751805216}
   - component: {fileID: 1326962647662265565}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1545,7 +1545,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 18.866, y: 3.029}
+  m_AnchoredPosition: {x: 18.865997, y: 3.0289993}
   m_SizeDelta: {x: -79.939, y: -18.604}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6765004372751805216

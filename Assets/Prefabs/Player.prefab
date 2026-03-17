@@ -111,6 +111,8 @@ MonoBehaviour:
   baseRotationX: 21
   laneXOffset: 0.3
   laneLerpSpeed: 8
+  laneTiltAngle: 2
+  laneTiltDuration: 0.1
   jumpYOffset: 1
   jumpZOffset: -1
   jumpRotationX: 10
@@ -179,6 +181,7 @@ MonoBehaviour:
   jumpVelocity: 10
   gravity: -30
   fallGravityMultiplier: 5
+  fastFallGravityMultiplier: 10
   velocitySmoothingSpeed: 10
   playerMaterials:
   - {fileID: 2100000, guid: 291cb678d7b3ac143bc2cf9f14136709, type: 2}
@@ -194,9 +197,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: b291cbdc13d9e5646b796137d6834d6c, type: 2}
   animatorZeroingSpeed: 4
   resetSign: {fileID: 1778347043075694746}
-  swipeThreshold: 50
-  swipeMaxTime: 0.5
-  swipeDirectionRatio: 0.6
+  swipeThreshold: 10
+  swipeMaxTime: 1
+  touchFeedbackPrefab: {fileID: 3992013310302512752, guid: ee19738ed591fe04f92d445eb19d192d, type: 3}
 --- !u!1 &8200890812231187779
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +234,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6669171630128160903}
-  m_LocalEulerAnglesHint: {x: 21, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 21, y: 0, z: 0.7}
 --- !u!20 &8287915866584271703
 Camera:
   m_ObjectHideFlags: 0
@@ -432,19 +435,31 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6903468983283661853, guid: 41c1606d2094c5546beb6aea776cafb3, type: 3}
+      propertyPath: isScaling
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6903468983283661853, guid: 41c1606d2094c5546beb6aea776cafb3, type: 3}
       propertyPath: endScale.x
-      value: 0.25
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 6903468983283661853, guid: 41c1606d2094c5546beb6aea776cafb3, type: 3}
       propertyPath: endScale.y
-      value: 0.25
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 6903468983283661853, guid: 41c1606d2094c5546beb6aea776cafb3, type: 3}
       propertyPath: endScale.z
-      value: 0.25
+      value: 0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 6903468983283661853, guid: 41c1606d2094c5546beb6aea776cafb3, type: 3}
+      propertyPath: floatSpeed
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 6903468983283661853, guid: 41c1606d2094c5546beb6aea776cafb3, type: 3}
       propertyPath: isFloating
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6903468983283661853, guid: 41c1606d2094c5546beb6aea776cafb3, type: 3}
+      propertyPath: floatHeight
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6903468983283661853, guid: 41c1606d2094c5546beb6aea776cafb3, type: 3}

@@ -39,6 +39,8 @@ public enum AudioEventSFX
     MedalSilver,
     MedalGold,
     MedalChamp,
+
+    EndGameOverPanel,
 }
 
 public enum AudioEventMusic

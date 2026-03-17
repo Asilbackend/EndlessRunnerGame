@@ -140,6 +140,11 @@ public class GameOverPanel : MonoBehaviour
         AudioManager.Instance?.PlaySFX(GetMedalConfig(_currentMedal).sfx);
     }
 
+    public void PlayEndSFX()
+    {
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.EndGameOverPanel);
+    }
+
     // ── Private ───────────────────────────────────────────────────────────────
     private void AddButtonHoverSound(Button button)
     {
