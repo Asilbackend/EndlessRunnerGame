@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c614b7924ab27f46a021b9f4824c9ec, type: 3}
+  m_Name: SpeedPowerUps
+  m_EditorClassIdentifier: Assembly-CSharp::World.ObjectsContainerSO
+  objectConfigs:
+  - objectName: LaneChangePU
+    objectPrefab: {fileID: 3487669498707678677, guid: cff6bfe10547aa044981edecd7bd4893, type: 3}
+    damage: 0
+  - objectName: Empty
+    objectPrefab: {fileID: 3487669498707678677, guid: 54c235f059c402f43995b6b44f944381, type: 3}
+    damage: 0
+  isMoving: 0

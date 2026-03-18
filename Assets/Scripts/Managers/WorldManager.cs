@@ -191,9 +191,9 @@ namespace Managers
             }
         }
 
-        public void ResetWorld()
+        public void ResetWorld(System.Action onReady = null)
         {
-            StartCoroutine(ResetWorldProcess());
+            StartCoroutine(ResetWorldProcess(onReady));
 
             if (chunkSpawner != null)
             {
@@ -201,26 +201,26 @@ namespace Managers
             }
         }
 
-        private IEnumerator ResetWorldProcess()
+        private IEnumerator ResetWorldProcess(System.Action onReady = null)
         {
             yield return new WaitForSeconds(GameController.Instance.StartTime);
             worldMover?.ResetBend();
             worldMover?.ResetSpeed();
-            worldMover?.Resume();
-            ResumeDynamicObstacles();
             var player = GameController.Instance != null ? GameController.Instance.PlayerController : null;
             if (player != null)
             {
+                player.ResumeAnimationAndWheels();
                 player.ResumeParticleSystems();
             }
+            onReady?.Invoke();
         }
 
-        public void ResetToLastCheckpoint(float duration)
+        public void ResetToLastCheckpoint(float duration, System.Action onReady = null)
         {
-            StartCoroutine(ResetToLastCheckpointProcess(duration));
+            StartCoroutine(ResetToLastCheckpointProcess(duration, onReady));
         }
 
-        private IEnumerator ResetToLastCheckpointProcess(float duration)
+        private IEnumerator ResetToLastCheckpointProcess(float duration, System.Action onReady = null)
         {
             // Ensure time scale is normal (slow-motion from ObstaclePointTrigger may still be active)
             Time.timeScale = 1f;
@@ -260,24 +260,17 @@ namespace Managers
                 AudioManager.Instance.ResumeMusic();
             }
 
-            // Do NOT teleport obstacles here — that caused a visible snap during the pre-resume
-            // pause. The clamp in WorldObstacle.MoveWithWorld() smoothly returns each obstacle
-            // to its activation start position during the rewind, so by the time we reach this
-            // point they are already at (or near) their designed positions. StopReverse() called
-            // from ResumeDynamicObstacles() below finishes clearing their state.
-
             if (player != null)
             {
                 player.StopAnimationAndWheels();
             }
             yield return new WaitForSeconds(GameController.Instance.StartTime);
-            worldMover?.Resume();
-            ResumeDynamicObstacles();
             if (player != null)
             {
                 player.ResumeAnimationAndWheels();
                 player.ResumeParticleSystems();
             }
+            onReady?.Invoke();
         }
 
         public float GetCurrentSpeed()

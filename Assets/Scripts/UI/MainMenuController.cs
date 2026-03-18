@@ -23,13 +23,16 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button dailyRewardButton;
 
+    [Header("Panels")]
+    [SerializeField] private UI.SettingsPanel settingsPanel;
+
     private void Awake()
     {
         if (playButton) playButton.onClick.AddListener(OnPlayClicked);
 
         if (shopButton) shopButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Shop"); });
         if (leaderboardButton) leaderboardButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Leaderboard"); });
-        if (settingsButton) settingsButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Settings"); });
+        if (settingsButton) settingsButton.onClick.AddListener(OnSettingsClicked);
         if (dailyRewardButton) dailyRewardButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Daily Reward"); });
 
         // Add hover sounds to all buttons
@@ -67,6 +70,13 @@ public class MainMenuController : MonoBehaviour
         {
             AudioManager.Instance.PlayMusic(AudioEventMusic.MainMenu, loop: true);
         }
+    }
+
+    private void OnSettingsClicked()
+    {
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
+        if (settingsPanel != null)
+            settingsPanel.Show();
     }
 
     private void OnPlayClicked()

@@ -15,8 +15,7 @@ namespace UI
         [Header("References")]
         [SerializeField] private HUD playerHUD;
         [SerializeField] private GameOverPanel gameOverPanel;
-        [SerializeField] private SettingsPanel settingsPanel;
-        [SerializeField] private ConfirmationPanel confirmationPanel;
+        [SerializeField] private GameMenuPanel gameMenuPanel;
         [SerializeField] private CountdownUI countdownUI;
 
         private void Awake()
@@ -37,8 +36,7 @@ namespace UI
 
         public HUD PlayerHUD => playerHUD;
         public GameOverPanel GameOverPanel => gameOverPanel;
-        public SettingsPanel SettingsPanel => settingsPanel;
-        public ConfirmationPanel ConfirmationPanel => confirmationPanel;
+        public GameMenuPanel GameMenuPanel => gameMenuPanel;
         public CountdownUI CountdownUI => countdownUI;
 
         /// <summary>

@@ -89,25 +89,37 @@ public class GameController : MonoBehaviour
         _highestScore = PlayerPrefsManager.GetInt(PlayerPrefsKeys.HighestScore, 0);
         _highestDistance = PlayerPrefsManager.GetFloat(PlayerPrefsKeys.HighestDistance, 0f);
 
-        if (config == null) return;
-
-        string vehicleId = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedVehicleId, config.defaultVehicleId);
-
-        if (GameManager.Instance != null)
-            GameManager.Instance.SetSelectedVehicleId(vehicleId);
-
-        // Get vehicle health from the selected vehicle's data
-        int vehicleHealth = _defaultHealth;
-        if (GameManager.Instance != null && GameManager.Instance.PlayableObjectsSO != null)
+        if (config != null)
         {
+            string vehicleId = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedVehicleId, config.defaultVehicleId);
+            if (GameManager.Instance != null)
+                GameManager.Instance.SetSelectedVehicleId(vehicleId);
+        }
+
+        SetupVehicleHealth();
+
+        // Pause world and show countdown before game begins
+        WorldManager.PauseWorld();
+        StartCoroutine(PlayGameplayMusicDelayed());
+        ShowCountdown();
+    }
+
+    private void SetupVehicleHealth()
+    {
+        int vehicleHealth = _defaultHealth;
+        if (config != null && GameManager.Instance != null && GameManager.Instance.PlayableObjectsSO != null)
+        {
+            string vehicleId = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedVehicleId, config.defaultVehicleId);
             var vehicleData = GameManager.Instance.PlayableObjectsSO.GetPlayableObjectDataById(vehicleId);
             if (vehicleData != null && vehicleData.health > 0)
                 vehicleHealth = vehicleData.health;
         }
         SetHealth(vehicleHealth);
+    }
 
-        // Play background music
-        StartCoroutine(PlayGameplayMusicDelayed());
+    private void ShowCountdown()
+    {
+        UIManager.Instance?.CountdownUI?.PlayCountdown();
     }
 
     private void Update()
@@ -255,15 +267,19 @@ public class GameController : MonoBehaviour
 
         GamePoints = 0;
         IsGameOver = false;
+        IsNewHighestScore = false;
+        IsNewHighestDistance = false;
         coinStreak = 0;
         _uiManager?.PlayerHUD?.HideStreak();
         _uiManager.PlayerHUD.RefreshFromGameController();
 
-        // ResetWorld() resets speed and chunk count, so the speed multiplier
-        // returns to 1.0. Update() will automatically sync pitch next frame.
-        WorldManager.ResetWorld();
+        // Reset health to vehicle's full health (full restart)
+        SetupVehicleHealth();
 
-        // Resume gameplay music after world reset (speed is now base)
+        // ResetWorld() resets speed and chunk count; countdown is shown via onReady callback
+        WorldManager.ResetWorld(onReady: ShowCountdown);
+
+        // Restart gameplay music
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayMusic(AudioEventMusic.Gameplay, loop: true, customFadeDuration: 1f);
@@ -278,7 +294,7 @@ public class GameController : MonoBehaviour
         // Don't reset music pitch here — Update() will sync it with
         // the current speed multiplier next frame, avoiding a pitch glitch.
 
-        WorldManager.ResetToLastCheckpoint(ReverseTime);
+        WorldManager.ResetToLastCheckpoint(ReverseTime, onReady: ShowCountdown);
     }
 
     /// <summary>

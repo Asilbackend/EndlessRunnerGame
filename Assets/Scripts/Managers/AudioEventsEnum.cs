@@ -41,6 +41,9 @@ public enum AudioEventSFX
     MedalChamp,
 
     EndGameOverPanel,
+    // Countdown
+    CountdownBeep,
+
 }
 
 public enum AudioEventMusic

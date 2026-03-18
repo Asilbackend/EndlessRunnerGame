@@ -105,6 +105,14 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: b7b21f9a60172844dbf194c6b25f40dd, type: 3}
     volume: 1
     pitch: 1
+  - sfxEvent: 24
+    clip: {fileID: 8300000, guid: 973cbfce50fc9634b8c2729624d4cc4d, type: 3}
+    volume: 1
+    pitch: 1
+  - sfxEvent: 25
+    clip: {fileID: 8300000, guid: 99f2aad29c110e54d9ac90f741126334, type: 3}
+    volume: 1
+    pitch: 1
   musicClips:
   - musicEvent: 0
     clip: {fileID: 8300000, guid: 22a806c9b68a3c446b6a2fe861ac91cc, type: 3}

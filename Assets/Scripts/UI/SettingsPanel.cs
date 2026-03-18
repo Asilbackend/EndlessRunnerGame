@@ -29,14 +29,12 @@ namespace UI
         {
             AudioManager.Instance?.PlaySFX(AudioEventSFX.MenuOpen);
             gameObject.SetActive(true);
-            Time.timeScale = 0f;
         }
 
         public void Hide()
         {
             AudioManager.Instance?.PlaySFX(AudioEventSFX.MenuClose);
             gameObject.SetActive(false);
-            Time.timeScale = 1f;
         }
 
         private void OnMasterVolumeChanged(float value)
@@ -61,8 +59,6 @@ namespace UI
         {
             AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
             Hide();
-            if (UIManager.Instance != null && UIManager.Instance.CountdownUI != null)
-                UIManager.Instance.CountdownUI.PlayCountdown();
         }
     }
 }

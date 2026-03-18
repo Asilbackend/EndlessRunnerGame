@@ -12,8 +12,7 @@ namespace UI
         [SerializeField] private TMP_Text runPointsText;
         [SerializeField] private TMP_Text mapName;
         [SerializeField] private TMP_Text distanceMeterText;
-        [SerializeField] private Button settingsButton;
-        [SerializeField] private Button returnToMenuButton;
+        [SerializeField] private Button menuButton;
 
         [Header("Streak UI")]
         [SerializeField] private GameObject streakContainer;
@@ -29,31 +28,20 @@ namespace UI
 
         private void Start()
         {
-            if (settingsButton != null)
-                settingsButton.onClick.AddListener(OnSettingsClicked);
-            if (returnToMenuButton != null)
-                returnToMenuButton.onClick.AddListener(OnReturnToMenuClicked);
+            if (menuButton != null)
+                menuButton.onClick.AddListener(OnMenuClicked);
 
             if (streakContainer != null)
                 streakContainer.SetActive(false);
         }
 
-        private void OnSettingsClicked()
+        private void OnMenuClicked()
         {
             AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
             if (GameController.Instance != null && GameController.Instance.WorldManager != null)
                 GameController.Instance.WorldManager.PauseWorld();
-            if (UIManager.Instance != null && UIManager.Instance.SettingsPanel != null)
-                UIManager.Instance.SettingsPanel.Show();
-        }
-
-        private void OnReturnToMenuClicked()
-        {
-            AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
-            if (GameController.Instance != null && GameController.Instance.WorldManager != null)
-                GameController.Instance.WorldManager.PauseWorld();
-            if (UIManager.Instance != null && UIManager.Instance.ConfirmationPanel != null)
-                UIManager.Instance.ConfirmationPanel.Show();
+            if (UIManager.Instance != null && UIManager.Instance.GameMenuPanel != null)
+                UIManager.Instance.GameMenuPanel.Show();
         }
 
         public void SetHealth(int health)
