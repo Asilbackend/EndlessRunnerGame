@@ -106,6 +106,7 @@ public class VehicleSelectorController : MonoBehaviour
         {
             PlayerPrefsManager.SetString(PlayerPrefsKeys.SelectedVehicleId, _current.EffectiveId);
             UIEventBus.RaiseVehicleChanged(_current.EffectiveId);
+            AnalyticsEvents.VehicleSelected(_current.EffectiveId);
         }
 
     }

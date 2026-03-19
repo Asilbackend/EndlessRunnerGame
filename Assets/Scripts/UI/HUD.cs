@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities;
 
 namespace UI
 {
@@ -59,7 +60,7 @@ namespace UI
         public void SetRunPoints(int points)
         {
             if (runPointsText != null)
-                runPointsText.text = points.ToString();
+                runPointsText.text = NumberFormatter.Format(points);
         }
 
         /// <summary>
@@ -79,18 +80,18 @@ namespace UI
             if (int.TryParse(runPointsText.text, out int current))
             {
                 current += amount;
-                runPointsText.text = current.ToString();
+                runPointsText.text = NumberFormatter.Format(current);
             }
             else
             {
-                runPointsText.text = amount.ToString();
+                runPointsText.text = NumberFormatter.Format(amount);
             }
         }
 
         public void SetDistanceMeter(float distance)
         {
             if (distanceMeterText != null)
-                distanceMeterText.text = $"{distance:F1}m";
+                distanceMeterText.text = NumberFormatter.FormatDistance(distance);
         }
 
         // ===================================================================

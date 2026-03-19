@@ -48,6 +48,10 @@ public class GameController : MonoBehaviour
     private float streakTimer = 0f;
     private WorldMover _worldMover;
 
+    /// <summary>Number of coins collected in this run (for career total tracking).</summary>
+    private int _runCoinsCollected = 0;
+    public int RunCoinsCollected => _runCoinsCollected;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -119,7 +123,14 @@ public class GameController : MonoBehaviour
 
     private void ShowCountdown()
     {
-        UIManager.Instance?.CountdownUI?.PlayCountdown();
+        UIManager.Instance?.CountdownUI?.PlayCountdown(onCountdownComplete: OnCountdownComplete);
+    }
+
+    private void OnCountdownComplete()
+    {
+        string vehicleId = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedVehicleId, "");
+        string mapId = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedMapId, "");
+        AnalyticsEvents.GameStart(vehicleId, mapId, _gameManager.PlayerGameNumber);
     }
 
     private void Update()
@@ -192,6 +203,7 @@ public class GameController : MonoBehaviour
     /// </summary>
     public float OnCoinCollected()
     {
+        _runCoinsCollected++;
         coinStreak++;
         streakTimer = streakResetTime;
 
@@ -211,6 +223,8 @@ public class GameController : MonoBehaviour
     private void CommitStreak()
     {
         int bonus = coinStreak;
+        if (coinStreak >= 3) // Only track meaningful streaks
+            AnalyticsEvents.CoinStreak(coinStreak, bonus);
         coinStreak = 0;
         SetPoints(GamePoints + bonus);
         _uiManager?.PlayerHUD?.CommitStreak(bonus);
@@ -248,6 +262,9 @@ public class GameController : MonoBehaviour
         CheckAndSaveRecords();
         SaveProgress();
         IsGameOver = true;
+
+        // Analytics: total games user property
+        AnalyticsEvents.UpdateTotalGamesPlayed(_gameManager.PlayerGameNumber);
         WorldManager.PauseWorld();
 
         // Play game over sound (music continues playing)
@@ -266,6 +283,7 @@ public class GameController : MonoBehaviour
             PowerupManager.Instance.ClearAll();
 
         GamePoints = 0;
+        _runCoinsCollected = 0;
         IsGameOver = false;
         IsNewHighestScore = false;
         IsNewHighestDistance = false;
@@ -337,5 +355,9 @@ public class GameController : MonoBehaviour
         _gameManager.SetPlayerPoints(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0) + GamePoints);
         //_gameManager.SetPlayerHealth(Health);
         _gameManager.IncrementGameNumber();
+
+        // Accumulate career total coins
+        int careerCoins = PlayerPrefsManager.GetInt(PlayerPrefsKeys.TotalCoinsCollected, 0);
+        PlayerPrefsManager.SetInt(PlayerPrefsKeys.TotalCoinsCollected, careerCoins + _runCoinsCollected);
     }
 }

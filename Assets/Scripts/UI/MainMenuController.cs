@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Utilities;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -25,13 +26,14 @@ public class MainMenuController : MonoBehaviour
 
     [Header("Panels")]
     [SerializeField] private UI.SettingsPanel settingsPanel;
+    [SerializeField] private UI.LeaderboardPanel leaderboardPanel;
 
     private void Awake()
     {
         if (playButton) playButton.onClick.AddListener(OnPlayClicked);
 
         if (shopButton) shopButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Shop"); });
-        if (leaderboardButton) leaderboardButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Leaderboard"); });
+        if (leaderboardButton) leaderboardButton.onClick.AddListener(OnLeaderboardClicked);
         if (settingsButton) settingsButton.onClick.AddListener(OnSettingsClicked);
         if (dailyRewardButton) dailyRewardButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Daily Reward"); });
 
@@ -63,13 +65,20 @@ public class MainMenuController : MonoBehaviour
         if (mapSelector) mapSelector.InitFromSave();
         if (vehicleSelector) vehicleSelector.InitFromSave();
 
-        if (coinsText) coinsText.text = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0).ToString();
+        if (coinsText) coinsText.text = NumberFormatter.Format(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0));
 
         // Play main menu music
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayMusic(AudioEventMusic.MainMenu, loop: true);
         }
+    }
+
+    private void OnLeaderboardClicked()
+    {
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
+        if (leaderboardPanel != null)
+            leaderboardPanel.Show();
     }
 
     private void OnSettingsClicked()

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using Utilities;
 
 public class GameOverPanel : MonoBehaviour
 {
@@ -180,16 +181,16 @@ public class GameOverPanel : MonoBehaviour
         float highDistance = GameController.Instance.HighestDistance;
 
         if (scoreText != null)
-            scoreText.text = currentScore.ToString();
+            scoreText.text = NumberFormatter.Format(currentScore);
 
         if (highScoreText != null)
-            highScoreText.text = highScore.ToString();
+            highScoreText.text = NumberFormatter.Format(highScore);
 
         if (distanceText != null)
-            distanceText.text = $"{currentDistance:F1}m";
+            distanceText.text = NumberFormatter.FormatDistance(currentDistance);
 
         if (highDistanceText != null)
-            highDistanceText.text = $"{highDistance:F1}m";
+            highDistanceText.text = NumberFormatter.FormatDistance(highDistance);
 
         if (newScoreRecordBadge != null)
             newScoreRecordBadge.SetActive(GameController.Instance.IsNewHighestScore);
@@ -199,6 +200,15 @@ public class GameOverPanel : MonoBehaviour
 
         _currentMedal = CalculateMedal(currentScore, highScore);
         ApplyMedalConfig(_currentMedal);
+
+        // Analytics: game over with medal info
+        string vehicleId = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedVehicleId, "");
+        string mapId = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedMapId, "");
+        AnalyticsEvents.GameOver(currentScore, currentDistance,
+            GameController.Instance.GameHealth, _currentMedal.ToString(),
+            vehicleId, mapId,
+            GameController.Instance.IsNewHighestScore,
+            GameController.Instance.IsNewHighestDistance);
     }
 
     private MedalType CalculateMedal(int current, int highest)
@@ -267,6 +277,8 @@ public class GameOverPanel : MonoBehaviour
         bool hasHealth = GameController.Instance != null && GameController.Instance.GameHealth > 0;
         if (hasHealth)
         {
+            float dist = GameController.Instance.WorldManager?.WorldMover?.TotalDistanceTraveled ?? 0f;
+            AnalyticsEvents.CheckpointResume(GameController.Instance.GamePoints, dist);
             GameController.Instance.ResetToLastCheckpoint();
             Hide();
         }
@@ -278,7 +290,12 @@ public class GameOverPanel : MonoBehaviour
 
     private void OnAdCompleted()
     {
+        AnalyticsEvents.AdWatched("extra_life");
         GameController.Instance?.AddLife();
+
+        float dist = GameController.Instance?.WorldManager?.WorldMover?.TotalDistanceTraveled ?? 0f;
+        AnalyticsEvents.CheckpointResume(GameController.Instance?.GamePoints ?? 0, dist);
+
         GameController.Instance?.ResetToLastCheckpoint();
         Hide();
     }

@@ -87,6 +87,7 @@ public class MapSelectorController : MonoBehaviour
         {
             PlayerPrefsManager.SetString(PlayerPrefsKeys.SelectedMapId, _current.id);
             UIEventBus.RaiseMapChanged(_current.id);
+            AnalyticsEvents.MapSelected(_current.id);
         }
     }
 

@@ -15,6 +15,7 @@ public enum PlayerPrefsKeys
     SelectedVehicleId,
     HighestScore,
     HighestDistance,
+    TotalCoinsCollected,
 }
 
 /// <summary>

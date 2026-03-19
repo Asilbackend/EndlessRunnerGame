@@ -96,6 +96,8 @@ namespace Powerup
 
         public void Activate(PowerupType type)
         {
+            AnalyticsEvents.PowerupCollected(type.ToString());
+
             switch (type)
             {
                 case PowerupType.CoinMagnet:      ActivateMagnet();        break;
