@@ -138,10 +138,6 @@ public class PlayerController : MonoBehaviour
 
         // Get main camera for touch feedback positioning
         _mainCamera = Camera.main;
-        if (_mainCamera == null)
-        {
-            _mainCamera = FindFirstObjectByType<Camera>();
-        }
     }
 
     private void Update()

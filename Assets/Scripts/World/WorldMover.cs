@@ -68,7 +68,7 @@ namespace World
         private float _bendCurrent = 0f;
         private float _bendVelocity = 0f;
 
-        private ShaderGlobals _shaderGlobals;
+        [SerializeField] private ShaderGlobals _shaderGlobals;
 
         private enum BendState { Straight, Approach, Hold, Return }
         private BendState _bendState = BendState.Straight;
@@ -82,7 +82,6 @@ namespace World
 
         private void OnEnable()
         {
-            _shaderGlobals = FindObjectOfType<ShaderGlobals>();
             if (_shaderGlobals != null)
             {
                 _bendCurrent = _shaderGlobals.SideBendStrength;

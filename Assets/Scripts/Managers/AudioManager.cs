@@ -41,6 +41,10 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        masterVolume = PlayerPrefsManager.GetFloat(PlayerPrefsKeys.MasterVolume, masterVolume);
+        musicVolume = PlayerPrefsManager.GetFloat(PlayerPrefsKeys.MusicVolume, musicVolume);
+        sfxVolume = PlayerPrefsManager.GetFloat(PlayerPrefsKeys.SFXVolume, sfxVolume);
+
         InitializeMusicSource();
         InitializeSFXPool();
     }
@@ -280,6 +284,7 @@ public class AudioManager : MonoBehaviour
     public void SetMasterVolume(float volume)
     {
         masterVolume = Mathf.Clamp01(volume);
+        PlayerPrefsManager.SetFloat(PlayerPrefsKeys.MasterVolume, masterVolume);
         UpdateAllVolumes();
     }
 
@@ -289,6 +294,7 @@ public class AudioManager : MonoBehaviour
     public void SetMusicVolume(float volume)
     {
         musicVolume = Mathf.Clamp01(volume);
+        PlayerPrefsManager.SetFloat(PlayerPrefsKeys.MusicVolume, musicVolume);
         UpdateMusicVolume();
     }
 
@@ -298,8 +304,13 @@ public class AudioManager : MonoBehaviour
     public void SetSFXVolume(float volume)
     {
         sfxVolume = Mathf.Clamp01(volume);
+        PlayerPrefsManager.SetFloat(PlayerPrefsKeys.SFXVolume, sfxVolume);
         UpdateSFXVolume();
     }
+
+    public float MasterVolume => masterVolume;
+    public float MusicVolume => musicVolume;
+    public float SFXVolume => sfxVolume;
 
     /// <summary>
     /// Mute all audio.

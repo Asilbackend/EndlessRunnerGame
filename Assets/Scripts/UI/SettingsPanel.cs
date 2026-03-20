@@ -10,7 +10,7 @@ namespace UI
         [SerializeField] private Slider musicVolumeSlider;
         [SerializeField] private Slider sfxVolumeSlider;
 
-        private void Start()
+        private void Awake()
         {
             if (closeButton != null)
                 closeButton.onClick.AddListener(OnCloseClicked);
@@ -21,14 +21,27 @@ namespace UI
                 musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
             if (sfxVolumeSlider != null)
                 sfxVolumeSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
+        }
 
-            gameObject.SetActive(false);
+        private void OnEnable()
+        {
+            SyncSliders();
         }
 
         public void Show()
         {
             AudioManager.Instance?.PlaySFX(AudioEventSFX.MenuOpen);
             gameObject.SetActive(true);
+        }
+
+        private void SyncSliders()
+        {
+            var audio = AudioManager.Instance;
+            if (audio == null) return;
+
+            if (masterVolumeSlider != null) masterVolumeSlider.SetValueWithoutNotify(audio.MasterVolume);
+            if (musicVolumeSlider != null) musicVolumeSlider.SetValueWithoutNotify(audio.MusicVolume);
+            if (sfxVolumeSlider != null) sfxVolumeSlider.SetValueWithoutNotify(audio.SFXVolume);
         }
 
         public void Hide()

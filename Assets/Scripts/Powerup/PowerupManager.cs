@@ -1,4 +1,5 @@
 using System.Collections;
+using DailyReward;
 using UnityEngine;
 using Utilities;
 using World;
@@ -97,6 +98,7 @@ namespace Powerup
         public void Activate(PowerupType type)
         {
             AnalyticsEvents.PowerupCollected(type.ToString());
+            DailyRewardManager.Instance?.ReportPowerupCollected(type);
 
             switch (type)
             {

@@ -17,7 +17,9 @@ namespace UI
         [SerializeField] private AnimationCurve floatCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         [SerializeField] private AnimationCurve fadeCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
         [SerializeField] private float horizontalRandomRange = 50f; // Random horizontal movement range
-        
+        [SerializeField] private Canvas canvasOverride;
+        [SerializeField] private Camera cameraOverride;
+
         private TextMeshProUGUI _textMesh;
         private RectTransform _rectTransform;
         private Vector2 _startPosition;
@@ -71,23 +73,19 @@ namespace UI
         public void ShowAtWorldPosition(int points, Vector3 worldPosition)
         {
             // Find or get canvas
-            Canvas canvas = GetComponentInParent<Canvas>();
+            Canvas canvas = canvasOverride != null ? canvasOverride : GetComponentInParent<Canvas>();
+
             if (canvas == null)
             {
-                canvas = FindFirstObjectByType<Canvas>();
-            }
-            
-            if (canvas == null)
-            {
-                Debug.LogError("No Canvas found! FloatingPointText needs a Canvas in the scene.");
+                Debug.LogError("No Canvas found! Assign canvasOverride or parent this under a Canvas.");
                 return;
             }
-            
+
             // Make sure we're a child of canvas
             transform.SetParent(canvas.transform, false);
-            
+
             // Convert world position to screen position
-            Camera cam = Camera.main ?? FindFirstObjectByType<Camera>();
+            Camera cam = cameraOverride != null ? cameraOverride : Camera.main;
             if (cam != null)
             {
                 Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(cam, worldPosition);
@@ -106,15 +104,11 @@ namespace UI
         public void ShowAtScreenCenter(int points)
         {
             // Find or get canvas
-            Canvas canvas = GetComponentInParent<Canvas>();
+            Canvas canvas = canvasOverride != null ? canvasOverride : GetComponentInParent<Canvas>();
+
             if (canvas == null)
             {
-                canvas = FindFirstObjectByType<Canvas>();
-            }
-            
-            if (canvas == null)
-            {
-                Debug.LogError("No Canvas found! FloatingPointText needs a Canvas in the scene.");
+                Debug.LogError("No Canvas found! Assign canvasOverride or parent this under a Canvas.");
                 return;
             }
             

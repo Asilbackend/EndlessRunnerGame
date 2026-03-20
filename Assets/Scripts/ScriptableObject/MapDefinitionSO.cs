@@ -11,6 +11,10 @@ public class MapDefinitionSO : ScriptableObject
     [Header("Menu Visuals")]
     public Sprite thumbnail;
     public bool lockedByDefault;
+    [Tooltip("Cost in earned coins. Set to 0 to disable coin purchase option.")]
+    public int coinPrice;
+    [Tooltip("Cost in gems (premium currency). Set to 0 to disable gem purchase option.")]
+    public int gemPrice;
 
     [Header("Gameplay")]
     [Tooltip("Scene to load for this map (e.g. MainGame)")]

@@ -1,3 +1,4 @@
+using DailyReward;
 using Managers;
 using Player;
 using UnityEngine;
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
 
     //public int PlayerHealth { get; private set; }
     public int PlayerPoints { get; private set; }
+    public int PlayerGems   { get; private set; }
     public int PlayerGameNumber { get; private set; }
 
     private void Awake()
@@ -56,11 +58,16 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
 
+        // Ensure DailyRewardManager exists on this persistent GameObject
+        if (GetComponent<DailyRewardManager>() == null)
+            gameObject.AddComponent<DailyRewardManager>();
+
         // Load selected vehicle from PlayerPrefs so it's available immediately
         _selectedVehicleIdOverride = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedVehicleId, string.Empty);
 
         //PlayerHealth = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Health, _defaultHealth);
         PlayerPoints = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, _defaultPoints);
+        PlayerGems   = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Gems, 0);
         PlayerGameNumber = PlayerPrefsManager.GetInt(PlayerPrefsKeys.GameNumber, 0);
     }
 
@@ -73,6 +80,29 @@ public class GameManager : MonoBehaviour
     {
         PlayerPoints = points;
         PlayerPrefsManager.SetInt(PlayerPrefsKeys.Points, points);
+    }
+
+    public void AddGems(int amount)
+    {
+        PlayerGems = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Gems, 0) + amount;
+        PlayerPrefsManager.SetInt(PlayerPrefsKeys.Gems, PlayerGems);
+    }
+
+    public bool SpendGems(int amount)
+    {
+        int current = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Gems, 0);
+        if (current < amount) return false;
+        PlayerGems = current - amount;
+        PlayerPrefsManager.SetInt(PlayerPrefsKeys.Gems, PlayerGems);
+        return true;
+    }
+
+    public bool SpendCoins(int amount)
+    {
+        int current = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0);
+        if (current < amount) return false;
+        SetPlayerPoints(current - amount);
+        return true;
     }
 
     public void IncrementGameNumber()

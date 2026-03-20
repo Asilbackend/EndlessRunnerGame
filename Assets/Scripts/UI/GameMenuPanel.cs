@@ -16,7 +16,7 @@ namespace UI
         [SerializeField] private Slider musicVolumeSlider;
         [SerializeField] private Slider sfxVolumeSlider;
 
-        private void Start()
+        private void Awake()
         {
             if (resumeButton != null) resumeButton.onClick.AddListener(OnResumeClicked);
             if (garageButton != null) garageButton.onClick.AddListener(OnGarageClicked);
@@ -25,8 +25,6 @@ namespace UI
             if (masterVolumeSlider != null) masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChanged);
             if (musicVolumeSlider != null)  musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
             if (sfxVolumeSlider != null)    sfxVolumeSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
-
-            gameObject.SetActive(false);
         }
 
         public void Show()

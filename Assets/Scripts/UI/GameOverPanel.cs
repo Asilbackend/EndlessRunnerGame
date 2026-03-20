@@ -101,7 +101,7 @@ public class GameOverPanel : MonoBehaviour
     private MedalType _currentMedal;
 
     // ── Unity Lifecycle ───────────────────────────────────────────────────────
-    private void Start()
+    private void Awake()
     {
         if (playAgainButton != null)
         {
@@ -303,8 +303,9 @@ public class GameOverPanel : MonoBehaviour
     private void OnPlayAgainClicked()
     {
         AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
-        GameController.Instance?.ResetGame();
         Hide();
+        // Reload the game scene through the loading screen instead of resetting in-place
+        SceneLoader.Load(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
     private void OnMainMenuClicked()

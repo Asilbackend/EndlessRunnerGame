@@ -10,11 +10,6 @@ namespace UI
         [SerializeField] private float displayDuration = 1f;
         [SerializeField] private float goDisplayDuration = 0.5f;
 
-        private void Start()
-        {
-            gameObject.SetActive(false);
-        }
-
         public void PlayCountdown(System.Action onCountdownComplete = null)
         {
             gameObject.SetActive(true);
@@ -26,19 +21,21 @@ namespace UI
             if (GameController.Instance != null && GameController.Instance.WorldManager != null)
                 GameController.Instance.WorldManager.PauseWorld();
 
-            // Play the 4-beep SFX — beeps land on each number and GO
+            // Play a beep at each step so audio stays perfectly in sync
             AudioManager.Instance?.PlaySFX(AudioEventSFX.CountdownBeep);
-
             if (countdownText != null) countdownText.text = "3";
             yield return new WaitForSecondsRealtime(displayDuration);
 
+            AudioManager.Instance?.PlaySFX(AudioEventSFX.CountdownBeep);
             if (countdownText != null) countdownText.text = "2";
             yield return new WaitForSecondsRealtime(displayDuration);
 
+            AudioManager.Instance?.PlaySFX(AudioEventSFX.CountdownBeep);
             if (countdownText != null) countdownText.text = "1";
             yield return new WaitForSecondsRealtime(displayDuration);
 
-            // 4th beep — show GO and resume world immediately
+            // Final beep — different sound for GO
+            AudioManager.Instance?.PlaySFX(AudioEventSFX.CountdownGo);
             if (countdownText != null) countdownText.text = "GO!";
             if (GameController.Instance != null && GameController.Instance.WorldManager != null)
                 GameController.Instance.WorldManager.ResumeWorld();

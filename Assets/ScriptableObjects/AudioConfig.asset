@@ -113,6 +113,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 99f2aad29c110e54d9ac90f741126334, type: 3}
     volume: 1
     pitch: 1
+  - sfxEvent: 26
+    clip: {fileID: 8300000, guid: de627266f58a9d74ebd8e13a342e3b08, type: 3}
+    volume: 1
+    pitch: 1
   musicClips:
   - musicEvent: 0
     clip: {fileID: 8300000, guid: 22a806c9b68a3c446b6a2fe861ac91cc, type: 3}

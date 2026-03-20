@@ -1,9 +1,8 @@
+using DailyReward;
 using Player;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using Utilities;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -14,8 +13,9 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private MapSelectorController mapSelector;
     [SerializeField] private VehicleSelectorController vehicleSelector;
 
-    [Header("Top Bar UI")]
-    [SerializeField] private TMP_Text coinsText;
+    [Header("Currency Display")]
+    [SerializeField] private UI.CurrencyDisplay coinsDisplay;
+    [SerializeField] private UI.CurrencyDisplay gemsDisplay;
 
     [Header("Buttons")]
     [SerializeField] private Button playButton;
@@ -27,15 +27,17 @@ public class MainMenuController : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private UI.SettingsPanel settingsPanel;
     [SerializeField] private UI.LeaderboardPanel leaderboardPanel;
+    [SerializeField] private UI.Shop.ShopPanel shopPanel;
+    [SerializeField] private UI.DailyRewardPanel dailyRewardPanel;
 
     private void Awake()
     {
         if (playButton) playButton.onClick.AddListener(OnPlayClicked);
 
-        if (shopButton) shopButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Shop"); });
+        if (shopButton) shopButton.onClick.AddListener(OnShopClicked);
         if (leaderboardButton) leaderboardButton.onClick.AddListener(OnLeaderboardClicked);
         if (settingsButton) settingsButton.onClick.AddListener(OnSettingsClicked);
-        if (dailyRewardButton) dailyRewardButton.onClick.AddListener(() => { AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick); Debug.Log("Daily Reward"); });
+        if (dailyRewardButton) dailyRewardButton.onClick.AddListener(OnDailyRewardClicked);
 
         // Add hover sounds to all buttons
         AddButtonHoverSound(playButton);
@@ -65,13 +67,28 @@ public class MainMenuController : MonoBehaviour
         if (mapSelector) mapSelector.InitFromSave();
         if (vehicleSelector) vehicleSelector.InitFromSave();
 
-        if (coinsText) coinsText.text = NumberFormatter.Format(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0));
+        // InitValue on first display so no animation fires on scene load
+        coinsDisplay?.InitValue(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0));
+        gemsDisplay?.InitValue(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Gems, 0));
 
         // Play main menu music
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayMusic(AudioEventMusic.MainMenu, loop: true);
         }
+    }
+
+    public void RefreshCurrencyDisplay()
+    {
+        coinsDisplay?.SetValue(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0));
+        gemsDisplay?.SetValue(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Gems, 0));
+    }
+
+    private void OnShopClicked()
+    {
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
+        if (shopPanel != null)
+            shopPanel.Show(onClose: RefreshCurrencyDisplay);
     }
 
     private void OnLeaderboardClicked()
@@ -86,6 +103,13 @@ public class MainMenuController : MonoBehaviour
         AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
         if (settingsPanel != null)
             settingsPanel.Show();
+    }
+
+    private void OnDailyRewardClicked()
+    {
+        AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
+        if (dailyRewardPanel != null)
+            dailyRewardPanel.Show(onCurrencyChanged: RefreshCurrencyDisplay);
     }
 
     private void OnPlayClicked()

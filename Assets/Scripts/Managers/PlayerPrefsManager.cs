@@ -16,6 +16,10 @@ public enum PlayerPrefsKeys
     HighestScore,
     HighestDistance,
     TotalCoinsCollected,
+    Gems,
+    MasterVolume,
+    MusicVolume,
+    SFXVolume,
 }
 
 /// <summary>

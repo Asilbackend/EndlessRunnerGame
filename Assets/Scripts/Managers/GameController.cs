@@ -1,3 +1,4 @@
+using DailyReward;
 using Managers;
 using Powerup;
 using UI;
@@ -66,7 +67,7 @@ public class GameController : MonoBehaviour
         _uiManager = UIManager.Instance;
         if (PlayerController == null)
         {
-            PlayerController = FindFirstObjectByType<PlayerController>();
+            Debug.LogError("GameController: PlayerController not assigned in Inspector!");
         }
     }
 
@@ -359,5 +360,16 @@ public class GameController : MonoBehaviour
         // Accumulate career total coins
         int careerCoins = PlayerPrefsManager.GetInt(PlayerPrefsKeys.TotalCoinsCollected, 0);
         PlayerPrefsManager.SetInt(PlayerPrefsKeys.TotalCoinsCollected, careerCoins + _runCoinsCollected);
+
+        // Report to daily objectives (batched — single save at the end)
+        var daily = DailyRewardManager.Instance;
+        if (daily != null)
+        {
+            daily.ReportGamePlayed();
+            daily.ReportDistance(_worldMover != null ? _worldMover.TotalDistanceTraveled : 0f);
+            daily.ReportCoinsCollected(_runCoinsCollected);
+            daily.ReportScoreReached(GamePoints);
+            daily.FlushIfDirty();
+        }
     }
 }

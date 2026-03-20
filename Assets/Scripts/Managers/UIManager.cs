@@ -28,6 +28,14 @@ namespace UI
             Instance = this;
         }
 
+        private void Start()
+        {
+            // Disable overlay panels after their Awake() has registered listeners
+            if (gameOverPanel != null) gameOverPanel.gameObject.SetActive(false);
+            if (gameMenuPanel != null) gameMenuPanel.gameObject.SetActive(false);
+            if (countdownUI != null)   countdownUI.gameObject.SetActive(false);
+        }
+
         private void OnDestroy()
         {
             if (Instance == this)
