@@ -264,6 +264,13 @@ public class GameController : MonoBehaviour
         SaveProgress();
         IsGameOver = true;
 
+        // Submit all-time bests to the global leaderboard
+        FirebaseLeaderboardService.Instance?.SubmitScores(
+            PlayerPrefsManager.GetInt(PlayerPrefsKeys.HighestScore, 0),
+            PlayerPrefsManager.GetFloat(PlayerPrefsKeys.HighestDistance, 0f),
+            PlayerPrefsManager.GetInt(PlayerPrefsKeys.TotalCoinsCollected, 0)
+        );
+
         // Analytics: total games user property
         AnalyticsEvents.UpdateTotalGamesPlayed(_gameManager.PlayerGameNumber);
         WorldManager.PauseWorld();

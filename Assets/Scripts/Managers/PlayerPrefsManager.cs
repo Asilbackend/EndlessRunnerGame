@@ -20,6 +20,8 @@ public enum PlayerPrefsKeys
     MasterVolume,
     MusicVolume,
     SFXVolume,
+    PlayerId,
+    PlayerDisplayName,
 }
 
 /// <summary>
