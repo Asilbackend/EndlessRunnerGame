@@ -65,6 +65,7 @@ public class GameController : MonoBehaviour
         }
         _gameManager = GameManager.Instance;
         _uiManager = UIManager.Instance;
+        WorldManager = GetComponent<WorldManager>();
         if (PlayerController == null)
         {
             Debug.LogError("GameController: PlayerController not assigned in Inspector!");
@@ -81,7 +82,6 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        WorldManager = GetComponent<WorldManager>();
         _worldMover = WorldManager.WorldMover;
 
         // Ensure PowerupManager exists on this GameObject

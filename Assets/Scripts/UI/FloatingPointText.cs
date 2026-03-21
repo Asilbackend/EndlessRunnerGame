@@ -16,9 +16,7 @@ namespace UI
         [SerializeField] private float lifetime = 1.5f;
         [SerializeField] private AnimationCurve floatCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         [SerializeField] private AnimationCurve fadeCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
-        [SerializeField] private float horizontalRandomRange = 50f; // Random horizontal movement range
-        [SerializeField] private Canvas canvasOverride;
-        [SerializeField] private Camera cameraOverride;
+        [SerializeField] private float horizontalRandomRange = 50f;
 
         private TextMeshProUGUI _textMesh;
         private RectTransform _rectTransform;
@@ -72,21 +70,9 @@ namespace UI
         
         public void ShowAtWorldPosition(int points, Vector3 worldPosition)
         {
-            // Find or get canvas
-            Canvas canvas = canvasOverride != null ? canvasOverride : GetComponentInParent<Canvas>();
-
-            if (canvas == null)
-            {
-                Debug.LogError("No Canvas found! Assign canvasOverride or parent this under a Canvas.");
-                return;
-            }
-
-            // Make sure we're a child of canvas
-            transform.SetParent(canvas.transform, false);
-
-            // Convert world position to screen position
-            Camera cam = cameraOverride != null ? cameraOverride : Camera.main;
-            if (cam != null)
+            Canvas canvas = GetComponentInParent<Canvas>();
+            Camera cam = Camera.main;
+            if (canvas != null && cam != null)
             {
                 Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(cam, worldPosition);
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -97,30 +83,16 @@ namespace UI
                 );
                 _rectTransform.anchoredPosition = localPoint;
             }
-            
+
             Show(points);
         }
-        
+
         public void ShowAtScreenCenter(int points)
         {
-            // Find or get canvas
-            Canvas canvas = canvasOverride != null ? canvasOverride : GetComponentInParent<Canvas>();
-
-            if (canvas == null)
-            {
-                Debug.LogError("No Canvas found! Assign canvasOverride or parent this under a Canvas.");
-                return;
-            }
-            
-            // Make sure we're a child of canvas
-            transform.SetParent(canvas.transform, false);
-            
-            // Set to center
             _rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
             _rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             _rectTransform.pivot = new Vector2(0.5f, 0.5f);
             _rectTransform.anchoredPosition = Vector2.zero;
-            
             Show(points);
         }
 

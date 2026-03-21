@@ -39,6 +39,7 @@ Material:
     - _LightIntensity: 3
     - _RimPower: 0
     - _RimStrength: 0
+    - _SideBendStrength: 1.7285231
     - _Steps: 4
     m_Colors:
     - _RevealColor: {r: 1, g: 1, b: 1, a: 1}

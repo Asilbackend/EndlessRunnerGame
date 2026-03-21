@@ -10,6 +10,8 @@ namespace World
         public string objectName = "New Object";
         public GameObject objectPrefab;
         public float damage = 0;
+        [Tooltip("Relative spawn weight. Leave at 1 for equal probability. 0 = never selected.")]
+        [Min(0f)] public float weight = 1f;
     }
 
     [CreateAssetMenu(fileName = "ObjectData", menuName = "World/Object Config", order = 2)]
@@ -26,8 +28,24 @@ namespace World
                 return null;
             }
 
-            int randomIndex = Random.Range(0, objectConfigs.Count);
-            return objectConfigs[randomIndex];
+            float totalWeight = 0f;
+            foreach (var config in objectConfigs)
+                totalWeight += config.weight;
+
+            // All weights are 0: fall back to uniform random
+            if (totalWeight <= 0f)
+                return objectConfigs[Random.Range(0, objectConfigs.Count)];
+
+            float roll = Random.Range(0f, totalWeight);
+            float cumulative = 0f;
+            foreach (var config in objectConfigs)
+            {
+                cumulative += config.weight;
+                if (roll < cumulative)
+                    return config;
+            }
+
+            return objectConfigs[objectConfigs.Count - 1];
         }
 
         public ObjectData GetObjectByName(string name)

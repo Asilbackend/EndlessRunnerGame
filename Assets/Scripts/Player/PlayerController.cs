@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (GameController.Instance.IsGameOver)
+        if (GameController.Instance == null || GameController.Instance.IsGameOver)
             return;
         SmoothMoveToTargetLane();
         ApplyGravityAndJump();

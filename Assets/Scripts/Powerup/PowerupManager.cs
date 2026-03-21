@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using DailyReward;
 using UnityEngine;
 using Utilities;
@@ -56,6 +57,21 @@ namespace Powerup
             Instance = this;
         }
 
+        private readonly List<WorldPowerup> _activePowerups = new List<WorldPowerup>();
+
+        public void RegisterPowerup(WorldPowerup p)   => _activePowerups.Add(p);
+        public void UnregisterPowerup(WorldPowerup p) => _activePowerups.Remove(p);
+
+        private void DeactivateAllOtherPowerups(WorldPowerup collected)
+        {
+            for (int i = _activePowerups.Count - 1; i >= 0; i--)
+            {
+                var p = _activePowerups[i];
+                if (p != null && p != collected)
+                    p.OnDespawn();
+            }
+        }
+
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
@@ -95,10 +111,11 @@ namespace Powerup
         //  PUBLIC: Activate a powerup
         // ===================================================================
 
-        public void Activate(PowerupType type)
+        public void Activate(PowerupType type, WorldPowerup source = null)
         {
             AnalyticsEvents.PowerupCollected(type.ToString());
             DailyRewardManager.Instance?.ReportPowerupCollected(type);
+            DeactivateAllOtherPowerups(source);
 
             switch (type)
             {

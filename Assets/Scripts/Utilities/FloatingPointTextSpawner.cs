@@ -6,20 +6,18 @@ namespace Utilities
     public class FloatingPointTextSpawner : MonoBehaviour
     {
         public static FloatingPointTextSpawner Instance { get; private set; }
-        
-        [Header("Prefab Assignment")]
+
         [SerializeField] private GameObject floatingPointTextPrefab;
-        
+        [SerializeField] private Canvas targetCanvas;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(gameObject);
+                Destroy(this);
+                return;
             }
-            else
-            {
-                Instance = this;
-            }
+            Instance = this;
         }
 
         private void OnDestroy()
@@ -27,51 +25,23 @@ namespace Utilities
             if (Instance == this)
                 Instance = null;
         }
-        
+
         public static void SpawnFloatingPointText(int points, Vector3 worldPosition)
         {
-            if (Instance == null)
-            {
-                Debug.LogError("FloatingPointTextSpawner not found in scene! Add it to a GameObject.");
+            if (Instance == null || Instance.floatingPointTextPrefab == null || Instance.targetCanvas == null)
                 return;
-            }
-            
-            if (Instance.floatingPointTextPrefab == null)
-            {
-                Debug.LogError("FloatingPointText prefab is not assigned in FloatingPointTextSpawner!");
-                return;
-            }
-            
-            GameObject instance = Instantiate(Instance.floatingPointTextPrefab);
-            FloatingPointText floatingText = instance.GetComponent<FloatingPointText>();
-            
-            if (floatingText != null)
-            {
-                floatingText.ShowAtWorldPosition(points, worldPosition);
-            }
+
+            var go = Instantiate(Instance.floatingPointTextPrefab, Instance.targetCanvas.transform);
+            go.GetComponent<FloatingPointText>()?.ShowAtWorldPosition(points, worldPosition);
         }
-        
+
         public static void SpawnFloatingPointTextAtScreenCenter(int points)
         {
-            if (Instance == null)
-            {
-                Debug.LogError("FloatingPointTextSpawner not found in scene! Add it to a GameObject.");
+            if (Instance == null || Instance.floatingPointTextPrefab == null || Instance.targetCanvas == null)
                 return;
-            }
-            
-            if (Instance.floatingPointTextPrefab == null)
-            {
-                Debug.LogError("FloatingPointText prefab is not assigned in FloatingPointTextSpawner!");
-                return;
-            }
-            
-            GameObject instance = Instantiate(Instance.floatingPointTextPrefab);
-            FloatingPointText floatingText = instance.GetComponent<FloatingPointText>();
-            
-            if (floatingText != null)
-            {
-                floatingText.ShowAtScreenCenter(points);
-            }
+
+            var go = Instantiate(Instance.floatingPointTextPrefab, Instance.targetCanvas.transform);
+            go.GetComponent<FloatingPointText>()?.ShowAtScreenCenter(points);
         }
     }
 }

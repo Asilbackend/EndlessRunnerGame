@@ -34,7 +34,7 @@ Material:
     - _RimStrength: 0
     m_Colors:
     - _RevealColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 0.40784314, g: 0.40784314, b: 0.40784314, a: 1}
+    - _ShadowColor: {r: 0.408805, g: 0.408805, b: 0.408805, a: 1}
     - _TilingOffset: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -43,6 +43,9 @@ namespace Powerup
             _bobPhase = Random.Range(0f, Mathf.PI * 2f);
         }
 
+        private void OnEnable()  => PowerupManager.Instance?.RegisterPowerup(this);
+        private void OnDisable() => PowerupManager.Instance?.UnregisterPowerup(this);
+
         private void Update()
         {
             if (!_isActive || _isCollected || _isPaused) return;
@@ -73,7 +76,7 @@ namespace Powerup
 
             // Apply the powerup effect
             if (PowerupManager.Instance != null)
-                PowerupManager.Instance.Activate(powerupType);
+                PowerupManager.Instance.Activate(powerupType, this);
 
             OnDespawn();
         }
