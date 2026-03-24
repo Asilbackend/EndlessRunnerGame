@@ -52,6 +52,7 @@ namespace UI
         {
             AudioManager.Instance?.PlaySFX(AudioEventSFX.ButtonClick);
             Hide();
+            GameController.Instance?.SaveProgress();
             SceneLoader.Load("MainMenu");
         }
 

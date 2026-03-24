@@ -360,6 +360,9 @@ public class GameController : MonoBehaviour
 
     public void SaveProgress()
     {
+        _gameManager ??= GameManager.Instance;
+        if (_gameManager == null) return;
+
         _gameManager.SetPlayerPoints(PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, 0) + GamePoints);
         //_gameManager.SetPlayerHealth(Health);
         _gameManager.IncrementGameNumber();

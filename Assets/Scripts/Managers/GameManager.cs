@@ -58,12 +58,10 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
 
-        // Ensure DailyRewardManager exists on this persistent GameObject
-        if (GetComponent<DailyRewardManager>() == null)
-            gameObject.AddComponent<DailyRewardManager>();
 
         // Load selected vehicle from PlayerPrefs so it's available immediately
         _selectedVehicleIdOverride = PlayerPrefsManager.GetString(PlayerPrefsKeys.SelectedVehicleId, string.Empty);
+
 
         //PlayerHealth = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Health, _defaultHealth);
         PlayerPoints = PlayerPrefsManager.GetInt(PlayerPrefsKeys.Points, _defaultPoints);
