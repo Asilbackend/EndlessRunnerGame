@@ -16,6 +16,9 @@ namespace World
         PowerupDoubleLane,
         PowerupDoubleCoin,
         PowerupInvincibility,
+
+        // Challenge
+        ChallengeTapBurst,
     }
 
     [System.Serializable]
